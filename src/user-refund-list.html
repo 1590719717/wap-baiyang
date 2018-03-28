@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>售后申请</title>
+    <link rel="stylesheet" href="css/user-order-list.css"/>
+    <script>
+        //解决IOS 6plus 返回不刷新的问题
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload()
+            }
+        };
+    </script>
+</head>
+<body class="order-list" vm-controller="refund-list" >
+<div class="wrap box">
+    <div class="flex">
+        <!--内容区 滚动区-->
+        <div class=" flex-content" id="refund_list" >
+            <!--公共头部菜单-->
+            <header class="top-header">
+                <h1 class="title">售后申请</h1>
+                <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                <!--头部右边按钮 导航菜单 -->
+                {{require('template/topnav.html', {'page':'user-index'})}}
+
+            </header>
+            <!--订单不为空-->
+            <div class="order-list-con" vm-html="data_list" >
+                <script type="text/html">
+                    <% if(data_list && data_list.length){ %>
+                    <% data_list.forEach(function(item){ %>
+                    <!--服务单号-->
+                    <div class="order-item clear" >
+                        <a href="user-refund-detail.html?service_sn=<%= item.service_sn %>">
+                            <div class="order-type order-service clear">
+                                <p class="order-number pull-left">服务单号：<%= item.service_sn %></p>
+                                <p class="order-status pull-right"><%=  item.status_text %></p>
+                            </div>
+
+                            <% if( item.goodsList && item.goodsList.length) { %>
+                            <!--商品列表-->
+                            <div class="order-list-wrap">
+
+                                <% if( item.goodsList.length == 1 ){ %>
+                                <div class="order-list clear">
+                                    <div class="order-product pull-left">
+                                        <span style="background-image: url(<%= item.goodsList[0].goods_image %>)"></span>
+                                    </div>
+                                    <div class="order-product-msg pull-right">
+                                        <p class="product-name">
+                                            <%= item.goodsList[0].goods_name %>
+                                        </p>
+                                        <p class="product-price clear">
+                                            <span class="pull-left black-color">&yen;<%= item.goodsList[0].promotion_price %></span>
+                                            <span class="product-num pull-right">&times;<%= item.goodsList[0].now_refund_goods_number %></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <div class="order-product-swipe" data-act="product-list-swipe" >
+                                    <div class="product-all" >
+                                        <% item.goodsList.forEach(function(product){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= product.goods_image %>)"></span></div>
+                                        <%})%>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                            </div>
+                            <% } %>
+                        </a>
+                        <a href="user-service-schedule.html?service_sn=<%= item.service_sn %>" class="order-service-tips">
+                            <p class="tips-p1"><%= item.kefu_status_text %></p>
+                            <p  class="tips-p2"><%= item.add_time %></p>
+                            <i class="icon icon-turn"></i>
+                        </a>
+                        <div class="btn-wrap clear">
+                            <% if( item.status == 4 && item.is_show == 1 ){ %>
+                            <a href="user-write-logistics.html?service_sn=<%= item.service_sn %>" class="order-kf mr-btn">填写物流</a>
+
+                            <% } else if( item.status == 5 && item.is_show == 1  ){ %>
+                            <a href="user-write-logistics.html?service_sn=<%= item.service_sn %>" class="order-kf mr-btn">修改物流</a>
+
+                            <% } %>
+
+                        </div>
+                    </div>
+                    <% }) %>
+                    <% } else if( data_list && !data_list.length ) {   %>
+                    <!--订单为空时-->
+                    <div class="none-img"><span></span></div>
+                    <p class="none-p">暂无售后记录</p>
+                    <% } %>
+
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/config.js"></script>
+<script>seajs.use('user-refund-list')</script>
+
+</body>
+</html>
+

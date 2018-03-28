@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>账号管理</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-account-all" vm-controller="user-account">
+    <!--账户管理首页-->
+    <div class="wrap box " >
+        <header class="user-account top-header">
+            <h1 class="title" vm-html="page_title"></h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+
+            <!--账户管理首页-->
+            <div class="user-account-content flex-content hide" id="wrap-index">
+
+                <a class="box-hor account-list clear">
+                    <div class="list-con flex-hor">
+                        <input type="file" accept="image/*" id="user-photo" class="portrait-input"/>
+                        <div class="pull-left ">头像</div>
+                        <div class="pull-right">
+                            <div class="account-avator" vm-css-background-image="'url(' + (portrait || '{{Config.cdn_url}}images/user-header.png') + ')'"></div>
+                        </div>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+                <a href="#page=nick" class="box-hor account-list clear">
+                    <div class="list-con flex-hor">
+                        <div class="pull-left">昵称</div>
+                        <div class="pull-right color-gray minwid" vm-html="nick_name">保密</div>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+                <a href="#page=gender" class="box-hor account-list clear">
+                    <div class="list-con flex-hor">
+                        <div class="pull-left">性别</div>
+                        <div class="pull-right color-gray minwid" vm-html="getGender(gender)"></div>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+                <div class="box-hor account-list clear">
+                    <div class="list-con flex-hor">
+                        <div class="pull-left ">出生日期</div>
+                        <div class="pull-right color-gray minwid" vm-html="getBirthday(birthday)"></div>
+                        <input type="text" class="calendar-input" readonly vm-value="birthday" vm-on-change="modifyBirthday()" data-act="calendar" data-param="range=1" />
+                    </div>
+                    <i class="icon icon-arrow-right2"></i>
+                </div>
+                <a href="#page=baby" class="box-hor account-list clear">
+                    <div class="list-con flex-hor">
+                        <div class="pull-left ">完善宝宝资料<span class="color-gray">（建议填写）</span></div>
+                        <div class="pull-right color-gray minwid" vm-html="getBaby(identity_id)"></div>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+                <a href="user-safety.html" class="box-hor account-list clear">
+                    <div class="list-con flex-hor">
+                        <div class="pull-left ">安全中心</div>
+                        <div class="pull-right color-gray minwid">修改密码</div>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+                <!--退出登录-->
+                <a href="javascript:;" vm-on-click="logout()" vm-attr-class="is_from_wechat?'hide':'exit-btn'+(isDisabled?' exit-btn-gray':'')" class="hide" >退出登录</a>
+                <!--微信内显示 解绑账号 -->
+                <a href="javascript:;" vm-on-click="tiedAccount()" vm-attr-class="is_from_wechat&&is_ready?'exit-btn'+(isDisabled?' exit-btn-gray':''):'hide'" class="hide">解绑账号</a>
+
+            </div>
+
+            <!--修改昵称-->
+            <div class="account-mname-content flex-content hide" id="wrap-nick">
+                <form>
+                    <div class="clear row">
+                        <label class="col-3">现有昵称</label>
+                        <input type="text" readonly vm-value="nick_name" name="nick" class="col-9" >
+                    </div>
+                    <div class="clear row">
+                        <label class="col-3">新昵称</label>
+                        <input type="text" vm-value="new_nick" name="new-nick" class="col-9" maxlength="20">
+                    </div>
+                    <!--<p class="tip-msg">4-20个字符，可由中英文、数字、“_”、“-”组成</p>-->
+                    <a href="javascript:;" vm-on-click="modifyNick()" class="save-msg-btn">保存</a>
+                </form>
+            </div>
+
+            <!--修改性别-->
+            <div class="account-msex-content flex-content hide" id="wrap-gender">
+                <div class="clear">
+                    <input type="radio" name="gender" value="1" vm-value="sex" >
+                    <span>女</span>
+                </div>
+                <div class="clear">
+                    <input type="radio" name="gender" value="2" vm-value="sex" >
+                    <span>男</span>
+                </div>
+                <div class="clear">
+                    <input type="radio" name="gender" value="3" vm-value="sex" >
+                    <span>保密</span>
+                </div>
+                <a href="javascript:;" vm-on-click="modifyGender()" class="save-msg-btn">保存</a>
+            </div>
+
+            <!--完善宝宝资料-->
+            <div class="account-baby-content flex-content hide" id="wrap-baby">
+                <!--已有宝宝-->
+                <div class="clear baby-list">
+                    <div class="box-hor isbaby-title">
+                        <div class="flex-hor">
+                            <i class="icon icon-had-baby"></i>已有宝宝
+                        </div>
+                        <label class="check-box">
+                            <input type="radio" name="identity_id" value="3" vm-value="identity_baby_id" vm-on-click="resetBabytime()" />
+                            <span class="icon-check"></span>
+                        </label>
+                    </div>
+                    <!--宝宝出生日期-->
+                    <div class="box-hor baby-birth">
+                        <div class="flex-hor">
+                            <p>请选择宝宝的出生日期</p>
+                            <p vm-html="(identity_baby_id==3)?getBirthday(baby_time):''"></p>
+                            <input type="text" class="calendar-input" data-act="calendar" data-param="range=1" readonly vm-value="baby_time"/>
+                        </div>
+                        <i class="icon icon-arow"></i>
+                    </div>
+                </div>
+
+                <div class="bg-line"></div>
+                <!--我是准妈妈-->
+                <div class="clear baby-list">
+                    <div class="box-hor isbaby-title">
+                        <div class="flex-hor">
+                            <i class="icon icon-having-baby"></i>我是准妈妈
+                        </div>
+                        <label class="check-box">
+                            <input type="radio" name="identity_id" value="2" vm-value="identity_baby_id" vm-on-click="resetBabytime()" />
+                            <span class="icon-check"></span>
+                        </label>
+                    </div>
+                    <!--宝宝预产日期-->
+                    <div class="box-hor baby-birth">
+                        <div class="flex-hor">
+                            <p>请选择宝宝的预产日期</p>
+                            <p vm-html="(identity_baby_id==2)?getBirthday(baby_time):''"></p>
+                            <input type="text" class="calendar-input" data-act="calendar" data-param="range=2" readonly vm-value="baby_time"/>
+                        </div>
+                        <i class="icon icon-arow"></i>
+                    </div>
+                </div>
+
+                <div class="bg-line"></div>
+                <!--我正在备孕-->
+                <div class="clear baby-list">
+                    <div class="box-hor isbaby-title">
+                        <div class="flex-hor">
+                            <i class="icon icon-will-baby"></i>我正在备孕
+                        </div>
+                        <label class="check-box">
+                            <input type="radio" name="identity_id" value="1" vm-value="identity_baby_id" vm-on-click="resetBabytime()"/>
+                            <span class="icon-check"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <a href="javascript:;" vm-on-click="modifyBaby()" class="save-msg-btn">保存</a>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-account')</script>
+</body>
+</html>
+

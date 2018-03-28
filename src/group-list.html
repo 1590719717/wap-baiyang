@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>好货拼团</title>
+    <link rel="stylesheet" href="css/group-purchase.css"/>
+</head>
+<body class="group-list-all" vm-controller ="group-list">
+    <header class="user-header top-header" id="header">
+        <h1 class="title">好货拼团</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+		<!--头部右边按钮 导航菜单 -->
+		{{require('template/topnav.html', {'page':''})}}
+
+	</header>
+    
+    <div class="group-nav"  id="nav-wrap">
+        <a class="nav-first" href="group-list.html#group_hot_list" >
+            <span vm-attr-class="group_type=='group_hot_list'?'chosen':'' " >热门拼团</span>
+        </a>
+        <a href="group-list.html#group_my_list">
+            <span vm-attr-class="group_type=='group_my_list'?'chosen':'' " >我的拼团</span>
+        </a>
+    </div>
+
+    <div class="group-list-tab"  >
+    	<!--热门拼团-->
+    	<ul vm-attr-class="group_type=='group_hot_list'?'hot-group-list-type':'hide'" class="hide" vm-html="hot_group">
+    		<script type="text/html">
+    			<% if( hot_group && hot_group.length ){ %>
+                    <% hot_group.forEach(function(item){%>
+		        		<li class="group-list-item">
+		        			<a href="group-product-detail.html?group_id=<%= item.gfa_id %>">
+		        			<div class="item-img"><img src="<%= item.goods_image %>" alt=""/></div>
+		        			<h3 class="item-title">
+		        				<% if(item.gfa_type && (item.gfa_type - 0) == 1){ %>
+		        					<em class="group-type">抽奖</em>
+		        				<% }else if(item.gfa_user_type && (item.gfa_user_type - 0) == 1){ %>
+		        					<em class="group-type">老带新</em>
+		        				<% }else{ %>
+		        					<em class="group-type">拼团</em>
+		        				<% } %>
+		        				<%= item.goods_name %>
+		        			</h3>
+							<div class="item-price clear">
+								<div class="box-align pull-left">
+									<em class="group-tag"><%= item.gfa_user_count %>人团</em>
+									<span class="price" data-act="price-part" data-param="price=<%= item.gfa_price %>"></span>
+									<del class="markPrice">&yen;<%= item.market_price%></del>
+								</div>						
+								<span class="group-pink-btn group-btn pull-right">去开团</span>
+							</div>
+							</a>
+		        		</li>
+	        		<% }) %>
+            	<% } %>
+    		</script>
+    	</ul>
+    	
+    	<ul vm-attr-class="group_type=='group_my_list'?'my-group-list-type':'hide'" class="hide" vm-html=" is_show + my_group">
+    		<script type="text/html">
+                <% if( my_group && my_group.length ){ %>
+                    <% my_group.forEach(function(item){ %>
+		        		<li class="group-list-item">
+		        			<a href="group-join.html?group_id=<%=item.gf_id%>">
+		        			<div class="item-img"><span style="background-image: url(<%= item.first_image %>)"></span></div>
+		        			<div class="group-info">
+		        				<h3 class="item-title">
+		        					<% if(item.gfa_type && (item.gfa_type - 0) == 1){ %>
+			        					<em class="group-type">抽奖</em>
+			        				<% }else if(item.gfa_user_type && (item.gfa_user_type - 0) == 1){ %>
+			        					<em class="group-type">老带新</em>
+			        				<% }else{ %>
+			        					<em class="group-type">拼团</em>
+			        				<% } %>
+		        					<%= item.goods_name %>
+		        				</h3>
+		        				<div class="item-price box-align">
+		        					<div class="flex">
+		        						<span class="price" data-act="price-part" data-param="price=<%= item.gfa_price %>"></span>
+		        						<em class="group-tag"><%= item.gfa_user_count %>人团</em>
+		        					</div>
+		        					<% if(item.gf_state && (item.gf_state - 0) == 1){ %>
+		        						<span class="group-state">等待成团</span>
+		        					<% } else if(item.gf_state && (item.gf_state - 0) == 2){ %>
+		        						<span class="group-state">拼团成功</span>
+		        					<% }else{ %>
+		        						<span class="group-state">拼团失败</span>
+		        					<% }%>
+		        				</div>
+		        			</div>
+		        			</a>
+		        			<div class="group-btn-area clear">
+		        				<% if(item.gf_state && (item.gf_state - 0) == 1){ %>
+		        					<p class="pull-left num">还差<i><%= item.gfa_user_count - item.gf_join_num %></i>人成团</p>
+	        						
+		        					<a href="group-order-detail.html?id=<%=item.order_sn%>" class="group-btn group-black-bright-btn pull-right">查看订单</a>
+		        					<a href="group-join.html?group_id=<%=item.gf_id%>&&is_show=1" class="group-btn group-pink-bright-btn pull-right">拉人拼团</a>
+	        					<% } else if(item.gf_state && (item.gf_state - 0) == 2){ %>
+	        						<% if(item.gfa_type && (item.gfa_type - 0) == 1){ %>
+	        							<!--抽奖-->
+	        							<% if(item.gfa_is_draw == 1){ %>
+	        								<a href="group-join.html?group_id=<%=item.gf_id%>" class="group-btn group-black-bright-btn pull-right">拼团详情</a>
+	        								<a href="group-winners.html?act_id=<%=item.gfa_id%>" class="group-btn group-black-bright-btn pull-right">中奖详情</a>
+	        							<% }else{ %>
+	        								<a href="group-join.html?group_id=<%=item.gf_id%>" class="group-btn group-black-bright-btn pull-right">拼团详情</a>
+	        							<% } %>
+	        						<% }else{ %>
+		        						<a href="group-order-detail.html?id=<%=item.order_sn%>" class="group-btn group-black-bright-btn pull-right">查看订单</a>
+	        							<a href="group-join.html?group_id=<%=item.gf_id%>" class="group-btn group-black-bright-btn pull-right">拼团详情</a>
+	        						<% } %>
+	        					<% }else{ %>
+		        					<a href="group-order-detail.html?id=<%=item.order_sn%>" class="group-btn group-black-bright-btn pull-right">查看订单</a>
+	        						<a href="group-join.html?group_id=<%=item.gf_id%>" class="group-btn group-black-bright-btn pull-right">拼团详情</a>
+	        					<% }%>
+		        			</div>
+		        			<% if(item.gfa_type && (item.gfa_type - 0) == 1 && item.gf_state == 2){ %>
+		        				<% if(item.gfa_is_draw == 0){ %>
+		        					<i class="group-icon group-icon-lottery-wait"></i>
+		        				<% } %>
+		        				<% if(item.gfa_is_draw == 1){ %>
+		        					<% if(item.is_win == 0){ %>
+		        						<i class="group-icon group-icon-lottery-fail"></i>
+		        					<% }else if(item.is_win == 1){ %>
+		        						<i class="group-icon group-icon-lottery-success"></i>
+		        					<% } %>
+		        				<% } %>
+		        			<% } %>
+		        		</li>
+        			<% }) %>
+                <% } else if( is_show ) {  %>
+	        		<li class="group-order-none">
+						<div class="none-img"><span></span></div>
+	                    <p>没有拼团商品哦</p>
+	                    <a href="javascript:;" class="group-btn group-pink-btn group-index-link" vm-on-click = "getGroupHot()" >逛逛今日热团</a>
+	                </li>
+	            <% } %>
+            </script>
+    	</ul>
+        
+    </div>
+    
+        
+    <script src="js/config.js"></script>
+    <script>seajs.use('group-list')</script>
+
+</body>
+</html>

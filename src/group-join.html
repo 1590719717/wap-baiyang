@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>好货拼团</title>
+    <link rel="stylesheet" href="css/group-purchase.css"/>
+</head>
+<body >
+<div class="wrap box group-pd-all" vm-controller ="group-join">
+    <header class="user-header top-header">
+        <h1 class="title" vm-html="page" >
+            <script type="text/html">
+                <% if(page=='group_join' ){ %>
+                好货拼团
+                <% } else if(page=='group_rule'){ %>
+                拼团规则
+                <% } %>
+            </script>
+        </h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+		<!--头部右边按钮 导航菜单 -->
+		{{require('template/topnav.html', {'page':''})}}
+
+	</header>
+	
+    <div class="flex" >
+        <div vm-attr-class="'flex-content group-pd-con '+(page=='group_join'?'':'hide')" class="hide" vm-html=" group_data + more_group_act" >
+            <script type="text/html">
+                <% if( group_data && group_data.fight && group_data.user) { %>
+
+                <!--参团商品详情-->
+                <div class="group-join" >
+                    <div class="group-product">
+                        <a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="clear">
+                            <div class="group-product-img"><span style="background-image: url( <%= group_data.first_image %> )"></span></div>
+                            <div class="group-product-msg">
+                                <h3 class="product-msg-name">
+                                	<% if(group_data.gfa_type && (group_data.gfa_type - 0) == 1){ %>
+			        					<em class="group-type">抽奖</em>
+			        				<% }else if(group_data.gfa_user_type && (group_data.gfa_user_type - 0) == 1){ %>
+			        					<em class="group-type">老带新</em>
+			        				<% }else{ %>
+			        					<em class="group-type">拼团</em>
+			        				<% } %>
+                                	<%= group_data.goods_name %>
+                                </h3>
+                                <p class="product-msg-price">
+                                	<em class="group-tag"><%= group_data.gfa_user_count %>人团</em>
+                                	<span class="price" data-act="price-part" data-param="price=<%= group_data.gfa_price %>"></span>
+									<del class="markPrice">&yen;<%= group_data.market_price%></del>
+                                </p>
+                            </div>
+                            <% if(group_data.fight.gf_state == 1){ %>
+                            	<i class="group-icon group-icon-wait"></i>
+                            <% } else if(group_data.fight.gf_state == 2){ %>
+                            	<% if(group_data.gfa_type && (group_data.gfa_type - 0) == 1){ %>
+		        					<% if(group_data.gfa_is_draw == 0){ %>
+			        					<i class="group-icon group-icon-lottery-wait"></i>
+			        				<% } %>
+			        				<% if(group_data.gfa_is_draw == 1){ %>
+			        					<i class="group-icon group-icon-lottery-ready"></i>
+			        				<% } %>
+		        				<% } else { %>
+		        					<i class="group-icon group-icon-success"></i>
+		        				<% } %>
+	                        <% }else{ %>
+	                        	<i class="group-icon group-icon-fail"></i>
+	                        <% } %>
+                        </a>
+                    </div>
+                    <div class="group-user">
+						<% if(group_data.gfa_type && (group_data.gfa_type - 0) == 1){ %>
+							<!--抽奖-->
+        					<% if(group_data.gfa_user_type && (group_data.gfa_user_type - 0) == 1){ %>
+	        					<!--老带新-->
+	        					<% if(group_data.fight.gf_state == 1 &&  group_data.user.join_time > 0){ %>
+	        						 <p>还差<span><%= join_left %></span>人，快去邀请小伙伴一起参团吧！</p>
+	        					<% }else if(group_data.fight.gf_state == 1 &&  group_data.user.join_time == 0){ %>
+	        						<% if(group_data.is_new_user == 1){ %>
+	        							<p>还差<span><%= join_left %></span>人，赶快参团吧！</p>
+	        						<% }else{ %>
+	        							<p>老用户只能开团，快去开团吧！</p>
+	        						<% } %>
+	        					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time == 0){ %>
+	        						<p>晚来一步，该团已满员~</p>
+	        					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time > 0){ %>
+	        						<% if(group_data.gfa_is_draw == 0){ %>
+	        							<p>恭喜您！拼团成功！坐等开奖！</p>
+	        						<% }else{ %>
+	        							<% if(group_data.user.is_win == 0){ %>
+			        						<p>离中奖只差一步！不服继续来战！</p>
+			        					<% }else if(group_data.user.is_win == 1){ %>
+			        						<p>恭喜您！中奖了~</p>
+			        					<% } %>
+	        						<% } %>
+	        					<% }else if(group_data.fight.gf_state == 3){ %>
+	        						<p>很遗憾！拼团失败，重新开团吧！</p>
+	        					<% } %>
+	        				<% }else{ %>
+	        					<!--普通拼团-->
+	        					<% if(group_data.fight.gf_state == 1 &&  group_data.user.join_time > 0){ %>
+	        						 <p>还差<span><%= join_left %></span>人，快去邀请小伙伴一起参团吧！</p>
+	        					<% }else if(group_data.fight.gf_state == 1 &&  group_data.user.join_time == 0){ %>
+	        						<p>还差<span><%= join_left %></span>人，赶快参团吧！</p>
+	        					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time == 0){ %>
+	        						<p>晚来一步，该团已满员~</p>
+	        					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time > 0){ %>
+	        						<% if(group_data.gfa_is_draw == 0){ %>
+	        							<p>恭喜您！拼团成功！搬着板凳坐等开奖！</p>
+	        						<% }else{ %>
+	        							<% if(group_data.user.is_win == 0){ %>
+			        						<p>离中奖只差一步！不服继续来战！</p>
+			        					<% }else if(group_data.user.is_win == 1){ %>
+			        						<p>恭喜您！中奖了~</p>
+			        					<% } %>
+	        						<% } %>
+	        					<% }else if(group_data.fight.gf_state == 3){ %>
+	        						<p>很遗憾！拼团失败，重新开团吧！</p>
+	        					<% } %>
+	        				<% } %>
+        					
+        				<% }else { %>
+        					<% if(group_data.gfa_user_type && (group_data.gfa_user_type - 0) == 1){ %>
+	        					<!--老带新-->
+	        					<% if(group_data.fight.gf_state == 1 &&  group_data.user.join_time > 0){ %>
+	        						 <p>还差<span><%= join_left %></span>人，快去邀请小伙伴一起参团吧！</p>
+	        					<% }else if(group_data.fight.gf_state == 1 &&  group_data.user.join_time == 0){ %>
+	        						<% if(group_data.is_new_user == 1){ %>
+	        							<p>还差<span><%= join_left %></span>人，赶快参团吧！</p>
+	        						<% }else{ %>
+	        							<p>老用户只能开团，快去开团吧！</p>
+	        						<% } %>
+	        					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time == 0){ %>
+	        						<p>该团已满员，您可以开新团哦~</p>
+	        					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time > 0){ %>
+	        						<p>恭喜您！拼团成功！</p>
+	        					<% }else if(group_data.fight.gf_state == 3){ %>
+	        						<p>很遗憾！拼团失败，重新开团吧！</p>
+	        					<% } %>
+	        				<% }else{ %>
+	        					<!--普通拼团-->
+	        					<% if(group_data.fight.gf_state == 1 &&  group_data.user.join_time > 0){ %>
+	        						 <p>还差<span><%= join_left %></span>人，快去邀请小伙伴一起参团吧！</p>
+	        					<% }else if(group_data.fight.gf_state == 1 &&  group_data.user.join_time == 0){ %>
+	        						<p>还差<span><%= join_left %></span>人，赶快参团吧！</p>
+	        					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time == 0){ %>
+	        						<p>该团已满员，您可以开新团哦~</p>
+	        					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time > 0){ %>
+	        						<p>恭喜您！拼团成功！</p>
+	        					<% }else if(group_data.fight.gf_state == 3){ %>
+	        						<p>很遗憾！拼团失败，重新开团吧！</p>
+	        					<% } %>
+	        				<% } %>
+        				<% } %>
+                        
+                        <div class="group-join-user">
+	                        <ul class="group-user-part clear">
+	                            <% var user_list = group_data.fight.user_list ; var join_left =  group_data.fight.gfa_user_count - user_list.length ;   %>
+	                            <% for( var i = 0 ; i < user_list.length ; i++){  %>
+	                                <li>
+	                                    <div>
+	                                        <% if( user_list[i].headimgurl != '' ){ %>
+	                                            <img src="<%= user_list[i].headimgurl %>" alt=""/>
+	                                        <% } %>
+	                                    </div>
+	                                    <% if( user_list[i].is_win == 1 ){ %>
+	                                    	<i class="group-win-icon"></i>
+	                                    <% } %>
+	                                </li>
+	                            <% } %>
+	                            <% for( var j = 0 ; j < join_left ; j++ ){ %>
+	                                <li></li>
+	                            <% } %>
+	                        </ul>
+	                        <% if( group_data.fight.gf_state == 1 && act_overtime == 0 ){ %>
+	                            <p class="count-time" data-act="count-down" data-param="end_time=<%= group_data.fight.end_time %> "></p>
+	                        <% } %>
+						</div>
+						<div class="group-user-detail" vm-on-click="toggleTag()"><span vm-html="is_select_tag ? '收起参团详情' : '查看参团详情'"></span><i class="icon-tigger icon-tigger-down" vm-attr-class="'icon-tigger ' + (is_select_tag ? 'icon-tigger-up':'icon-tigger-down')"></i></div>
+                    </div>
+					<ul class="hide" vm-attr-class="is_select_tag ? 'group-user-list':'hide'">
+						<% var user_list = group_data.fight.user_list ; %>
+						<% user_list.forEach(function(item){ %>
+							<% if(item.is_head == 1){ %>
+								<li class="box-align active">
+									<div class="user-head">
+										<div>
+											<% if( item.headimgurl != '' ){ %>
+	                                            <img src="<%= item.headimgurl %>" alt=""/>
+	                                        <% } %>
+										</div>
+									</div>
+									<span class="user-name flex"><%= item.nickname %></span>
+									<span class="time" data-act="showJoinTime" data-param="is_head=<%= item.is_head %>&&join_time=<%= item.join_time %> "></span>
+								</li>
+							<% }else{ %>
+								<li class="box-align">
+									<div class="user-head">
+										<div>
+											<% if( item.headimgurl != '' ){ %>
+	                                            <img src="<%= item.headimgurl %>" alt=""/>
+	                                        <% } %>
+										</div>
+									</div>
+									<span class="user-name flex"><%= item.nickname %></span>
+									<span class="time" data-act="showJoinTime" data-param="is_head=<%= item.is_head %>&&join_time=<%= item.join_time %> "></span>
+								</li>
+							<% } %>
+							
+						<% }) %>
+					</ul>
+                </div>
+
+
+                <div class="group-panel-title">
+                	<% if(group_data.gfa_type && (group_data.gfa_type + 0) == 1){ %>
+    					<span>拼团抽奖玩法</span>
+    				<% }else if(group_data.gfa_user_type && (group_data.gfa_user_type + 0) == 1){ %>
+    					<span>老带新玩法</span>
+    				<% }else{ %>
+    					<span>拼团玩法</span>
+    				<% } %>
+                    
+                    <a href="javascript:;" vm-on-click="pageRouter('group_rule')">查看详情<i class="icon icon-group-arrow"></i></a>
+               </div>
+                <div class="group-rule">
+                	<% if(group_data.gfa_type && (group_data.gfa_type - 0) == 1){ %>
+                		<% if(group_data.fight.gf_state == 2){ %>
+                			<% if(group_data.gfa_is_draw == 1){ %>
+                				<div class="rule-mid-line clear">
+			                        <div class="rule-list">
+			                            <span class="line-bg"></span>
+			                            <span class="circle-num"><em class="active-color" >1</em></span>
+			                        </div>
+			                        <div class="rule-list">
+			                            <span class="line-bg"></span>
+			                            <span class="circle-num"><em class="active-color">2</em></span>
+			                        </div>
+			                        <div class="rule-list">
+			                            <span class="line-bg"></span>
+			                            <span class="circle-num"><em class="active-color">3</em></span>
+			                        </div>
+			                        <div class="rule-list2">
+			                            <span class="circle-num"><em class="active-color">4</em></span>
+			                        </div>
+			                    </div>
+			                    <div class="rule-list-text clear">
+		                            <div class="list-red-text">支付开团/</br>参团</div>
+		                            <div class="list-red-text">邀请参团</div>
+		                            <div class="list-red-text">团满抽奖</br>不满退款</div>
+		                            <div class="list-red-text">开奖后</br>发货/退款</div>
+		                       	</div>
+                			<% }else{ %>
+                				<div class="rule-mid-line clear">
+			                        <div class="rule-list">
+			                            <span class="line-bg"></span>
+			                            <span class="circle-num"><em class="active-color" >1</em></span>
+			                        </div>
+			                        <div class="rule-list">
+			                            <span class="line-bg"></span>
+			                            <span class="circle-num"><em class="active-color">2</em></span>
+			                        </div>
+			                        <div class="rule-list">
+			                            <span class="line-bg"></span>
+			                            <span class="circle-num"><em class="active-color">3</em></span>
+			                        </div>
+			                        <div class="rule-list2">
+			                            <span class="circle-num"><em>4</em></span>
+			                        </div>
+			                    </div>
+			                    <div class="rule-list-text clear">
+		                            <div class="list-red-text">支付开团/</br>参团</div>
+		                            <div class="list-red-text">邀请参团</div>
+		                            <div class="list-red-text">团满抽奖</br>不满退款</div>
+		                            <div >开奖后</br>发货/退款</div>
+		                       	</div>
+                			<% } %>
+                		<% }else{ %>
+                			<div class="rule-mid-line clear">
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em class="active-color" >1</em></span>
+		                        </div>
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em class="active-color">2</em></span>
+		                        </div>
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em>3</em></span>
+		                        </div>
+		                        <div class="rule-list2">
+		                            <span class="circle-num"><em>4</em></span>
+		                        </div>
+		                    </div>
+		                    <div class="rule-list-text clear">
+	                            <div class="list-red-text">支付开团/</br>参团</div>
+	                            <div class="list-red-text">邀请参团</div>
+	                            <div>团满抽奖</br>不满退款</div>
+	                            <div >开奖后</br>发货/退款</div>
+	                       	</div>
+                		<% } %>
+                		
+                	<% }else{ %>
+                		<% if(group_data.fight.gf_state == 2){ %>
+                			<div class="rule-mid-line clear">
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em class="active-color" >1</em></span>
+		                        </div>
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em class="active-color">2</em></span>
+		                        </div>
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em class="active-color">3</em></span>
+		                        </div>
+		                        <div class="rule-list2">
+		                            <span class="circle-num"><em class="active-color">4</em></span>
+		                        </div>
+		                    </div>
+		                    <div class="rule-list-text clear">
+	                            <div class="list-red-text">选择商品</div>
+	                            <div class="list-red-text">支付开团/</br>参团</div>
+	                            <% if(group_data.gfa_user_type && (group_data.gfa_user_type - 0) == 1){ %>
+	                            	<div class="list-red-text">邀请新用户</br>参团</div>
+	                            <% }else{ %>
+	                            	<div class="list-red-text">邀请参团</div>
+	                            <% } %>
+	                            <div class="list-red-text">人满成团</div>
+	                        </div>
+                		<% }else{ %>
+                			<div class="rule-mid-line clear">
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em class="active-color" >1</em></span>
+		                        </div>
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em class="active-color">2</em></span>
+		                        </div>
+		                        <div class="rule-list">
+		                            <span class="line-bg"></span>
+		                            <span class="circle-num"><em class="active-color">3</em></span>
+		                        </div>
+		                        <div class="rule-list2">
+		                            <span class="circle-num"><em>4</em></span>
+		                        </div>
+		                    </div>
+		                    <div class="rule-list-text clear">
+	                            <div class="list-red-text">选择商品</div>
+	                            <div class="list-red-text">支付开团/</br>参团</div>
+	                            <% if(group_data.gfa_user_type && (group_data.gfa_user_type - 0) == 1){ %>
+	                            	<div class="list-red-text">邀请新用户</br>参团</div>
+	                            <% }else{ %>
+	                            	<div class="list-red-text">邀请参团</div>
+	                            <% } %>
+	                            <div >人满成团</div>
+	                        </div>
+                		<% } %>
+                		
+                	<% } %>
+               	</div>
+
+                <div class="group-panel-title">
+                    <span>其他团购</span>
+                    <a href="group-list.html">更多<i class="icon icon-group-arrow"></i></a>
+                </div>
+
+                <% if(more_group_act && more_group_act.length) { %>
+                <div class="group-more">
+                    <div class="group-wrap" data-act="swipe" >
+                        <ul class="group-list-more" >
+                            <% more_group_act.forEach(function(item, i) { %>
+                                <% if(i % 3 == 0){ %>
+                                    <li class="group-item">
+                                <% } %>
+                                    <a href="group-product-detail.html?group_id=<%= item.gfa_id %>">
+                                        <div class="group-item-img"><span style="background-image: url(<%= item. first_image %>)"></span></div>
+                                        <p class="group-item-name"><%= item.goods_name %></p>
+                                        <p class="group-item-price"><span data-act="price-part" data-param="price=<%= item.gfa_price %>"></span><del>&yen;<%= item.market_price %></del></p>
+                                    </a>
+                                <% if(i % 3 == 2 || i == more_group_act.length + 1){ %>
+                                    </li>
+                                <% } %>
+                            <% }); %>
+                        </ul>
+                    </div>
+                </div>
+                <% } %>
+
+                <% } %>
+            </script>
+        </div>
+
+        <div vm-attr-class="'flex-content group-rule-con '+ (page=='group_rule'?'':'hide')" class="hide">
+            <div class="group-rule-top"></div>
+            <div class="group-rule-text">
+                <h1>规则说明</h1>
+                <p class="rule-title">1、怎么开团？</p>
+                <p class="rule-text">选择心仪商品，点击“x人拼团”按钮，付款后即为开团成功。</p>
+                <p class="rule-title">2、团长</p>
+                <p class="rule-text">开团且该团第一位支付成功的人。 </p>
+                <p class="rule-title">3、怎么参与拼团？</p>
+                <p class="rule-text">进入朋友分享的链接，点击“立即参团”按钮，付款后即为参团成功，若多人同时支付，支付成功时间较早的人获得参团资格。</p>
+                <p class="rule-title">4、拼团失败</p>
+                <p class="rule-text">在成团的有效时间内未凑齐成团人数，则拼团失败。此时付款项会原路退回到支付账户。</p>
+                <p class="rule-title">5、在拼团时间内可以取消订单吗？</p>
+                <p class="rule-text">拼团在有效时间内，拼购的商品订单不允许取消。</p>
+                <p class="rule-title">6、怎么就可以成团？</p>
+                <p class="rule-text">在开团或参团成功后，点击“邀请好友参团”按钮，将页面分享给好友，在有效时间内凑齐人数即为成团。</p>
+                <p class="rule-title">7、什么是抽奖拼团？</p>
+                <p class="rule-text">拼团成功的用户才有抽奖资格，达到活动时间系统随机抽奖，同一个用户只能中奖一次。中奖用户获得抽奖奖品，未中奖将全额退款。</p>
+                <p class="rule-title">8、什么是老带新？</p>
+                <p class="rule-text">参团用户必须新用户。</p>
+                <p class="rule-title">9、拼团的商品可以用优惠券吗？</p>
+                <p class="rule-text">拼团商品不可以使用优惠券，不可以参加满减，但可以使用商城的余额进行支付哦。</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div vm-attr-class="page=='group_join'?'group-share-footer':'hide'"  vm-html=" group_data + act_overtime" >
+        <script type="text/html">
+            <% if( group_data &&  group_data.fight && group_data.user){ %>
+				<div class="group-footer">
+                    <a href="group-list.html" class="pull-left ">更多热团</a>
+                    <% if( act_overtime == 0 ){ %>
+                    	<!--未过期-->
+	                    <% if(group_data.gfa_type && (group_data.gfa_type - 0) == 1){ %>
+							<!--抽奖-->
+							<% if(group_data.gfa_user_type && (group_data.gfa_user_type - 0) == 1){ %>
+		    					<!--老带新-->
+		    					<% if(group_data.fight.gf_state == 1 &&  group_data.user.join_time > 0){ %>
+		    						<a href="javascript:;" class="pull-right join-active" vm-on-click="show_share()" >邀请好友参团</a>
+		    					<% }else if(group_data.fight.gf_state == 1 &&  group_data.user.join_time == 0){ %>
+		    						<% if(group_data.is_new_user == 1){ %>
+		    							<a href="javascript:;" class="pull-right join-active" vm-on-click="submit_group(0)" >立即参团</a>
+		    						<% }else{ %>
+		    							<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >我要开团</a>
+		    						<% } %>
+		    					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time == 0){ %>
+		    						<% if(group_data.gfa_is_draw == 0){ %>
+		    							<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    						<% }else{ %>
+										<a href="group-winners.html?act_id=<%=group_data.gfa_id%>" class="pull-right join-active" >查看中奖名单</a>
+		    						<% } %>
+		    					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time > 0){ %>
+		    						<% if(group_data.gfa_is_draw == 0){ %>
+		    							<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >再拼一单</a>
+		    						<% }else{ %>
+										<a href="group-winners.html?act_id=<%=group_data.gfa_id%>" class="pull-right join-active" >查看中奖名单</a>
+		    						<% } %>
+		    					<% }else if(group_data.fight.gf_state == 3){ %>
+		    						<% if(group_data.gfa_is_draw == 0){ %>
+		    							<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    						<% }else{ %>
+										<a href="group-winners.html?act_id=<%=group_data.gfa_id%>" class="pull-right join-active" >查看中奖名单</a>
+		    						<% } %>
+		    					<% } %>
+		    				<% }else{ %>
+		    					<!--普通拼团-->
+		    					<% if(group_data.fight.gf_state == 1 &&  group_data.user.join_time > 0){ %>
+		    						<a href="javascript:;" class="pull-right join-active" vm-on-click="show_share()" >邀请好友参团</a>
+		    					<% }else if(group_data.fight.gf_state == 1 &&  group_data.user.join_time == 0){ %>
+		    						<a href="javascript:;" class="pull-right join-active" vm-on-click="submit_group(0)" >立即参团</a>
+		    					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time == 0){ %>
+		    						<% if(group_data.gfa_is_draw == 0){ %>
+		    							<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    						<% }else{ %>
+										<a href="group-winners.html?act_id=<%=group_data.gfa_id%>" class="pull-right join-active" >查看中奖名单</a>
+		    						<% } %>
+		    					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time > 0){ %>
+		    						<% if(group_data.gfa_is_draw == 0){ %>
+		    							<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >再拼一单</a>
+		    						<% }else{ %>
+										<a href="group-winners.html?act_id=<%=group_data.gfa_id%>" class="pull-right join-active" >查看中奖名单</a>
+		    						<% } %>
+		    					<% }else if(group_data.fight.gf_state == 3){ %>
+		    						<% if(group_data.gfa_is_draw == 0){ %>
+		    							<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    						<% }else{ %>
+										<a href="group-winners.html?act_id=<%=group_data.gfa_id%>" class="pull-right join-active" >查看中奖名单</a>
+		    						<% } %>
+		    					<% } %>
+		    				<% } %>
+	    				<% }else { %>
+	    					<!--非抽奖-->
+	    					<% if(group_data.gfa_user_type && (group_data.gfa_user_type - 0) == 1){ %>
+		    					<!--老带新-->
+		    					<% if(group_data.fight.gf_state == 1 &&  group_data.user.join_time > 0){ %>
+		    						<a href="javascript:;" class="pull-right join-active" vm-on-click="show_share()" >邀请好友参团</a>
+		    					<% }else if(group_data.fight.gf_state == 1 &&  group_data.user.join_time == 0){ %>
+		    						<% if(group_data.is_new_user == 1){ %>
+		    							<a href="javascript:;" class="pull-right join-active" vm-on-click="submit_group(0)" >立即参团</a>
+		    						<% }else{ %>
+		    							<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >我要开团</a>
+		    						<% } %>
+		    					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time == 0){ %>
+		    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time > 0){ %>
+		    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >再拼一单</a>
+		    					<% }else if(group_data.fight.gf_state == 3){ %>
+		    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    					<% } %>
+		    				<% }else{ %>
+		    					<!--普通拼团-->
+		    					<% if(group_data.fight.gf_state == 1 &&  group_data.user.join_time > 0){ %>
+		    						<a href="javascript:;" class="pull-right join-active" vm-on-click="show_share()" >邀请好友参团</a>
+		    					<% }else if(group_data.fight.gf_state == 1 &&  group_data.user.join_time == 0){ %>
+		    						<a href="javascript:;" class="pull-right join-active" vm-on-click="submit_group(0)" >立即参团</a>
+		    					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time == 0){ %>
+		    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    					<% }else if(group_data.fight.gf_state == 2 && group_data.user.join_time > 0){ %>
+		    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >再拼一单</a>
+		    					<% }else if(group_data.fight.gf_state == 3){ %>
+		    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    					<% } %>
+		    				<% } %>
+	    				<% } %>
+	    			<% }else{ %>
+	    				<!--已过期-->
+	    				<% if(group_data.gfa_type && (group_data.gfa_type - 0) == 1){ %>
+							<!--抽奖-->
+							<% if(group_data.gfa_is_draw == 0){ %>
+    							<% if(group_data.user.join_time == 0){ %>
+		    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+		    					<% }else if(group_data.user.join_time > 0){ %>
+		    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >再拼一单</a>
+		    					<% } %>
+    						<% }else{ %>
+								<a href="group-winners.html?act_id=<%=group_data.gfa_id%>" class="pull-right join-active" >查看中奖名单</a>
+    						<% } %>
+	    				<% }else { %>
+	    					<% if(group_data.user.join_time == 0){ %>
+	    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >立即开团</a>
+	    					<% }else if(group_data.user.join_time > 0){ %>
+	    						<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="pull-right join-active" >再拼一单</a>
+	    					<% } %>
+	    				<% } %>
+	    			<% } %>
+               </div>
+            <% } %>
+        </script>
+    </div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script>seajs.use('group-join')</script>
+
+</body>
+</html>

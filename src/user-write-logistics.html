@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>填写物流信息</title>
+    <link rel="stylesheet" href="css/user-write-logistics.css"/>
+</head>
+<body class="user-write-logistics" vm-controller ="service-logistics" >
+
+    <!--公共头部-->
+    <header class="top-header">
+        <h1 class="title">填写物流信息</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':'user-index'})}}
+
+    </header>
+
+    <p>本服务由百洋商城提供</p>
+
+    <div class="write-logistics-con">
+        <div class="inp-list row">
+            <div class="col-3"><span>*</span>物流单号</div>
+            <input type="text" name="logistics-id" class="col-9" placeholder="请填写物流单号" vm-value="logistics_id" id="logistics_number" />
+        </div>
+        <div class="inp-list row">
+            <div class="col-3"><span>*</span>物流公司</div>
+            <input type="text" class="logistics-name" class="col-9" placeholder="请填写物流公司" vm-value="logistics_name"  />
+        </div>
+    </div>
+
+    <a href="javascript:;" class="btn-save" vm-on-click="logistics_submit()" >确定</a>
+    
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-write-logistics')</script>
+</body>
+</html>
+

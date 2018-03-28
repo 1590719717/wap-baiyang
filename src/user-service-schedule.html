@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>服务单进度</title>
+    <link rel="stylesheet" href="css/user-service-schedule.css"/>
+    <script>
+        //解决IOS 6plus 返回不刷新的问题
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload()
+            }
+        };
+    </script>
+</head>
+<body class="user-service-schedule" vm-controller="service-logistics"  >
+
+    <div class="wrap box">
+        <div class="flex">
+            <div class=" flex-content" >
+                <!--公共头部菜单-->
+                <header  class="top-header">
+                    <h1 class="title">服务单进度</h1>
+                    <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                    <!--头部右边按钮 导航菜单 -->
+                    {{require('template/topnav.html', {'page':'user-index'})}}
+
+                </header>
+
+                <div class="order-wl-top clear" >
+                    <p>服务单号：<em vm-html="service_sn"></em></p>
+                    <p>订单编号：<em vm-html="order_sn"></em></p>
+                    <p>申请时间：<em vm-html="service_time"></em></p>
+                </div>
+
+
+                <div class="order-wl-detail clear" vm-html="service_data" >
+                    <script type="text/html">
+                        <% if( service_data && service_data.length ){ %>
+                        <% service_data.forEach(function(item){  %>
+                        <% if(item && item.length ) { %>
+                        <div class="order-wl-list clear">
+                            <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                <circle cx="17" cy="17" r="16" class="color-circle" />
+                                <circle cx="17" cy="17" r="22" class="whiter-circle" />
+                            </svg>
+                            <% item.forEach(function(list){ %>
+                            <div class="text-tip"><%= list %></div>
+                            <% }) %>
+                        </div>
+                        <% } %>
+                        <% })  %>
+                        <% } %>
+                    </script>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="btn-service-wap" vm-html="status + is_can_cancel + is_show_wl ">
+            <script type="text/html">
+                <% if( status == 4 || status == 5 || is_can_cancel == 1){ %>
+                    <div class="btn-wap" >
+                    <% if(is_can_cancel  == 1 ){ %>
+                        <a href="javascript:;" class="btn-a red-btn" vm-on-click="cancelRefund()">撤销申请</a>
+                    <% } %>
+                    <% if( status == 4 && is_show_wl == 1 ){ %>
+                        <a vm-attr-href="'user-write-logistics.html?service_sn='+ service_sn " class="btn-a gray-btn">填写物流</a>
+                    <% } else if( status == 5 && is_show_wl == 1) { %>
+                        <a vm-attr-href="'user-write-logistics.html?service_sn='+ service_sn " class="btn-a gray-btn">修改物流</a>
+                    <% } %>
+                    </div>
+                <% } %>
+            </script>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-service-schedule')</script>
+
+</body>
+</html>
+

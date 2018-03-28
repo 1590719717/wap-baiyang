@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>商品分类</title>
+    <link rel="stylesheet" href="css/page.css"/>
+    <link rel="stylesheet" href="css/category.css"/>
+</head>
+<body>
+    <div class="wrap box" >
+        <header class="search-box top-header">
+            <span class="btn-search" data-act="search">请输入关键词进行搜索</span>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <div class="flex">
+            <div class="flex-content box-hor" vm-controller="category-list">
+                <div class="category-content flex-hor box-hor2">
+                    <div class="category-main">
+                        <ul vm-html="all_data">
+                            <script type="text/html">
+
+                                <% if(all_data && all_data.length){ %>
+                                    <% all_data.forEach(function(item,index) { %>
+                                        <li vm-on-click="navChange( this,<%= index %> )" class=" <%= index<1?'nav active':'nav' %> " >
+                                            <%= item.category_name  %>
+                                        </li>
+                                    <% }); %>
+                                <% }; %>
+
+                            </script>
+
+                        </ul>
+                    </div>
+
+                    <div class="category-box box">
+                        <div class="category-banner" vm-html="spread">
+                            <script type="text/html">
+                                <% if( spread && spread.image_url ){ %>
+                                <a href="<%= spread.location %>"><img src="<%= spread.image_url %>"></a>
+                                <% }; %>
+                            </script>
+                        </div>
+                        <div class="flex">
+                            <div class="flex-content">
+                                <div class="category-list" id="category-list">
+                                    <div vm-html="son">
+                                        <script type="text/html">
+                                            <% if(son && son.length  ){ %>
+                                                <% son.forEach(function(list){ %>
+                                                    <div class="category-list-title">
+                                                        <%= list.category_name %>
+                                                    </div>
+                                                    <% if( list.son && list.son.length ){ %>
+                                                        <ul>
+                                                        <% list.son.forEach(function(item){ %>
+                                                            <li>
+                                                                <a href="product-list.html?categoryId=<%= item.id %>">
+                                                                    <div class="category-list-icon">
+                                                                        <%if(item.category_logo){%>
+                                                                        <span style="background-image: url(<%= item.category_logo %>)"></span>
+                                                                        <%}%>
+                                                                    </div>
+                                                                    <div class="category-list-name">
+                                                                        <%= item.category_name %>
+                                                                    </div>
+                                                                </a>
+                                                            </li>
+                                                        <% }); %>
+                                                        </ul>
+                                                    <% } %>
+                                                <% }); %>
+                                            <% } %>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use(['category'])</script>
+</body>
+</html>

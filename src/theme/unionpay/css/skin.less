@@ -1,0 +1,44 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2016/6/7
+ * @description 银联推荐支付
+ */
+
+@rem750: (750 / 320 * 12rem);
+@rem640: (640 / 320 * 12rem);
+
+
+/* 隐藏银联支付
+ ********************************************************/
+.order-pay .order-pay-content .order-pay-method a.unionpay {
+    display: none;
+}
+
+.order-pay .order-pay-content .order-pay-method a.unionpay-commend {
+    display: -webkit-box !important;
+    display: box !important;
+
+    .order-pay-text p {
+        &:nth-child(1) {
+
+            vertical-align: text-top;
+
+            .icon-commend {
+                line-height: 1em;
+                color: #fff;
+                font-size: (20 / @rem750);
+                font-style: normal;
+                font-weight: 100;
+                padding: (5 / @rem750) (10 / @rem750);
+                background-color: #ef3c79;
+                vertical-align: middle;
+                border-radius: 3px;
+            }
+        }
+        &:nth-child(2) {
+            color: #ef3c79;
+        }
+    }
+}
+

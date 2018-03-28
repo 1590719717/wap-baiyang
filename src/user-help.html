@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>客服与帮助</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-help-all">
+    <div class="wrap box">
+        <header class="user-help top-header">
+            <h1 class="title">客服与帮助</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="help-content flex-content">
+                <a href="./user-help-buy.html" class="help-list">
+                    <div class="icon icon-help-buy"></div>
+                    <div class="help-list-con row">
+                        <div class="col-11">
+                            <p>购物流程</p>
+                            <p class="color-gray">注册账号、下单付款等</p>
+                        </div>
+                        <div class="col-1 over-vsi">
+                            <i class="icon icon-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+                <a href="./user-help-order.html" class="help-list">
+                    <div class="icon icon-help-order"></div>
+                    <div class="help-list-con row">
+                        <div class="col-11">
+                            <p>订单/支付</p>
+                            <p class="color-gray">修改订单、订单取消等</p>
+                        </div>
+                        <div class="col-1 over-vsi">
+                            <i class="icon icon-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+                <a href="./user-help-bill.html" class="help-list">
+                    <div class="icon icon-help-bill"></div>
+                    <div class="help-list-con row">
+                        <div class="col-11">
+                            <p>发票问题</p>
+                            <p class="color-gray">发票内容等</p>
+                        </div>
+                        <div class="col-1 over-vsi">
+                            <i class="icon icon-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+                <a href="./user-help-wl.html" class="help-list">
+                    <div class="icon icon-help-wl"></div>
+                    <div class="help-list-con row">
+                        <div class="col-11">
+                            <p>物流/配送</p>
+                            <p class="color-gray">查看物流、物流跟踪</p>
+                        </div>
+                        <div class="col-1 over-vsi">
+                            <i class="icon icon-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+                <a href="./user-help-back.html" class="help-list">
+                    <div class="icon icon-help-back"></div>
+                    <div class="help-list-con row">
+                        <div class="col-11">
+                            <p>售后服务</p>
+                            <p class="color-gray">退换货、退款</p>
+                        </div>
+                        <div class="col-1 over-vsi">
+                            <i class="icon icon-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+                <a href="./user-help-integral.html" class="help-list">
+                    <div class="icon icon-help-integral"></div>
+                    <div class="help-list-con row">
+                        <div class="col-11">
+                            <p>会员积分&权益</p>
+                            <p class="color-gray">积分规则等</p>
+                        </div>
+                        <div class="col-1 over-vsi">
+                            <i class="icon icon-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:;" class="help-list" data-act="ntkf">
+                    <div class="icon icon-help-custor"></div>
+                    <div class="help-list-con row">
+                        <div class="col-11">
+                            <p class="line-p">联系客服</p>
+                        </div>
+                        <div class="col-1 over-vsi">
+                            <i class="icon icon-arrow-right2"></i>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

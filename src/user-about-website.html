@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>网站资质</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-copyright-all">
+    <div class="wrap box">
+        <header  class="top-header">
+            <h1 class="title">网站资质</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="about-website flex-content">
+                <div class="tab-wrap" data-act="tab">
+                    <ul class="table-title row">
+                        <li class="js-tab-title col-6">网站资质</li>
+                        <li class="js-tab-title col-6">药师资质</li>
+                    </ul>
+                    <div class="table-content">
+                        <div class="content-item js-tab-content scroll-wrap hide" data-act="swipe" data-param="auto=0">
+                            <ul class="scroll-list">
+                                <li class="scroll-item zizhi"></li>
+                                <li class="scroll-item zizhi"></li>
+                                <li class="scroll-item zizhi"></li>
+                                <li class="scroll-item zizhi"></li>
+                                <li class="scroll-item zizhi"></li>
+                                <li class="scroll-item zizhi"></li>
+                                <li class="scroll-item zizhi"></li>
+                            </ul>
+                        </div>
+                        <div class="content-item js-tab-content scroll-wrap hide" data-act="swipe" data-param="auto=0">
+                            <ul class="scroll-list">
+                                <li class="scroll-item zizhi-ys"></li>
+                                <li class="scroll-item zizhi-ys"></li>
+                                <li class="scroll-item zizhi-ys"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

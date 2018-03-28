@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>地址列表</title>
+    <!--<link rel="stylesheet" href="css/index.css"/>-->
+    <link rel="stylesheet" href="css/user-address.css"/>
+</head>
+
+<body class="user-address-all " vm-controller="user-address">
+    <!--收货地址列表-->
+    <div page-router="" class="user-address-list " >
+
+        <header class="search-box top-header" >
+            <h1 class="title" >收货地址管理</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+
+        <div vm-html="address_list" >
+            <!--地址列表-->
+            <script type="text/html">
+                <% if(address_list && address_list.length){ %>
+                <ul class="address-list" id="address_list" >
+                    <% address_list.forEach(function(item) { %>
+                    <li >
+                        <div class="li-div" <%if( (address_list.length > 1 ) || (address_list.length == 1 && item.default_addr!='1' ) ) {%>data-act="chosen-swipe"<%}%> >
+                            <div class="list-content ">
+                                <div class="div-box">
+                                    <div class="list-text">
+                                        <div class="address-user clear">
+                                            <span class="name"><%= item.consignee %></span>
+                                            <!-- 标签 -->
+                                            <% if(item.tag_id == 1){ %>
+                                            <span class="address-tag wo">我</span>
+                                            <% } else if(item.tag_id == 2){ %>
+                                            <span class="address-tag friend">朋友</span>
+                                            <% } else if(item.tag_id == 3){ %>
+                                            <span class="address-tag family">亲人</span>
+                                            <% } else if(item.tag_id == 4){ %>
+                                            <span class="address-tag company">公司</span>
+                                            <% } else if(item.tag_id == 5){ %>
+                                            <span class="address-tag other">其他</span>
+                                            <% } %>
+                                            <span class="phone"><%=  getMobile(item.telphone) %></span>
+                                        </div>
+                                        <p class="address-text">
+                                            <% if(item.default_addr=='1'){ %>
+                                            <span class="moren">[默认]</span>
+                                            <% } %>
+                                            <%= item.province_name + item.city_name + item.county_name + item.address %>
+                                        </p>
+                                    </div>
+                                    <a href="?detail" class="list-edit" vm-on-click="edit('<%= item.id %>')" >
+                                        <i class="list-address-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <a href="javascript:;" class="<%= item.default_addr=='1'?'hide':'list-default' %>" vm-on-click="setDefault('<%= item.id %>')" >
+                                <span>设为<br/>默认</span>
+                            </a>
+                            <a href="javascript:;" class="<%= address_list.length== 1&&item.default_addr!='1'?'hide':'list-delete' %>" vm-on-click="del('<%= item.id %>')" >
+                                <span>删除</span>
+                            </a>
+
+                        </div>
+
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } else if(address_list && !address_list.length) {%>
+                <div class="empty">列表为空！</div>
+                <% } %>
+
+                <a href="?detail" class="add-btn  " vm-on-click="add()" >
+                    <div>新增收货地址</div>
+                </a>
+
+            </script>
+        </div>
+
+    </div>
+
+    <!--新增/编辑地址-->
+    <div page-router="?detail"  class="add-address ">
+
+        <header class="search-box top-header" >
+            <h1 class="title" vm-html="address_type=='add'?'新增收货地址':'修改收货地址'"></h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+
+        <p class="hide" vm-attr-class="geolocation?'get-position':'hide'" vm-html="geolocation">
+            <script type="text/html">
+                <i class="icon icon-position"></i>
+                <% if(geolocation){ %>
+                <% if(geolocation.state == 'loading'){ %>
+                <span>正在获取您的地址...</span>
+                <% } else if(geolocation.state == 'success'){ %>
+                <span><%= geolocation.address %></span>
+                <% } else if(geolocation.state == 'fail') { %>
+                <span>位置加载失败！</span>
+                <% } %>
+                <% } %>
+            </script>
+        </p>
+
+        <form id="form-address">
+            <div class="row lxr">
+                <span>收货人</span>
+                <input type="text" data-validate="empty" vm-value="address_info.consignee" class="" value="" placeholder="请输入收货人姓名" >
+            </div>
+            <div class="row lxdh">
+                <span>联系电话</span>
+                <input type="text" data-validate="empty,phone" vm-value="address_info.telphone" class="" value="" placeholder="请输入收货人手机号码" >
+            </div>
+            <div class="row region" vm-on-click="selectAddress()">
+                <span>省市区</span>
+                <input type="text" vm-value="address_info.province" class="hide" data-validate="empty" value=""/>
+                <input type="text" vm-value="address_info.city" class="hide" data-validate="empty" value=""/>
+                <input type="text" vm-value="address_info.county" class="hide" data-validate="empty" value=""/>
+                <div class="area" >
+                    <input type="text" vm-value="address_text" placeholder="请点击选择送货区域" readonly="readonly" value="" >
+                    <i class="icon-arrow"></i>
+                </div>
+            </div>
+            <div class="row xxdz">
+                <span>详细地址</span>
+                <input type="text" class="detailed-add" data-validate="empty" vm-value="address_info.address" value="" placeholder="请输入详细地址">
+            </div>
+            <div class="row postcode">
+                <span>邮政编码</span>
+                <input type="tel" vm-value="address_info.zipcode" value="" class="postcode" placeholder="选填">
+            </div>
+            <div class="row add-tages">
+                <span>添加标签</span>
+                <div class="add-tag">
+                    <img vm-attr-src="getTag(address_info.tag_id)" vm-attr-class="'tag '+(address_info.tag_id > 0 ?'':'hide')" class="hide">
+                    <i class="show-tag" vm-attr-class="'show-tag '+(is_select_tag?'on':'')" vm-on-click="toggleTag()"></i>
+                </div>
+            </div>
+            <div class="hide" vm-attr-class="'row tags '+(is_select_tag?'':'hide')">
+                <div><span  vm-on-click="setTag(1)" vm-attr-class="address_info.tag_id==1?'on':''">我</span></div>
+                <div><span  vm-on-click="setTag(2)" vm-attr-class="address_info.tag_id==2?'on':''">朋友</span></div>
+                <div><span  vm-on-click="setTag(3)" vm-attr-class="address_info.tag_id==3?'on':''">亲人</span></div>
+                <div><span  vm-on-click="setTag(4)" vm-attr-class="address_info.tag_id==4?'on':''">公司</span></div>
+                <div><span  vm-on-click="setTag(5)" vm-attr-class="address_info.tag_id==5?'on':''">其他</span></div>
+            </div>
+
+            <div class="row set-default">
+                <label class="check-box">
+                    <input type="checkbox" class="js-type" vm-value="address_info.default_addr" value="1" >
+                    <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                        <circle cx="17" cy="17" r="16"/>
+                        <path d="M8,17 L14,22 L26,11"/>
+                    </svg>
+                </label>
+                <span>设为默认地址</span>
+            </div>
+        </form>
+
+        <a href="javascript:;" class="save-btn " vm-on-click="save()" >
+            <div>保存并使用</div>
+        </a>
+
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-address')</script>
+
+</body>
+</html>

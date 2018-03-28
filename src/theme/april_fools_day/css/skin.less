@@ -1,0 +1,203 @@
+@charset "utf-8";
+/*!
+ * @author yuchunfeng
+ * @date 2017/3/29
+ * @description 愚人节皮肤
+ */
+
+@rem750: (750 / 320 * 12rem);
+
+@icon_new_year: '../images/icon-fools-day.png?v1.0.2';
+@icon_w: 600;
+@icon_h: 200;
+
+
+/* 首页按钮
+ ***************************************/
+.index-nav {
+
+    a {
+
+        .icon-hwg {
+            width: (88 / @rem750);
+            height: (80 / @rem750);
+            background-image: url(@icon_new_year);
+            background-repeat: no-repeat;
+            background-size: ( @icon_w / 88 * 100%) ( @icon_h / 80 * 100%) ;
+            background-position: 0 (95 / (@icon_h - 80) * 100%) ;
+        }
+        .icon-doc {
+            width: (99 / @rem750);
+            height: (80 / @rem750);
+            background-image: url(@icon_new_year);
+            background-repeat: no-repeat;
+            background-size: ( @icon_w / 99 * 100%) ( @icon_h / 80 * 100%) ;
+            background-position: (100 / (@icon_w - 99) * 100%) (95 / (@icon_h - 80) * 100%) ;
+        }
+        .icon-assurance {
+            width: (88 / @rem750);
+            height: (80 / @rem750);
+            background-image: url(@icon_new_year);
+            background-repeat: no-repeat;
+            background-size: ( @icon_w / 88 * 100%) ( @icon_h / 80 * 100%) ;
+            background-position: (209 / (@icon_w - 88) * 100%) (95 / (@icon_h - 80) * 100%) ;
+        }
+        .icon-type {
+            width: (85 / @rem750);
+            height: (80 / @rem750);
+            background-image: url(@icon_new_year);
+            background-repeat: no-repeat;
+            background-size: ( @icon_w / 85 * 100%) ( @icon_h / 80 * 100%) ;
+            background-position: (312 / (@icon_w - 85) * 100%) (96 / (@icon_h - 80) * 100%) ;
+        }
+    }
+}
+
+
+/* 页脚图标
+************************************/
+.footer .foot-nav {
+    width: auto;
+
+    &.main-venue {
+
+        display: table-cell !important;
+        width: (185 / @rem750);
+        position: relative;
+
+        .icon-main-venue {
+            display: block;
+            position: absolute;
+            bottom: (-17 / @rem750) ;
+            z-index: 1;
+            width: (185 / @rem750);
+            height: (149 / @rem750);
+            margin: 0;
+            background: url(@icon_new_year) no-repeat (407 / (@icon_w - 185) * 100%) 0;
+            background-size: (@icon_w / 185 * 100%) (@icon_h / 149 * 100%);
+        }
+
+    }
+}
+
+
+/* 页脚导航菜单
+*********************************************************/
+.footer {
+    .foot-nav {
+        color: #666666;
+
+        .icon-home {
+            width: (56 / @rem750);
+            height: (52 / @rem750);
+            background: url(@icon_new_year) no-repeat 0 0;
+            background-size: (@icon_w / 56 * 100%) (@icon_h / 52 * 100%);
+        }
+        .icon-brand {
+            width: (62 / @rem750);
+            height: (62 / @rem750);
+            background: url(@icon_new_year) no-repeat (69 / (@icon_w - 62 ) * 100%) 0;
+            background-size: (@icon_w / 62 * 100%) (@icon_h / 62 * 100%);
+        }
+        .icon-shop-car {
+            position: relative;
+            width: (58 / @rem750);
+            height: (57 / @rem750);
+            background: url(@icon_new_year) no-repeat (141 / (@icon_w - 58 ) * 100%) 0;
+            background-size: (@icon_w / 58 * 100%) (@icon_h / 57 * 100%);
+
+            // 购物车数量
+            .icon-num {
+                display: inline-block;
+                position: absolute;
+                font-size: 0.5rem;
+                right: -1rem;
+                top: -0.5rem;
+                width: 1rem;
+                height: 1rem;
+                text-align: center;
+                font-style: normal;
+                z-index: 11;
+
+                svg {
+                    width: 100%;
+                    height: 100%;
+                    overflow: visible;
+
+                    circle {
+                        fill: #ff5a96;
+                        stroke: none;
+                        stroke-width: 0;
+                    }
+                    text {
+                        font-size: 10px;
+                        fill: #fff;
+                        stroke: none;
+                        text-anchor: middle
+                    }
+                }
+
+            }
+        }
+        .icon-user {
+            position: relative;
+            width: (58 / @rem750);
+            height: (52 / @rem750);
+            background: url(@icon_new_year) no-repeat (207 / (@icon_w - 58 ) * 100%) 0;
+            background-size: (@icon_w / 58 * 100%) (@icon_h / 52 * 100%);
+        }
+
+        &.active {
+            color: #fc2d31;
+
+            .icon-home {
+                width: (56 / @rem750);
+                height: (52 / @rem750);
+                background: url(@icon_new_year) no-repeat 0 0;
+                background-size: (@icon_w / 56 * 100%) (@icon_h / 52 * 100%);
+            }
+            .icon-brand {
+                width: (62 / @rem750);
+                height: (62 / @rem750);
+                background: url(@icon_new_year) no-repeat (69 / (@icon_w - 62 ) * 100%) 0;
+                background-size: (@icon_w / 62 * 100%) (@icon_h / 62 * 100%);
+            }
+            .icon-shop-car {
+                position: relative;
+                width: (58 / @rem750);
+                height: (57 / @rem750);
+                background: url(@icon_new_year) no-repeat (141 / (@icon_w - 58 ) * 100%) 0;
+                background-size: (@icon_w / 58 * 100%) (@icon_h / 57 * 100%);
+
+            }
+            .icon-user {
+                position: relative;
+                width: (58 / @rem750);
+                height: (52 / @rem750);
+                background: url(@icon_new_year) no-repeat (207 / (@icon_w - 58 ) * 100%) 0;
+                background-size: (@icon_w / 58 * 100%) (@icon_h / 52 * 100%);
+            }
+
+        }
+
+    }
+
+}
+
+//首页横幅
+.index-content .top-scroll .fools-day-img {
+    display: block!important;
+    width: 100%;
+    height: (235 / @rem750);
+
+    span {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: url(../images/icon-fools-go.jpg) 0 0;
+        background-size: 100% 100%;
+    }
+
+}
+
+

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>关于我们</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-about-all">
+    <div class="wrap box">
+        <header class="user-about top-header">
+            <h1 class="title">关于我们</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="about-content flex-content">
+                <!--
+                <a href="./user-about-copyright.html" class="row type-list ">
+                    <div class="about-text col-11">版权信息</div>
+                    <div class="about-right col-1"><i class="icon icon-arrowr"></i></div>
+                </a>
+                -->
+                <a href="./user-about-feedback.html" class="row type-list ">
+                    <div class="about-text col-11">用户反馈</div>
+                    <div class="about-right col-1"><i class="icon icon-arrowr"></i></div>
+                </a>
+                <!--
+                <a href="./user-about-declaration.html" class="row type-list ">
+                    <div class="about-text col-11">特别声明</div>
+                    <div class="about-right col-1"><i class="icon icon-arrowr"></i></div>
+                </a>
+                -->
+                <a href="./user-about-by.html" class="row type-list ">
+                    <div class="about-text col-11">关于百洋</div>
+                    <div class="about-right col-1"><i class="icon icon-arrowr"></i></div>
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

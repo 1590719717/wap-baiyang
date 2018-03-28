@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>兑换记录</title>
+    <link rel="stylesheet" href="css/integral.css"/>
+</head>
+<body>
+    <div vm-controller="detail-exchange" >
+        <header   class="top-header">
+            <h1 class="title" >兑换记录</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+
+        <!-- 积分兑换记录-->
+        <div vm-attr-class="show_login==1?'':'hide'" class="hide"  vm-html="exchange_list + is_none + exchange_recommend" >
+
+            <script type="text/html">
+
+                <% if(exchange_list && exchange_list.length){ %>
+
+                    <div class="detail-write-border exchange" >
+
+                        <% exchange_list.forEach(function(item){ %>
+
+                            <div class="detail-write">
+                                <span class="detail-write-every"><%=item.points_gifts_name%></span>
+                                <br>
+                                <span class="detail-write-date"><%=item.exchange_time%></span>
+                                <span class="detail-write-plus"> <i></i><%=item.exchange_integral%> </span>
+                            </div>
+
+                        <% }) %>
+
+                    </div>
+
+                <% } else if( is_none  ) {  %>
+
+                    <div class="detail-list-none">
+
+                        <p>啊哦！您还没有兑换记录哦！</p>
+                        <a href="integral-index.html">前往积分商城</a>
+
+                    </div>
+
+                    <div class="detail_exchange">
+
+                        <div class="title">
+                            <em>超值兑换</em>
+                            <span></span>
+                        </div>
+
+                        <!--超值兑换    -->
+                        <section class="integral-second"  >
+
+                            <ul >
+                                <% if(exchange_recommend && exchange_recommend.length){ %>
+                                <% exchange_recommend.forEach(function(item){ %>
+                                    <li>
+                                        <a href="integral-gift.html?gift_id=<%= item.id  %>&point=<%= point %>">
+                                            <% if( item.cover_image && item.cover_image.length ) {  %>
+                                                <div class="quan-type">
+                                                    <span style="background-image: url(<%= item.cover_image %>)"></span>
+                                                </div>
+                                            <% } else if( item.coupon ) {  %>
+
+                                                <% if( item.coupon.type=='coupon' ){  %>
+                                                    <!--满减-->
+                                                    <div class=" quan-write quan-money ">
+                                                        <div><span><%= item.coupon.value %></span>元</div>
+                                                        <div><%= item.coupon.name %></div>
+                                                        <div><%= item.coupon.description %></div>
+                                                    </div>
+
+                                                <% }  else  if( item.coupon.type=='discount' ){  %>
+                                            <!--折扣 -->
+                                                    <div class=" quan-write quan-discount ">
+                                                        <div><span><%= item.coupon.value %></span>折</div>
+                                                        <div><%= item.coupon.name %></div>
+                                                        <div><%= item.coupon.description %></div>
+                                                    </div>
+
+                                                <% }  else  if( item.coupon.type=='free_ship' ){  %>
+                                            <!--包邮-->
+                                                    <div class=" quan-write quan-free ">
+                                                        <div><span>包邮</span></div>
+                                                        <div><%= item.coupon.name %></div>
+                                                        <div><%= item.coupon.description %></div>
+                                                    </div>
+
+                                                <% }  %>
+
+                                            <% } %>
+
+                                            <p class="quan-p4"><%= item.points_gifts_name %></p>
+                                            <p class="quan-p5"><span><%= item.need_points %></span>积分</p>
+                                        </a>
+                                    </li>
+                                <% }) %>
+                                <% } %>
+                            </ul>
+
+                        </section>
+
+                    </div>
+
+                <% } %>
+
+            </script>
+
+        </div>
+
+        <!--未登录-->
+        <div vm-attr-class="show_login==2?'integral-logout':'hide'" class="hide"  >
+            <div class="img-logo"></div>
+            <p>啊哦~您还没有登陆呦~</p>
+            <a href="javascript:;" vm-on-click="go_login()">登录</a>
+        </div>
+
+    </div>
+
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('integral-exchange')</script>
+
+</body>
+</html>

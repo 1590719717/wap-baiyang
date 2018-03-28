@@ -1,0 +1,484 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2016/6/7
+ * @version 1.0.0
+ * @description js控件样式表
+ */
+
+@import "../skin/{{Config.skin_file}}";
+
+
+// 公共css方法
+.transform(@value) {
+    -webkit-transform: @value;
+    transform: @value;
+}
+.transform-origin(@value) {
+    -webkit-transform-origin: @value;
+    transform-origin: @value;
+}
+.animation(@value) {
+    -webkit-animation: @value;
+    animation:         @value;
+}
+
+/* 单页面路由插件
+ ***************************************************/
+[page-router] {
+    display: none !important;
+}
+
+// CSS 代码
+/* icon-music */
+.music() {
+    0% {
+        .transform(rotate(0deg));
+    }
+    100% {
+        .transform(rotate(360deg));
+    }
+}
+@-webkit-keyframes music {
+    .music();
+}
+@keyframes music {
+    .music();
+}
+.icon-music {
+    position: absolute;
+    top: 2.2rem;
+    left: 0;
+    z-index: 10;
+    width: 4rem;
+    height: 4rem;
+    display: block;
+    background: url(../images/icon-music.png?v1.0.2) no-repeat 50% 50%;
+    background-size: 1rem 1rem;
+    .transform-origin(50% 50%);
+}
+.icon-music-animation {
+    .animation(music 2s linear 0s infinite);
+}
+/* 弹窗
+ *************************************************************/
+.popup {
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display:         box;
+    -webkit-box-pack: center;
+    box-pack:         center;
+    -webkit-box-align: center;
+    box-align:         center;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .popup-content {
+        min-width: 40%;
+        max-width: 85%;
+        padding: (36 / 24rem);
+        text-align: center;
+        position: relative;
+        background-color: rgba(0,0,0,0.7);
+        border-radius: .5rem;
+
+        .icon-close {
+            position: absolute;
+            right: 1em;
+            top: 1em;
+            cursor: pointer;
+            display: block;
+            font: 400 0.5em/1.5em 'sans-serif';
+            font-style: normal;
+            width: 1.5em;
+            height: 1.5em;
+            color: #e94809;
+            border: 1px solid #e94809;
+            border-radius: 50%;
+        }
+        .popup-msg {
+            display: block;
+            width: 100%;
+            padding-top: (78 / 24rem);
+            text-align: center;
+            background-position: center top;
+            background-repeat: no-repeat;
+            background-size: (46 / 24rem) (46 / 24rem);
+            color: #ffffff;
+            font-size: (26 / 24rem);
+            word-break: break-all;
+        }
+        .popup-confirm-msg {
+            display: block;
+            padding: (36 / 24rem);
+            text-align: center;
+            color: #ffffff;
+            font-size: (26 / 24rem);
+        }
+        .popup-btn {
+            border-top: #fff solid 1px;
+            width: 100%;
+
+            a {
+                display: inline-block;
+                width: 50%;
+                color: #fff;
+                text-align: center;
+                text-decoration: none;
+                padding: (10 / 24rem) 0;
+
+                &:nth-child(2) {
+                    border-left: #fff solid 1px;
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                }
+            }
+        }
+    }
+
+    &.popup-success .popup-msg {
+        background-image: url(../images/icon-success.png?v1.0.2);
+    }
+    &.popup-error .popup-msg {
+        background-image: url(../images/icon-fail.png?v1.0.2);
+    }
+    &.popup-fail .popup-msg {
+        &:extend(.popup .popup-error .popup-msg);
+    }
+    &.popup-loading {
+        background-color: transparent;
+
+        .popup-content {
+            width: (52 * 2 / @rem750);
+            height: (52 * 2 / @rem750);
+            padding: 0;
+            border-radius: 0;
+            min-width: 0;
+            background: url(../images/loading.svg?v1.0.0) no-repeat 0 0;
+            background-size: 100%;
+        }
+    }
+    &.popup-share {
+        .popup_share();
+
+        .popup-content {
+            display: none;
+        }
+    }
+    &.popup-confirm {
+        .popup-content {
+            padding: 0;
+        }
+    }
+
+    //商品详情页  分享商品
+    &.popup-goods {
+        background: rgba(0,0,0,0.8);
+
+        .popup-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            background: transparent ;
+            border-radius: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+
+            .share-arrow {
+                width: 100%;
+                padding: (30 / @rem750) (20 /@rem750);
+                box-sizing: border-box;
+                overflow: hidden;
+
+                span {
+                    display: inline-block;
+                    width: (70 / @rem750);
+                    height: (109 / @rem750);
+                    float: right;
+                    background: url(../images/icon-share-arrow.png?v1.0.2) no-repeat 0 0;
+                    background-size: 100% 100%;
+                }
+            }
+            p {
+                color: #ffffff;
+                text-align: center;
+                margin: ( 55 / @rem750 ) auto;
+                width: 100%;
+                padding: 0 (100 / @rem750);
+                box-sizing: border-box;
+                font-size: (30 / @rem750);
+            }
+            a {
+                display: block;
+                width: (710 / @rem750);
+                margin: auto;
+                background-color: @base_color;
+                color: #ffffff;
+                text-align: center;
+                font-size: (32 / @rem750);
+                height: (88 / @rem750);
+                line-height: (88 / @rem750);
+                border-radius: 4px;
+            }
+        }
+
+    }
+
+
+}
+
+/* 底部弹出选择菜单
+ *************************************************************/
+.popup-selector {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    font-size: 1.3rem;
+    background-color: rgba(0,0,0,0.5);
+
+    .selector-content {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff;
+
+        .selector-bar {
+            width: 100%;
+            background-color: #eee ;
+
+            &::after {
+                content: ' ';
+                display: block;
+                clear: both;
+                width: 0;
+                height: 0;
+            }
+
+            .btn-cancel,
+            .btn-confirm {
+                padding: 0.25em 0.5em;
+                margin: 0.5em;
+                font-size: 1em;
+                line-height: 1em;
+                color: @base_color;
+            }
+            .btn-cancel {
+                float: left;
+            }
+            .btn-confirm {
+                float: right;
+            }
+        }
+
+        .selector-current {
+            position: absolute;
+            width: 100%;
+            height: 2em;
+            left: 0;
+            bottom: 4em;
+            border-top: 1px solid #dddddd;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .selector-row,
+        .selector-title {
+            box-sizing: border-box;
+            z-index: 0;
+            width: 100%;
+        }
+        .selector-title {
+            height: 2em;
+            display: table;
+
+            span {
+                display: table-cell;
+                text-align: center;
+                padding: 0 1em;
+                vertical-align: middle;
+            }
+        }
+
+        .selector-row {
+            position: relative;
+            height: 10em;
+            overflow: hidden;
+
+            &::after {
+                &:extend(.calendar .cal-content .cal-bar::after);
+            }
+
+            .selector-cell {
+                position: relative;
+                z-index: 1;
+                width: (100 / 3%);
+                height: 100%;
+                float: left;
+                text-align: center;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;  /* 快速回弹滚动 */
+
+                &::-webkit-scrollbar{
+                    opacity: 0;
+                }
+                span {
+                    display: block;
+                    width: 100%;
+                    font-size: 1em;
+                    line-height: 2em;
+                    height: 2em;
+                    color: #999;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    &.active {
+                        color: #333;
+                        font-weight: 900;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* 分享弹框
+ *************************************************************/
+.popup-bonus-share {
+    .layout {
+        position: absolute;
+        right: 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 0;
+        background: rgba(0,0,0,0.4);
+    }
+
+    .popup-content-share {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: 1;
+        background-color: #ffffff;
+        width: 100%;
+        height: auto;
+
+        .share-list {
+            width: 100%;
+            overflow: hidden;
+            padding: (25 / @rem750) (25 / @rem750) (55 / @rem750) (25 / @rem750);
+            border-bottom: #dedede solid 1px;
+            box-sizing: border-box;
+        }
+
+        ul {
+            width: 100%;
+            height: auto;
+
+            li {
+                width: 25%;
+                float: left;
+                margin-top: (30 / @rem750);
+
+                a {
+                    text-decoration: none;
+                    text-align: center;
+                    display: block;
+                    width: 100%;
+
+                    .icon-share-wf,
+                    .icon-share-wp,
+                    .icon-share-qf,
+                    .icon-share-qk,
+                    .icon-share-weibo,
+                    .icon-share-code {
+                        width: (112 / @rem750);
+                        height: (112 / @rem750);
+                        background: url(../images/icon-bonus-share.png?v1.0.2) no-repeat;
+                        background-size: 100% ( 717 / 112 * 100%);
+                    }
+                    .icon-share-wf {
+                        background-position: 0 0;
+                    }
+                    .icon-share-wp {
+                        background-position: 0 ( 117 / (717 - 112)  * 100%);
+                    }
+                    .icon-share-qf {
+                        background-position: 0 ( 240 / (717 - 112)  * 100%);
+                    }
+                    .icon-share-qk {
+                        background-position: 0 ( 359 / (717 - 112)  * 100%);
+                    }
+                    .icon-share-weibo {
+                        background-position: 0 ( 478 / (717 - 112)  * 100%);
+                    }
+                    .icon-share-code {
+                        background-position: 0 ( 604 / (717 - 112)  * 100%);
+                    }
+
+
+                    span {
+                        display: inline-block;
+                        width: 100%;
+                        color: #666666;
+                        font-size: (24 / @rem750);
+                    }
+                }
+            }
+        }
+
+        //扫码领红包
+        .share-code {
+            width: 100%;
+            padding: (100 / @rem750)  0 (50 / @rem750) 0 ;
+            border-bottom: #dedede solid 1px;
+            box-sizing: border-box;
+            overflow: hidden;
+
+            .share-code-pic {
+                width: 100%;
+                height: (290 / @rem750);
+
+                img {
+                    display: inline-block;
+                    margin: auto;
+                    height: 100%;
+                }
+            }
+            p {
+                margin: 0;
+                font-size: (22 / @rem750) ;
+                color: @base_color;
+                text-align: center;
+            }
+        }
+
+        .close-cancel-btn {
+            display: block;
+            background-color: #ffffff;
+            width: 100%;
+            height: (110 / @rem750);
+            line-height:(110 / @rem750);
+            color: #333333;
+            font-size: (32 / @rem750);
+            text-align: center;
+        }
+
+    }
+
+}
+

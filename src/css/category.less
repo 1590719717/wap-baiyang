@@ -1,0 +1,177 @@
+@charset "utf-8";
+/*!
+ * @author wentaini@163.com
+ * @date 2016/6/22
+ * @version 1.0.0
+ * @description 分类 样式
+ */
+
+@import "../skin/{{Config.skin_file}}";
+
+@width: 640;
+@height: 1007;
+
+body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    color: #333;
+}
+.wrap {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+
+/* box 盒模型
+ **********************************************************************/
+.box-hor {
+    display: -webkit-box;
+    display:         box;
+    -webkit-box-orient: horizontal;
+    box-orient:         horizontal;
+    -webkit-box-pack: center;
+    box-pack:         center;
+    -webkit-box-align: center;
+    box-align:         center;
+    -webkit-box-lines: single;
+    box-lines:         single;
+
+    .flex-hor {
+        position: relative;
+        -webkit-box-flex: 1;
+        box-flex:         1;
+        flex:             1;
+    }
+}
+.box-hor2 {
+    display: -webkit-box;
+    display:         box;
+
+    .flex-hor {
+        position: relative;
+        -webkit-box-flex: 1;
+        box-flex:         1;
+        flex:             1;
+    }
+}
+
+
+/* 分类页
+ ******************************************************/
+
+.category-content {
+    background-color: #eeeeee;
+    text-align: center;
+    height: 100%;
+    .category-main{
+        width: (156 / 24rem);
+        height:100%;
+        background:#ffffff;
+        overflow-y: auto;
+        ul{
+            width: 100%;
+            li{
+                height: (86 / 24rem);
+                line-height: (86 / 24rem);
+                border-bottom:1px #e5e5e5 solid;
+                border-right:1px #e5e5e5 solid;
+                color: #333333;
+                .no-wrap();
+                &.active{
+                    background:#eeeeee;
+                    border-left:(4 / 24rem) @base_color solid;
+                    border-right:1px #eeeeee solid;
+                    color: @base_color;
+                }
+            }
+
+            li:active{
+                opacity: 0.6;
+            }
+        }
+    }
+
+    .category-box{
+        width: (484 / 24rem);
+        height:100%;
+        padding:0 (10 / 24rem);
+        box-sizing: border-box;
+        text-align: center;
+        overflow-y: auto;
+
+        .category-banner{
+            margin-top: (10 / 24rem);
+            width: 100%;
+
+            img{
+                width:100%;
+            }
+        }
+
+        .category-list{
+            margin-top: (10 / 24rem);
+            position: relative;
+            width:100%;
+            height: 100%;
+            min-height: (200 / 24rem);
+            overflow-y: auto;
+
+            .category-list-title {
+                color: #333;
+                text-align: left;
+                clear: both;
+                padding: (25 / 24rem) 0 (10 / 24rem) 0;
+            }
+
+            ul{
+                width: 100%;
+                overflow: hidden;
+                background-color: #ffffff;
+
+                li {
+                    margin: (10 / 24rem) (18 /24rem) ;
+                    float: left;
+
+                    .category-list-name,.category-list-name a {
+                        font-size: (22 / 24rem);
+                        color: #666;
+                    }
+
+                    .category-list-icon {
+                        height: (110 / 24rem);
+                        width: (110 / 24rem);
+                        overflow: hidden;
+                        background: #f2f2f2 url("../images/default-img.png?v1.0.2") no-repeat 50% 50%;
+                        background-size: contain;
+                        span{
+                            display: inline-block;
+                            height: (110 / 24rem);
+                            width: (110 / 24rem);
+                            background:url("../images/default-img.png?v1.0.2") no-repeat 50% 50%;
+                            background-size:contain;
+                        }
+                    }
+                    .category-list-name {
+                        width: (110 / 24rem);
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        color: #666666;
+                    }
+                }
+
+                li:active{
+                    opacity: 0.6;
+                }
+            }
+        }
+
+    }
+
+
+
+}

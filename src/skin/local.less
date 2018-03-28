@@ -1,0 +1,591 @@
+
+@rem750: (750 / 320 * 12rem);
+@rem640: (640 / 320 * 12rem);
+
+.no-wrap() {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+@base_color: #ef3c79;                  /* 主色调*/
+
+@recharge_color:#e93371;               /* 充值页面主色调*/
+
+@deep_red_color: #f42d40;              /* 深红色 （地址删除按钮 ， 上传图片的删除icon ）*/
+@red_color: #e60012;                   /* 深红色 处方药列表 红点  */
+
+@darken_red:#f7293a;                   /* 商品详情 折扣 红色字体*/
+@treatment_border_pink:#f476a1;        /* 商品详情 疗程 红色右边框*/
+@package_span_red:#f03c79;             /* 商品详情 套餐 红色字体*/
+@input_msg_red:#f00;                   /* 商品详情 拨打药师电话 错误提示字体颜色*/
+
+@lighten_pink:#fc98ba;                 /* 微信登录 按钮字体颜色*/
+
+@tag_span_text:#ef3c79;                /* 标签  订单*/
+@tag_span_bgcolor:#ffd9e6 ;            /* 标签  订单*/
+
+@bonus_bg_color:#ca3136;              /* 红包页面  背景色*/
+@bonus_bg_color_top:#e63339;          /* 红包页面*/
+@bonus_money_tips:#e9343b;            /* 红包页面*/
+@bonus_nav:#c80005;                   /* 我的红包*/
+@bonus_rule:#ef3c79;                  /* 红包规则 红色文字*/
+
+@circle_heart:#ef3c79 ;               /*圆圈  服务进度页*/
+@circle_border:#ffbed4;               /*圆圈  服务进度页*/
+
+@integral_text: #dddddd;                  /*积分文字颜色*/
+@integral_sign_bg: #ef3c79;           /*积分签到页的背景色  */
+@integral_sign_border: #ee2a6d;           /*积分签到页的边框颜色  */
+@integral_total_bg: #dd175b;           /*积分签到页  */
+
+@group_text: #ec407a ;                /* 拼团按钮主色  */
+@group_pink_btn: #ff79a7 ;            /* 拼团按钮主色  */
+
+
+
+/**************** 首页   ***************/
+//logo
+.website_logo() {
+    margin: (6 / @rem640) (9 / @rem640) 0 (15 / @rem640);
+    width: (106 / 640 * 100%);
+    padding-bottom: (40 / 640 * 100%);
+    background: url(../images/icon-index.png?v1.0.2) no-repeat 0 0;
+    background-size: (338 / 106 * 100%) (493 / 40 * 100%);
+}
+//首页搜索框
+.search_width() {
+    width: (426 / 640 * 100%);
+}
+
+// 底部导航栏icon
+.icon_footer_home() {
+    width: (41 / 24rem);
+    height: (41 / 24rem);
+    background: url("../images/icon-index.png?v1.0.0") no-repeat 0 (65 / (493 - 41) * 100%);
+    background-size: (338 / 41 * 100%) (493 / 41 * 100%);
+}
+.icon_footer_brand() {
+    width: (39 / 24rem);
+    height: (39 / 24rem);
+    background: url("../images/icon-index.png?v1.0.0") no-repeat (71 / (338 - 39) * 100%) (65 / (493 - 39) * 100%);
+    background-size: (338 / 39 * 100%) (493 / 39 * 100%);
+}
+.icon_footer_shopcar() {
+    width: (42 / 24rem);
+    height: (44 / 24rem);
+    background: url("../images/icon-index.png?v1.0.0") no-repeat (139 / (338 - 42) * 100%) (58 / (493 - 44) * 100%);
+    background-size: (338 / 42 * 100%) (493 / 44 * 100%);
+}
+.icon_footer_user() {
+    width: (44 / 24rem);
+    height: (40 / 24rem);
+    background: url("../images/icon-index.png?v1.0.0") no-repeat (208 / (338 - 44) * 100%) (61 / (493 - 40) * 100%);
+    background-size: (338 / 44 * 100%) (493 / 40 * 100%);
+}
+
+.active_icon_home() {
+    background-position: 0 (128 / (493 - 41) * 100%);
+}
+.active_icon_brand() {
+    background-position: (71 / (338 - 39) * 100%) (128 / (493 - 39) * 100%);
+}
+.active_icon_shopcar() {
+    background-position: (139 / (338 - 42) * 100%) (126 / (493 - 44) * 100%);
+}
+.active_icon_user() {
+    background-position: (208 / (338 - 44) * 100%) (126 / (493 - 40) * 100%);
+}
+
+
+/****************商品详情页   ***************/
+//优惠券的边框icon
+.icon_coupon_border() {
+    border-style: solid;
+    border-width: 2px 5px;
+    border-image-width: 2px 5px;
+    border-image-source: url(../images/border-sawtooth.png);
+    border-image-slice: 3 8;
+    border-image-repeat: stretch;
+    max-width: 30%;
+}
+// 红色钩子图标
+.icon_hook() {
+    background: url(../images/icon-product-detail.png?v1.0.0) no-repeat 0 0;
+    width: (28 / @rem750);
+    height: (28 / @rem750);
+    background-position: (468 / (750 - 28) * 100%) (120 / (259 - 28) * 100%);
+    background-size: (750 / 28 * 100%) (259 / 28 * 100%);
+}
+// 问号图标
+.icon_quest() {
+    width: (31 / @rem750);
+    height: (31 / @rem750);
+    background: url(../images/icon-product-detail.png?v1.0.0) no-repeat (513 / (750 - 31) * 100%) (118 / (259 - 31) * 100%) ;
+    background-size: (750 / 31 * 100%) (259 / 31 * 100%);
+}
+// 感叹号图标
+.icon_warn() {
+    width: (30 / @rem750);
+    height: (30 / @rem750);
+    background: url(../images/icon-product-detail.png?v1.0.0) no-repeat (564 / (750 - 30) * 100%) (118 / (259 - 30) * 100%);
+    background-size: (750 / 30 * 100%) (259 / 30 * 100%);
+}
+// 评论等级 灰色星星
+.gray_start() {
+    width: (116 / @rem750);
+    height: (24 / @rem750);
+    background: url(../images/icon-product-detail.png?v1.0.0) no-repeat 0 (207 / (259 - 24) * 100%);
+    background-size: (750 / 116 * 100%) (259 / 24* 100%);
+
+}
+// 评论等级 红色星星
+.red_start() {
+    width: (116 / @rem750);
+    height: (24 / @rem750);
+    background: url(../images/icon-product-detail.png?v1.0.0) no-repeat 0 (237 / (259 - 24) * 100%) #fff;
+    background-size: (750 / 116 * 100%) (259 / 24* 100%);
+}
+//红色购物车 icon
+.icon_car()  {
+    width: (38 / @rem750);
+    height: (38 / @rem750);
+    background: url(../images/icon-product-detail.png?v1.0.0) no-repeat 0 0;
+    background-size: (750 / 38 * 100%) (259 / 38 * 100%);
+    background-position: (96 / (750 - 38) * 100%) (161 / (259 - 38) * 100%);
+}
+//红色客服 icon
+.icon_client() {
+    width: (38 / @rem750);
+    height: (38 / @rem750);
+    background: url(../images/icon-product-detail.png?v1.0.0) no-repeat 0 0;
+    background-size: (750 / 38 * 100%) (259 / 38 * 100%);
+    background-position: 0 (161 / (259 - 38) * 100%);
+}
+// 红色收藏icon
+.icon_collect() {
+    width: (38 / @rem750);
+    height: (38 / @rem750);
+    background: url(../images/icon-product-detail.png?v1.0.0) no-repeat 0 0;
+    background-size: (750 / 38 * 100%) (259 / 38 * 100%);
+    background-position: (48 / (750 - 38) * 100%) (161 / (259 - 38) * 100%);
+}
+
+
+//优惠券  待开始
+.coupon_to_start()  {
+    width: (100 / @rem750);
+    height: (97 / @rem750);
+    background: url(../images/icon-user-coupon.png?v1.0.0) no-repeat (2 / (704 - 100) * 100%) (573 / (700 - 97) * 100%);
+    background-size: (704 / 100 * 100%) (700 / 97 * 100%);
+}
+//优惠券  待使用
+.coupon_to_use()  {
+    width: (100 / @rem750);
+    height: (97 / @rem750);
+    background: url(../images/icon-user-coupon.png?v1.0.0) no-repeat (110 / (704 - 100) * 100%) (573 / (700 - 97) * 100%);
+    background-size: (704 / 100 * 100%) (700 / 97 * 100%);
+}
+//优惠券  待领取
+.coupon_to_get()  {
+    width: (100 / @rem750);
+    height: (97 / @rem750);
+    background: url(../images/icon-user-coupon.png?v1.0.0) no-repeat (222 / (704 - 100) * 100%) (573 / (700 - 97) * 100%);
+    background-size: (704 / 100 * 100%) (700 / 97 * 100%);
+}
+//优惠券  带赠送
+.coupon_to_giving ()  {
+    width: (105/@rem750);
+    height: (105/@rem750);
+    background: url(../images/icon-user-coupon.png?v1.0.0) no-repeat (330/(704-105)*100%) (573/(700-105)*100%) ;
+    background-size: (704/105 *100%)  (700/105*100%);
+
+}
+// 评价/资讯为空
+.comment_empty(){
+    padding-top: (260 / @rem750);
+    background: url(../images/icon-empty.png) no-repeat 50% 0;
+    background-size: (140 / 750 * 100%);
+}
+
+
+
+/**************** 确认订单页   ***************/
+.icon_time() {
+    width: (30 / @rem750);
+    height: (30 / @rem750);
+    background: url(../images/icon-shop.png?v1.0.0) no-repeat ((100 / (150 - 30) ) * 100% ) 0 ;
+    background-size: ((150 / 30) * 100% ) ((150 / 30) * 100% ) ;
+}
+.icon_shipping_time() {
+    width: (47 / @rem750);
+    height:(50 / @rem750);
+    background: url(../images/icon-order-pay.png?v1.0.2) no-repeat ((78 / (130 - 47) ) * 100% ) ((175 / (290 - 50) ) * 100% )  ;
+    background-size: ((130 / 47) * 100% ) ((290 / 50) * 100% ) ;
+}
+
+
+/**************** 支付成功页   ***************/
+//非处方药
+.successful_top_img() {
+    width: (104 / @rem750) ;
+    height: (190 / @rem750);
+    background: url(../images/group-submit-success.png) no-repeat 0 0 ;
+    background-size: 100% 100%;
+}
+.icon_pay_shipping() {
+    display: inline-block;
+}
+//处方药
+.successful_img_rx() {
+    height: (240 / @rem750);
+    width: 100%;
+    background: url(../images/order-pay-02.jpg?v1.0.2) no-repeat 0 0 ;
+    background-size: 100% 100%;
+}
+.icon_active_rx() {
+    width: (27 / @rem750);
+    height:(33 / @rem750);
+    background: url(../images/icon-pay-success.png?v1.0.2) no-repeat 0 0;
+    background-size: (29 / 27 *100%) (197 /33  *100%);
+}
+
+/**************** 个人中心首页  ***************/
+.user_top_img() {
+    width: 100%;
+    height: (230 / @rem750) ;
+    background: url(../images/user_bg.jpg?v1.0.2) no-repeat 0 0;
+    background-size: 100% 100%;
+}
+
+
+/**************** 订单列表  ***************/
+.icon_order_none() {
+    height: (240 / @rem750);
+    background: url(../images/order-none.png) no-repeat 50% 50%;
+    background-size: contain;
+}
+
+
+/**************** 新增地址  ***************/
+.icon_position() {
+    width: (26 / @rem750);
+    height: (38 / @rem750);
+    background: url(../images/icon-touch-machine.png?v1.0.2) no-repeat 0 (247 / (344 - 38) * 100%);
+    background-size: (251 / 26 * 100%) (344 / 38 * 100%);
+}
+.show_tag_add() {
+    width: (38/24rem);
+    height: (38/24rem);
+    background: url(../images/icon-address.png?v1.0.2) no-repeat;
+    background-size: (639/38*100%) (377/38*100%);
+    background-position: (65 /(639 - 38) * 100%) (1 /(377 - 38) * 100%);
+}
+.show_tag_on() {
+    width: (38/24rem);
+    height: (38/24rem);
+    background: url(../images/icon-address.png?v1.0.2) no-repeat;
+    background-size: (639/38*100%) (377/38*100%);
+    background-position: (107 / (639 - 38) * 100%) 0;
+}
+.icon_detail_kf() {
+    width: (40 / @rem750);
+    height:(40 / @rem750);
+    background: url(../images/user-order-detail.png?v1.0.0) no-repeat 0 (98 / (270 - 40) * 100%);
+    background-size: 100% (270 / 40 * 100%);
+
+}
+
+.icon_detail_tel() {
+    width: (38 / @rem750);
+    height: (40 / @rem750) ;
+    background: url(../images/user-order-detail.png?v1.0.0) no-repeat 0 (152 / (270 - 40) * 100%);
+    background-size: (40 / 38 * 100% ) (270 / 40 * 100%);
+
+}
+
+
+/**************** 浏览足迹  ***************/
+//足迹为空时的icon
+.icon_track_none() {
+    height: (310 / @rem750);
+    background: url(../images/user-track-null.png) no-repeat 50% 50%;
+    background-size: contain;
+}
+
+/**************** 商品收藏  ***************/
+//收藏为空时的icon
+.icon_collect_none() {
+    width: (108 / 24rem ) ;
+    height: (144 / 24rem );
+    background: url(../images/icon-collect-none.png) no-repeat 50% 50%;
+    background-size: contain;
+}
+
+
+/**************** 修改密码  ***************/
+.modify-psw-step1() {
+    width: 100%;
+    height: (149 / 24rem);
+    background: url(../images/user-modify1.jpg) no-repeat 0 0 ;
+    background-size: cover;
+}
+.modify-psw-step2() {
+    width: 100%;
+    height: (162 / 24rem);
+    background: url(../images/user-modify2.jpg) no-repeat 0 0 ;
+    background-size: cover;
+}
+
+
+/**************** 查看物流  ***************/
+.icon_wl() {
+
+}
+
+/**************** 积分  ***************/
+.user_integral() {
+    height: (339/@rem750);
+    background: -webkit-linear-gradient(left bottom, #fd5ea0, #fd4760); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(top right, #fd5ea0, #fd4760); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(top right, #fd5ea0, #fd4760); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to top right, #fd5ea0, #fd4760); /* 标准的语法（必须放在最后） */
+    background-color: #fd4760;
+
+}
+.user_integral_none() {
+    height: (290 / @rem750);
+    background: url(../images/integral_none.png?v1.0.0) no-repeat 50% 50%;
+    background-size: contain;
+}
+
+
+
+
+/**************** 余额明细  ***************/
+//明细列表为空时
+.balance_none() {
+    width: 100%;
+    height: (160 / @rem750);
+    background: url(../images/icon-balance-null.png) no-repeat 50% 50%;
+    background-size: contain;
+}
+.balance_btn_bonus() {
+    display: block;
+    margin: 0 auto (25 / @rem750) auto;
+    border: @recharge_color solid 1px;
+    color: @recharge_color ;
+}
+
+
+    /**************** 红包  ***************/
+//登录注册头部背景图片
+.bonus_login_top() {
+    height: (270 / 1029 * 100%);
+    background: url(../images/user-bonus-top.jpg?v1.0.2) no-repeat 0 100% @bonus_bg_color_top ;
+    background-size: 100%;
+}
+.bonus_login_pic() {
+    height: (209 / 1029 * 100%);
+    background: url(../images/user-bonus-getsuc.png?v1.0.2) no-repeat 50% 50%;
+    background-size: contain;
+}
+.bonus_send_top() {
+    height: (458 / 1029 * 100%);
+    background: url(../images/user-bonus-top.jpg?v1.0.2) no-repeat 0 0;
+    background-size: 100%;
+}
+//红包规则
+.bonus_rule_img() {
+    background: url(../images/bonus-rule-01.png) no-repeat 0 0;
+    background-size: 100% 100%;
+}
+.bonus_rule_footer() {
+    background: url(../images/bonus-rule-02.png) no-repeat 0 0;
+    background-size: 100% 100%;
+}
+.bonus_close_rule() {
+    top: (14 / @rem640);
+    right:(14 / @rem640);
+    color: #7b7b7b;
+    font-size: (50 / @rem640);
+}
+.bonus_share_top() {
+    background: url(../images/user-bonus-top.jpg?v1.0.2) no-repeat 0 0;
+    background-size: 100% 100%;
+    padding-bottom: (270 / @width * 100%);
+}
+.bonus_share_avator() {
+    margin: (50/24rem) auto (20/24rem);
+}
+//微信红包分享遮罩层
+.popup_share() {
+    background: rgba(0,0,0,.7) url(../images/user-bonus-share.png?v1.0.2) no-repeat 0 0;
+    background-size: 100% 100%;
+
+}
+//红包无人领取
+.bonus_get_none() {
+    height: (285/24rem);
+    background: url(../images/user-bonus-null.png?v1.0.2) no-repeat 50% 50%;
+    background-size: contain;
+}
+//我
+.icon_bonus_my() {
+    width: (42/24rem) ;
+    height:(26/24rem) ;
+    background: url(../images/icon-user-bonus.png?v1.0.2) no-repeat 0 (153/(200-26)*100%) ;
+    background-size: (100/42*100%) (200/26*100%);
+}
+
+/*************** 错误页面 ********************/
+.error_img() {
+    width: (390 / @rem750);
+    height: (341 / @rem750);
+    background: url(../images/error-page.png?v1.0.0) no-repeat 50% 50%;
+    background-size: contain;
+}
+
+
+/*************** 搜索结果列表页 ********************/
+.product_list_empty() {
+    padding-top: (260 / @rem750);
+    margin-top: (200 / @rem750);
+    background: url(../images/icon-empty.png) no-repeat 50% 0;
+    background-size: (141 / @rem750);
+}
+
+//公司简介
+.icon_company_circle() {
+    width: (28 / @rem750);
+    height: (28 / @rem750);
+    background: url(../images/icon-foot-nav.png?v1.0.2) no-repeat ( 93 / (125 - 28) * 100% ) ( 183 / (229 - 28) * 100% ) ;
+    background-size: (125 / 28 * 100%) (229 / 28 * 100%);
+}
+
+/**************积分商城*****************/
+//积分商城首页
+.icon_integral_sign() {
+    width: (68 / @rem750) ;
+    height: (58 / @rem750);
+    background: url(../images/icon-integral.png) no-repeat 0 0;
+    background-size: ( 400 / 68* 100% ) ( 550 / 58 * 100% );
+
+}
+.icon_integral_shop() {
+    width: (62 / @rem750) ;
+    height: (61 / @rem750);
+    background: url(../images/icon-integral.png) no-repeat ( 80 / (400 - 61 ) * 100% ) 0;
+    background-size: ( 400 / 62* 100% ) ( 550 / 61 * 100% );
+
+}
+
+.sign_mid_img() {
+    width: 100%;
+    height: (53 / @rem750);
+    background: url(../images/integral-mid-sign.jpg) no-repeat 0 0 ;
+    background-size: 100% 100%;
+}
+.icon_popup_sign() {
+    display: block;
+}
+
+.icon_integral_detail1() {
+    width: (32 / @rem750);
+    height: (32 / @rem750);
+    background: url(../images/icon-integral.png?v1.0.2) no-repeat (226/ (400 - 32) * 100%) (0/ (550- 32) * 100%);
+    background-size: ((400 / 32) * 100% ) ((550 / 32) * 100% );
+
+}
+.icon_integral_detail2() {
+    width: (32 / @rem750);
+    height: (32 / @rem750);
+    background: url(../images/icon-integral.png?v1.0.2) no-repeat (187/ (400 - 32) * 100%) (0/ (550- 32) * 100%);
+    background-size: ((400 / 32) * 100% ) ((550 / 32) * 100% );
+
+}
+.icon_integral_detail_none() {
+    margin-top: (120 / @rem750);
+    overflow: hidden;
+    padding-top: (130 / @rem750);
+}
+
+/**********拼团 ************/
+.icon_group_share() {
+    visibility: visible;
+}
+//拼团成功
+.icon_group_success() {
+    background-position: 0 0;
+}
+//已开奖
+.icon_group_lottery_ready() {
+    background-position: 0 (934 / (1064 - 130) * 100%);
+}
+//已中奖
+.icon_group_lottery_success() {
+    background-position: 0 (664 / (1064 - 130) * 100%);
+}
+
+.group_rule_top() {
+    height: (638 / @rem750);
+    background: url(../images/group-rule.jpg?v=2.0) no-repeat 0 0 ;
+    background-size: 100%;
+}
+
+//未参团的用户默认头像
+.group_default_header() {
+    background: #eeeeee url(../images/group_head.png?v=2.0) no-repeat 0 (80 / (160 - 80) * 100%);
+    background-size: 100% (160 / 80 * 100%);
+}
+//已参团的用户默认头像
+.group_join_header() {
+    background: url(../images/group_head.png?v=2.0) no-repeat 0 0;
+    background-size: 100% 200%;
+}
+.group_order_none() {
+    width: (136 / @rem750);
+    height: (260 / @rem750);
+    background: url(../images/group-order-none.png?v1.0.0) no-repeat 50% 50%;
+    background-size: contain;
+}
+
+//拼团订单详情
+.group_icon-user() {
+    width: ( 28 / @rem750);
+    height: ( 29 / @rem750);
+    background: url(../images/group-icon-order-detail.png?v1.0.2) no-repeat 0 ((134 / (203 - 29))*100%) ;
+    background-size: ((48 / 28)*100%) ((203 / 29) *100%);
+
+}
+.group_icon-phone() {
+    width: ( 20 / @rem750);
+    height: ( 28 / @rem750);
+    background: url(../images/group-icon-order-detail.png?v1.0.2) no-repeat 0 ((175 / (203 - 28))*100%) ;
+    background-size: ((48 / 20)*100%) ((203 / 28) *100%);
+
+}
+.group_icon-kf() {
+    width: (48 / 24rem);
+    height: (42 / 24rem);
+    background: url(../images/group-icon-order-detail.png?v1.0.2) no-repeat 0 (76 / (203 - 42)*100%);
+    background-size: ((48 / 48)*100%) ((203 / 42) *100%);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

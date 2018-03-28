@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>我的订单</title>
+    <link rel="stylesheet" href="css/user-order-list.css"/>
+</head>
+<body class="order-list" vm-controller="user-order" >
+
+<div class="wrap box">
+    <div class="flex">
+        <!--内容区 滚动区-->
+        <div class=" flex-content" id="order_content">
+            <!--公共头部菜单-->
+            <header class="top-header">
+                <h1 class="title">我的订单</h1>
+                <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                <!--头部右边按钮 导航菜单 -->
+                {{require('template/topnav.html', {'page':'user-index'})}}
+
+            </header>
+            <!--头部tab-->
+            <div class="order-nav clear">
+                <a href="#all" class="all active" ><p >全部</p></a>
+                <a href="#paying" class="paying" ><p>待付款</p></a>
+                <a href="#shipping" class="shipping" ><p>待发货</p></a>
+                <a href="#shipped" class="shipped" ><p>待收货</p></a>
+                <a href="#evaluating" class="evaluating" ><p>待评价</p></a>
+            </div>
+            <!--订单不为空-->
+            <div class="order-list-con" vm-html="list">
+                <script type="text/html">
+                    <% if( list && list.length ){ %>
+                    <% list.forEach(function(item){ %>
+
+                    <%if( item.order_status=='paying' && item.goodsList && item.goodsList.length ){ %>
+                    <!--待付款 paying-->
+                    <div class="order-item clear">
+                        <a href="user-order-detail.html?id=<%= item.order_sn %>">
+                            <div class="order-type clear">
+                                <p class="order-number pull-left"><%= item.shop_name %></p>
+                                <p class="order-status pull-right">
+                                    <% if( item.rx_exist == 1){ %>
+                                        <% if( item.audit_state == 0 ){ %>
+                                        待审核
+                                        <% } else if( item.audit_state == 1 ) { %>
+                                        待付款
+                                        <% } else if( item.audit_state == 2 ) { %>
+                                        交易关闭
+                                        <% } %>
+                                    <% } else { %>
+                                    待付款
+                                    <% } %>
+                                </p>
+                            </div>
+                            <!--商品列表-->
+                            <div class="order-list-wrap">
+                                <% if( item.goodsList.length > 1 || (item.goodsList.length == 1 && item.giftsList.length >= 1 )){ %>
+                                <div class="order-product-swipe" data-act="product-list-swipe" >
+                                    <div class="product-all" >
+                                        <!--商品-->
+                                        <%item.goodsList.forEach(function(product){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= product.goods_image %>)"></span></div>
+                                        <%})%>
+                                        <!--赠品-->
+                                        <%item.giftsList.forEach(function(gift){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= gift.goods_image %>)"></span></div>
+                                        <%})%>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <%item.goodsList.forEach(function(product){%>
+                                <div class="order-list clear">
+                                    <div class="order-product pull-left">
+                                        <span style="background-image: url(<%= product.goods_image %>)"></span>
+                                    </div>
+                                    <div class="order-product-msg pull-right">
+                                        <p class="product-name">
+                                            <%if(product.is_global==1){%>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                            <% } else if( product.drug_type == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                            <% } else if( product.drug_type == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                            <% } else if( product.drug_type == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                            <% } %>
+                                            <%=product.goods_name%>
+                                        </p>
+                                        <p class="product-price clear">
+                                            <span class="pull-left">&yen;<%=product.unit_price%></span>
+                                            <span class="product-num pull-right">&times;<%=product.goods_number%></span>
+                                            <% if(product.memberTagName && product.memberTagName.length ){  %>
+                                            <span class="tag-span"><%=product.memberTagName%></span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <%})%>
+                                <% } %>
+                            </div>
+                        </a>
+                        <!--订单商品总计-->
+                        <div class="order-count clear">
+                            <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+                            <span class="pull-right">共<em><%=item.goods_total%></em>件&nbsp;&nbsp;</span>
+                        </div>
+                        <% if( item.rx_exist == 1 ){ %>
+                            <% if( item.audit_state == 0 ){ %>
+                            <div class="rx-tip">药师审核中，请耐心等待</div>
+                            <% } else if( item.audit_state == 1 ){ %>
+                            <div class="rx-tip">您的订单已通过药师的审核</div>
+                            <% } else if( item.audit_state == 2 ){ %>
+                            <div class="rx-tip"><span>您的订单未能通过药师审核，原因：<%= item.audit_reason %></span></div>
+                            <% } %>
+                        <% } %>
+                        <div class="btn-wrap clear">
+                            <% if( item.rx_exist == 1) { %>
+                                <% if( item.audit_state == 0 ) { %>
+                                    <a href="javascript:;" class="order-pay-btn-disabled">去付款</a>
+                                <% } else if( item.audit_state == 1 ) { %>
+                                    <a href="order-pay.html?order_id=<%=item.order_sn%>&is_global=<%=item.is_global%>" class="order-pay-btn">去付款</a>
+                                <% } %>
+                            <% } else { %>
+                                <a href="order-pay.html?order_id=<%=item.order_sn%>&is_global=<%=item.is_global%>" class="order-pay-btn">去付款</a>
+                            <% } %>
+                        </div>
+                    </div>
+                    <%}%>
+
+                    <%if(item.order_status=='shipping'  && item.goodsList && item.goodsList.length){%>
+                    <!--待发货 shipping-->
+                    <div class="order-item clear" >
+                        <a href="user-order-detail.html?id=<%= item.order_sn %>">
+                            <div class="order-type clear">
+                                <p class="order-number pull-left"><%= item.shop_name %></p>
+                                <p class="order-status pull-right">待发货</p>
+                            </div>
+                            <!--商品列表-->
+                            <div class="order-list-wrap">
+                                <% if( item.goodsList.length > 1 || (item.goodsList.length == 1 && item.giftsList.length >= 1 )){ %>
+                                <div class="order-product-swipe" data-act="product-list-swipe" >
+                                    <div class="product-all" >
+                                        <!--商品-->
+                                        <%item.goodsList.forEach(function(product){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= product.goods_image %>)"></span></div>
+                                        <%})%>
+                                        <!--赠品-->
+                                        <%item.giftsList.forEach(function(gift){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= gift.goods_image %>)"></span></div>
+                                        <%})%>
+                                    </div>
+                                </div>
+
+                                <% } else { %>
+                                <%item.goodsList.forEach(function(product){%>
+                                <div class="order-list clear">
+                                    <div class="order-product pull-left">
+                                        <span style="background-image: url(<%= product.goods_image %>)"></span>
+                                    </div>
+                                    <div class="order-product-msg pull-right">
+                                        <p class="product-name">
+                                            <%if(product.is_global==1){%>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                            <% } else if( product.drug_type == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                            <% } else if( product.drug_type == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                            <% } else if( product.drug_type == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                            <% } %>
+                                            <%=product.goods_name%>
+                                        </p>
+                                        <p class="product-price clear">
+                                            <span class="pull-left">&yen;<%=product.unit_price%></span>
+                                            <span class="product-num pull-right">&times;<%=product.goods_number%></span>
+                                            <% if(product.memberTagName && product.memberTagName.length ){  %>
+                                            <span class="tag-span"><%=product.memberTagName%></span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <%})%>
+                                <% } %>
+                            </div>
+                        </a>
+                        <!--订单商品总计-->
+                        <div class="order-count clear">
+                            <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+                            <span class="pull-right">共<em><%=item.goods_total%></em>件&nbsp;&nbsp;</span>
+                        </div>
+                    </div>
+                    <%}%>
+
+                    <%if(item.order_status=='shipped'  && item.goodsList && item.goodsList.length){%>
+                    <!--待收货 shipped-->
+                    <div class="order-item clear">
+                        <a href="user-order-detail.html?id=<%= item.order_sn %>">
+                            <div class="order-type clear">
+                                <p class="order-number pull-left"><%= item.shop_name %></p>
+                                <p class="order-status pull-right">待收货</p>
+                            </div>
+                            <!--商品列表-->
+                            <div class="order-list-wrap">
+                                <% if( item.goodsList.length > 1 || (item.goodsList.length == 1 && item.giftsList.length >= 1 )){ %>
+                                <div class="order-product-swipe" data-act="product-list-swipe" >
+                                    <div class="product-all" >
+                                        <!--商品-->
+                                        <%item.goodsList.forEach(function(product){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= product.goods_image %>)"></span></div>
+                                        <%})%>
+                                        <!--赠品-->
+                                        <%item.giftsList.forEach(function(gift){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= gift.goods_image %>)"></span></div>
+                                        <%})%>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <%item.goodsList.forEach(function(product){%>
+                                <div class="order-list clear">
+                                    <div class="order-product pull-left">
+                                        <span style="background-image: url(<%= product.goods_image %>)"></span>
+                                    </div>
+                                    <div class="order-product-msg pull-right">
+                                        <p class="product-name">
+                                            <%if(product.is_global==1){%>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                            <% } else if( product.drug_type == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                            <% } else if( product.drug_type == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                            <% } else if( product.drug_type == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                            <% } %>
+                                            <%=product.goods_name%>
+                                        </p>
+                                        <p class="product-price clear">
+                                            <span class="pull-left">&yen;<%=product.unit_price%></span>
+                                            <span class="product-num pull-right">&times;<%=product.goods_number%></span>
+                                            <% if(product.memberTagName && product.memberTagName.length ){  %>
+                                            <span class="tag-span"><%=product.memberTagName%></span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <%})%>
+                                <% } %>
+                            </div>
+
+                        </a>
+
+                        <!--订单商品总计-->
+                        <div class="order-count clear">
+                            <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+                            <span class="pull-right">共<em><%=item.goods_total%></em>件&nbsp;&nbsp;</span>
+                        </div>
+
+                        <div class="btn-wrap clear">
+                            <a href="javascript:;" class="order-take-btn" vm-on-click="confirmOrder('<%=item.order_sn%>','<%= item.notice_has_service %>')" >确认收货</a>
+                            <% if(item.is_show_logisticsbutton){ %>
+                            <a href="user-order-lookwl.html?id=<%= item.order_sn %>&payment_id=<%= item.payment_id %>&is_global=<%= item.is_global %>" class="order-lookwl-btn mr-btn">查看物流</a>
+                            <% } %>
+                        </div>
+                    </div>
+                    <%}%>
+
+                    <%if(item.order_status=='closed'  && item.goodsList && item.goodsList.length){%>
+                    <!--订单列表 订单取消 canceled-->
+                    <div class="order-item clear">
+                        <a href="user-order-detail.html?id=<%= item.order_sn %>">
+                            <div class="order-type clear">
+                                <p class="order-number pull-left"><%= item.shop_name %></p>
+                                <p class="order-status pull-right">关闭交易</p>
+                            </div>
+                            <!--商品列表-->
+                            <div class="order-list-wrap">
+                                <% if( item.goodsList.length > 1 || (item.goodsList.length == 1 && item.giftsList.length >= 1 )){ %>
+                                <div class="order-product-swipe" data-act="product-list-swipe" >
+                                    <div class="product-all" >
+                                        <!--商品-->
+                                        <%item.goodsList.forEach(function(product){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= product.goods_image %>)"></span></div>
+                                        <%})%>
+                                        <!--赠品-->
+                                        <%item.giftsList.forEach(function(gift){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= gift.goods_image %>)"></span></div>
+                                        <%})%>
+                                    </div>
+                                </div>
+
+                                <% } else { %>
+                                <%item.goodsList.forEach(function(product){%>
+                                <div class="order-list clear">
+                                    <div class="order-product pull-left">
+                                        <span style="background-image: url(<%= product.goods_image %>)"></span>
+                                    </div>
+                                    <div class="order-product-msg pull-right">
+                                        <p class="product-name">
+                                            <%if(product.is_global==1){%>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                            <% } else if( product.drug_type == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                            <% } else if( product.drug_type == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                            <% } else if( product.drug_type == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                            <% } %>
+                                            <%=product.goods_name%>
+                                        </p>
+                                        <p class="product-price clear">
+                                            <span class="pull-left">&yen;<%=product.unit_price%></span>
+                                            <span class="product-num pull-right">&times;<%=product.goods_number%></span>
+                                            <% if(product.memberTagName && product.memberTagName.length ){  %>
+                                            <span class="tag-span"><%=product.memberTagName%></span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <%})%>
+                                <% } %>
+                            </div>
+                        </a>
+
+                        <!--订单商品总计-->
+                        <div class="order-count clear">
+                            <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+                            <span class="pull-right">共<em><%=item.goods_total%></em>件&nbsp;&nbsp;</span>
+                        </div>
+
+                        <% if( item.rx_exist == 1 && item.audit_state == 2  ){ %>
+                            <div class="rx-tip"><span>您的订单未能通过药师审核，原因：<%= item.audit_reason %></span></div>
+                        <% } %>
+
+                        <div class="btn-wrap clear">
+                            <a href="javascript:;" vm-on-click="delectOrder('<%=item.order_sn%>')" class="order-lookwl-btn ">删除订单</a>
+                        </div>
+
+                    </div>
+                    <%}%>
+
+                    <%if(item.order_status=='finished' && item.goodsList && item.goodsList.length) { %>
+
+                    <% var is_single = item.goodsList&&item.goodsList.length==1?1:0; %>
+
+                    <!--交易完成 finished-->
+                    <% if(item.status=='finished'){ %>
+                    <div class="order-item clear">
+                        <a href="user-order-detail.html?id=<%= item.order_sn %>">
+                            <div class="order-type clear">
+                                <p class="order-number pull-left"><%= item.shop_name %></p>
+                                <p class="order-status pull-right">交易完成</p>
+                            </div>
+                            <!--商品列表-->
+                            <div class="order-list-wrap">
+                                <% if( item.goodsList.length > 1 || (item.goodsList.length == 1 && item.giftsList.length >= 1 )){ %>
+                                <div class="order-product-swipe" data-act="product-list-swipe" >
+                                    <div class="product-all" >
+                                        <!--商品-->
+                                        <%item.goodsList.forEach(function(product){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= product.goods_image %>)"></span></div>
+                                        <%})%>
+                                        <!--赠品-->
+                                        <%item.giftsList.forEach(function(gift){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= gift.goods_image %>)"></span></div>
+                                        <%})%>
+                                    </div>
+                                </div>
+
+                                <% } else { %>
+                                <%item.goodsList.forEach(function(product){%>
+                                <div class="order-list clear">
+                                    <div class="order-product pull-left">
+                                        <span style="background-image: url(<%= product.goods_image %>)"></span>
+                                    </div>
+                                    <div class="order-product-msg pull-right">
+                                        <p class="product-name">
+                                            <%if(product.is_global==1){%>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                            <% } else if( product.drug_type == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                            <% } else if( product.drug_type == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                            <% } else if( product.drug_type == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                            <% } %>
+                                            <%=product.goods_name%>
+                                        </p>
+                                        <p class="product-price clear">
+                                            <span class="pull-left">&yen;<%=product.unit_price%></span>
+                                            <span class="product-num pull-right">&times;<%=product.goods_number%></span>
+                                            <% if(product.memberTagName && product.memberTagName.length ){  %>
+                                            <span class="tag-span"><%=product.memberTagName%></span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <%})%>
+                                <% } %>
+                            </div>
+
+                        </a>
+
+                        <!--订单商品总计-->
+                        <div class="order-count clear">
+                            <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+                            <span class="pull-right">共<em><%=item.goods_total%></em>件&nbsp;&nbsp;</span>
+                        </div>
+
+                        <div class="btn-wrap clear">
+                            <!--交易完成-->
+                            <% if( item.comment_status == 0){ %>
+                            <a class="order-look-eluate-btn" href="user-order-share.html?order_id=<%=item.order_sn%><%=is_single==1?'&which_page=1':'' %>" >评价晒单</a>
+                            <% } else if( item.comment_status == 1){ %>
+                            <a class="order-look-eluate-btn" href="user-order-share.html?order_id=<%=item.order_sn%><%=is_single==1?'&which_page=1':'' %>" >追加晒单</a>
+                            <% } else if( item.comment_status == 2){ %>
+                            <a class="order-look-eluate-btn" href="user-order-share.html?order_id=<%=item.order_sn%><%=is_single==1?'&which_page=3':'' %>" >查看评价</a>
+                            <% } %>
+                            <a href="javascript:;" vm-on-click="delectOrder('<%=item.order_sn%>')" class="order-lookwl-btn mr-btn">删除订单</a>
+                        </div>
+                    </div>
+                    <%}%>
+                    <!--待评价-->
+                    <%if(item.status=='evaluating' ){%>
+                    <!--待评价 evaluating-->
+                    <div class="order-item clear">
+                        <a href="user-order-detail.html?id=<%= item.order_sn %>">
+                            <div class="order-type clear">
+                                <p class="order-number pull-left"><%= item.shop_name %></p>
+                                <p class="order-status pull-right">交易完成</p>
+                            </div>
+                            <!--商品列表-->
+                            <div class="order-list-wrap">
+                                <% if( item.goodsList.length > 1 || (item.goodsList.length == 1 && item.giftsList.length >= 1 )){ %>
+                                <div class="order-product-swipe" data-act="product-list-swipe" >
+                                    <div class="product-all" >
+                                        <!--商品-->
+                                        <%item.goodsList.forEach(function(product){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= product.goods_image %>)"></span></div>
+                                        <%})%>
+                                        <!--赠品-->
+                                        <%item.giftsList.forEach(function(gift){%>
+                                        <div class="product-all-list"><span style="background-image: url(<%= gift.goods_image %>)"></span></div>
+                                        <%})%>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                <%item.goodsList.forEach(function(product){%>
+                                <div class="order-list clear">
+                                    <div class="order-product pull-left">
+                                        <span style="background-image: url(<%= product.goods_image %>)"></span>
+                                    </div>
+                                    <div class="order-product-msg pull-right">
+                                        <p class="product-name">
+                                            <%if(product.is_global==1){%>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                            <% } else if( product.drug_type == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                            <% } else if( product.drug_type == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                            <% } else if( product.drug_type == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                            <% } %>
+                                            <%=product.goods_name%>
+                                        </p>
+                                        <p class="product-price clear">
+                                            <span class="pull-left">&yen;<%=product.unit_price%></span>
+                                            <span class="product-num pull-right">&times;<%=product.goods_number%></span>
+                                            <% if(product.memberTagName && product.memberTagName.length ){  %>
+                                            <span class="tag-span"><%=product.memberTagName%></span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <%})%>
+                                <% } %>
+                            </div>
+
+                        </a>
+
+                        <!--订单商品总计-->
+                        <div class="order-count clear">
+                            <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+                            <span class="pull-right">共<em><%=item.goods_total%></em>件&nbsp;&nbsp;</span>
+                        </div>
+
+                        <div class="btn-wrap clear">
+                            <% if( item.comment_status == 0){ %>
+                            <a class="order-look-eluate-btn" href="user-order-share.html?order_id=<%=item.order_sn%><%=is_single==1?'&which_page=1':'' %>" >评价晒单</a>
+                            <% } else if( item.comment_status == 1){ %>
+                            <a class="order-look-eluate-btn" href="user-order-share.html?order_id=<%=item.order_sn%><%=is_single==1?'&which_page=1':'' %>" >追加晒单</a>
+                            <% } else if( item.comment_status == 2){ %>
+                            <a class="order-look-eluate-btn" href="user-order-share.html?order_id=<%=item.order_sn%><%=is_single==1?'&which_page=3':'' %>" >查看评价</a>
+                            <% } %>
+                            <a href="javascript:;" vm-on-click="delectOrder('<%=item.order_sn%>')" class="order-lookwl-btn mr-btn">删除订单</a>
+                        </div>
+                    </div>
+                    <%}%>
+
+                    <% } %>
+
+                    <% }); %>
+                    <% } else if( list && !list.length ) {   %>
+                    <!--订单为空时-->
+                    <div class="none-img"><span></span></div>
+                    <p class="none-p">您还没有相关订单</p>
+
+                    <% } %>
+
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="js/config.js"></script>
+<script>seajs.use('user-order')</script>
+
+</body>
+</html>
+

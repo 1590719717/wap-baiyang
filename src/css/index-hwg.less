@@ -1,0 +1,328 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2016/6/7
+ * @version 1.0.0
+ * @description 内页 样式
+ */
+
+@import "../skin/{{Config.skin_file}}";
+
+
+@width: 640;
+@height: 1007;
+
+@icon: '../images/icon-index-hwg.png?v1.0.2';
+@icon_w: 37;
+@icon_h: 169;
+
+body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background-color: #f0f0f0;
+}
+.wrap {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* 海外优选首页
+ ******************************************************/
+.content-hwg {
+
+    .no-wrap() {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .icon-hot {
+        width: (22 / 24rem);
+        height: (26 / 24rem);
+        background: url(@icon) no-repeat 0 (55 / (@icon_h - 26) * 100%);
+        background-size: (@icon_w / 22 * 100%) (@icon_h / 26 * 100%);
+    }
+    .icon-world {
+        width: (28 / 24rem);
+        height: (28 / 24rem);
+        background: url(@icon) no-repeat 0 (97 / (@icon_h - 28) * 100%);
+        background-size: (@icon_w / 28 * 100%) (@icon_h / 28 * 100%);
+    }
+    .icon-brand {
+        width: (26 / 24rem);
+        height: (26 / 24rem);
+        background: url(@icon) no-repeat 0 100%;
+        background-size: (@icon_w / 26 * 100%) (@icon_h / 26 * 100%);
+    }
+
+    section {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+
+        .block-title {
+            width: (290 / @width * 100%);
+            margin: (28 / 24rem) auto;
+            font-size: (28 / 24rem);
+            color: #8251e5;
+            height: 0.5em;
+            line-height: 1em;
+            border-bottom: 1px solid #8251e5;
+            text-align: center;
+
+            span {
+                display: inline-block;
+                height: 1em;
+                background-color: #f0f0f0;
+                padding: 0 (14 / 24rem);
+                margin: -0.5em auto 0;
+            }
+            .icon {
+                vertical-align: top;
+                margin: 0 (9 / 24rem) 0 0;
+            }
+        }
+
+    }
+
+    // 头部滚动
+    .top-scroll {
+        .scroll-wrap {
+            width: 100%;
+            height: (214 / 24rem);
+            overflow: hidden;
+            position: relative;
+
+            .scroll-list {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                -webkit-transition: all .3s ease;
+                transition:         all .3s ease;
+
+                .scroll-item {
+                    float: left;
+                    width: 100%;
+                    height: 100%;
+
+                    img{
+                        width:100%;
+                    }
+
+                    a {
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        background-repeat: no-repeat;
+                        background-size: 100% 100%;
+                        background-position: 0 0;
+                        background-color: #fff;
+                    }
+                }
+            }
+
+            .scroll-icon {
+                position: absolute;
+                left: 0;
+                bottom: (14 / 24rem);
+                width: 100%;
+                z-index: 2;
+                text-align: center;
+
+                span {
+                    box-sizing: border-box;
+                    display: inline-block;
+                    width: 6px;
+                    height: 6px;
+                    margin: 0 (6 / 24rem);
+                    background-color: #fff;
+                    border-radius: 3px;
+
+                    &.active {
+                        background-color: #8b259a;
+                    }
+                }
+            }
+
+        }
+    }
+
+    //热门推荐
+    .hot-commend {
+        .commend-goods {
+            position: relative;
+            margin-left:(10 / 24rem);
+
+            .scroll-icon {
+                display: none;
+            }
+        }
+        .goods-list  {
+            display: block;
+            .goods-item {
+                width: 100%;
+                overflow: hidden;
+                float: left;
+
+                a {
+                    position: relative;
+                    display: block;
+                    height: (306 / 24rem);
+                    background-color: #fff;
+                    border-right: (10 / 24rem) solid #eee;
+                }
+
+                .icon-flag {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    display: block;
+                    width: (44 / 24rem);
+
+                    img {
+                        width: 100%;
+                        height: auto;
+                    }
+                }
+
+                .goods-pic  {
+                    width: 100%;
+                    height: (180 / 24rem);
+                    line-height: (288 / 24rem);
+                    text-align: center;
+                    margin: 0 0 (20 / 24rem);
+                    background: url(../images/default-img.png?v1.0.2) no-repeat 50% 50%;
+                    background-size: contain;
+                }
+
+                .goods-title {
+                    .no-wrap();
+                    padding: 0 0.5em;
+                    display: block;
+                    font-size: (20 / 24rem);
+                    color: #000;
+                }
+
+                .goods-dec {
+                    &:extend(.content-hwg .hot-commend .goods-list .goods-item .goods-title);
+                    font-size: (18 / 24rem);
+                    color: #666;
+                }
+
+                .goods-price {
+                    padding: 0 0.25em;
+                    font-size: (24 / 24rem);
+                    color: @base_color ;
+                    line-height: 1em;
+                    font-style: normal;
+                }
+            }
+
+        }
+    }
+
+    //全球盛宴
+    .whole-world {
+        .special-line  {
+            display: -webkit-box;
+            display: box;
+            -webkit-box-pack: justify;
+            box-pack: justify;
+            -webkit-box-align: start;
+            box-align: start;
+
+            &:not(:first-child) {
+                margin-top: (9 / 24rem);
+            }
+
+            a {
+                -webkit-box-flex: 1;
+                box-flex: 1;
+                overflow: hidden;
+                position: relative;
+                display: block;
+
+                &:not(:first-child) {
+                    margin-left: (9 / 24rem);
+                }
+            }
+
+            img {
+                width: 100%;
+                height: auto;
+                vertical-align: middle;
+            }
+        }
+    }
+
+    //海外名牌
+    .overseas-brand {
+        .brand-banner {
+            margin: 0 0 (9 / 24rem);
+
+            img {
+                width: 100%;
+                vertical-align: middle;
+            }
+        }
+
+        .brand-list {
+            box-sizing: border-box;
+            padding: 0 (16 / 24rem) 0 (8 / 24rem);
+
+            li {
+                box-sizing: border-box;
+                width: 50%;
+                padding: 0 0 (8 / 24rem) (8 / 24rem);
+
+                &:nth-child(odd) {
+                    float: left;
+                }
+                &:nth-child(even) {
+                    float: right;
+                }
+
+                a {
+                    &:extend(.content-hwg .hot-commend .goods-list .goods-item a);
+                    border: 0 none;
+                }
+
+                .icon-flag  {
+                    &:extend(.content-hwg .hot-commend .goods-list .goods-item .icon-flag);
+                    img {
+                        &:extend(.content-hwg .hot-commend .goods-list .goods-item .icon-flag img);
+                    }
+                }
+
+                .goods-pic  {
+                    &:extend(.content-hwg .hot-commend .goods-list .goods-item .goods-pic);
+                }
+
+                .goods-title {
+                    &:extend(.content-hwg .hot-commend .goods-list .goods-item .goods-title);
+                }
+
+                .goods-dec {
+                    &:extend(.content-hwg .hot-commend .goods-list .goods-item .goods-dec);
+                }
+
+                .goods-price {
+                    &:extend(.content-hwg .hot-commend .goods-list .goods-item .goods-price);
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+

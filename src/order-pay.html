@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>支付订单</title>
+    <link rel="stylesheet" href="css/order.css"/>
+</head>
+<body class="order-pay" vm-controller="order-pay">
+<div class="wrap box">
+    <!--头部-->
+    <header class="order-pay top-header">
+        <h1 class="title">支付订单</h1>
+        <a href="javascript:;" vm-on-click="back('user-order.html',1)" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':''})}}
+
+    </header>
+    <div class="flex">
+        <!--内容区 滚动区-->
+        <div class="order-pay-content flex-content">
+            <p class="order-pay-money">实付金额：<span vm-html="'&yen;'+real_pay">&yen;0.00</span></p>
+
+            <div vm-attr-class="is_touch_machine?'hide':'order-pay-method'" class="hide">
+
+                <!--支付宝支付-->
+                <a href="javascript:;" vm-attr-class="!is_from_wechat&&!is_global?'box-hor alipay':'hide'" class="hide" vm-on-click="alipay()">
+                    <i class="icon icon-pay-alipay"></i>
+
+                    <div class="flex-hor order-pay-text">
+                        <p>支付宝支付</p>
+                        <p>推荐支付宝用户使用</p>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+
+                <!--微信支付-->
+                <a href="javascript:;" vm-attr-class="is_from_wechat&&!is_global?'box-hor wechat':'hide'" class="hide" vm-on-click="wechat_pay()">
+                    <i class="icon icon-pay-weixin"></i>
+
+                    <div class="flex-hor order-pay-text">
+                        <p>微信支付</p>
+                        <p>微信安全支付</p>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+
+                <!-- 银联支付 -->
+                <!--<a href="javascript:;" class="hide" vm-attr-class="!is_from_wechat&&!is_global?'box-hor unionpay':'hide'" vm-on-click="other()">
+                    <i class="icon icon-pay-bank"></i>
+
+                    <div class="flex-hor order-pay-text">
+                        <p>银联支付</p>
+                        <p>中国银联在线支付服务</p>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>-->
+
+                <!--易票联微信支付-->
+                <a href="javascript:;" vm-attr-class="is_from_wechat&&is_global?'box-hor wechat':'hide'" class="hide" vm-on-click="ypl_pay(0)">
+                    <i class="icon icon-pay-weixin"></i>
+
+                    <div class="flex-hor order-pay-text">
+                        <p>微信支付</p>
+                        <p >易票联微信支付</p>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+
+                <!-- 易票联微信H5支付 -->
+                <!--<a href="javascript:;" class="hide" vm-attr-class="!is_from_wechat&&is_global&&show_wx_h5?'box-hor ypl-unionpay':'hide'" vm-on-click="ypl_pay(2)">
+                    <i class="icon icon-pay-weixin"></i>
+
+                    <div class="flex-hor order-pay-text">
+                        <p>微信支付</p>
+                        <p>易票联微信支付</p>
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>-->
+
+                <!-- 易票联银联支付 -->
+                <a href="javascript:;" class="hide" vm-attr-class="!is_from_wechat&&is_global?'box-hor ypl-unionpay':'hide'" vm-on-click="ypl_pay(1)">
+                    <i class="icon icon-pay-bank"></i>
+
+                    <div class="flex-hor order-pay-text">
+                        <p>银联支付</p>
+
+                    </div>
+                    <i class="icon icon-arrow-right"></i>
+                </a>
+
+            </div>
+
+            <!--触屏机的支付方式-->
+            <div vm-attr-class="is_touch_machine?'order-pay-machine':'hide'" class="hide">
+                <p class="order-pay-title">请选择支付方式</p>
+                <!--普通商品&海外优选订单-->
+                <div class="hide" vm-attr-class="is_global?'hide':'pay-method-div clear'">
+                    <div class="pay-method">
+                        <a class="pay-alipay-machine" href="javascript:;" vm-on-click="chose_pay_way(1)"></a>
+                        <p>支付宝支付</p>
+                    </div>
+                    <div class="pay-method">
+                        <a class="pay-wechat-machine" href="javascript:;" vm-on-click="chose_pay_way(2)"></a>
+                        <p>微信支付</p>
+                    </div>
+                    <span></span>
+                </div>
+                <!--香港跨境订单-->
+                <div class="pay-method-div clear" vm-attr-class="is_global?'pay-method-div clear':'hide'">
+                    <div class="pay-method">
+                        <a class="pay-wechat-machine" href="javascript:;" vm-on-click="chose_pay_way(3)"></a>
+                        <p>微信支付</p>
+                    </div>
+                </div>
+            </div>
+
+            <!--二维码弹窗-->
+            <div vm-attr-class="is_pay_wechat || is_pay_alipay ?'popup popup-pay-code':'hide'" class="hide">
+                <div class="popup-pay-content">
+                    <!--微信 二维码-->  <!--支付宝 二维码-->
+                    <div class="pay-code" vm-css-background-image="'url('+ code_url +')'"></div>
+                    <p class="pay-code-tips" vm-html="is_pay_wechat?'微信扫一扫立即支付':'支付宝扫一扫立即支付'"></p>
+                    <a href="javascript:;" vm-on-click="back('',1)"> 关闭 </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="js/config.js"></script>
+<script>seajs.use('order-pay')</script>
+</body>
+</html>

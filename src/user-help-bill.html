@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>发票问题</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-help-other">
+    <div class="wrap box">
+        <header class="user-help top-header">
+            <h1 class="title">发票问题</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="help-buy-content flex-content">
+
+                <div class="row help-item">
+                    <div class="col-1 ">
+                        <div class="help-circle">1</div>
+                    </div>
+                    <div class="col-11 botm-line">
+                        <p class="help-list-title">可以开发票吗？</p>
+                        <div class="item-top row-98">商城开具正规发票，发票抬头和内容在下单页面中“<span class="color-red">发票信息</span>”
+                            里面选择即可；<br>发票内容有药品、保健品、医疗器械、食品、生活用品和计生用品，具体是根据您购买的实际商品开具的。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 ">
+                        <div class="help-circle bg-circle-2">2</div>
+                    </div>
+                    <div class="col-11 botm-line">
+                        <p class="help-list-title color-blue">可以开增值税发票吗？</p>
+                        <div class="item-top row-98">很抱歉，目前开具不了增值税发票。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 ">
+                        <div class="help-circle bg-circle-3">3</div>
+                    </div>
+                    <div class="col-11 botm-line">
+                        <p class="help-list-title color-yellow">商品和发票是否可以分开邮寄？</p>
+                        <div class="item-top row-98">如需发票，请您在下单页面中选择发票抬头和内容即可，我们会把发票随单一同发出。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

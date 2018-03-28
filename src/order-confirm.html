@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>确认订单</title>
+    <link rel="stylesheet" href="css/order-confirm.css"/>
+</head>
+<body class="order-confirm" vm-controller="order-confirm">
+
+    <!--内容区 订单详情 -->
+    <div page-router="" class="order-confirm-content" >
+        <!--头部-->
+        <header class="order-header top-header">
+            <h1 class="title" >确认订单</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <div class="hide" vm-attr-class="o2o_promote_text ? 'promotion-message' : 'hide'">
+            <span data-act="toggle" data-param="class=open" vm-html="o2o_promote_text || ''" class="message js-promote-text"></span>
+        </div>
+
+        <!--订单头部个人信息        -->
+        <a href="?address" class="box-hor clear order-top" vm-html="address_selected" >
+            <script type="text/html">
+                <% if( address_selected.id ){ %>
+
+                    <i class="icon icon-address"></i>
+                    <div class="flex-hor order-address-top">
+                        <div class="order-user" >
+                            <span class="u_name"><%= address_selected.consignee %></span>
+
+                            <% if( address_selected.tag_id == 1 ){ %>
+                                <span class="u_tag wo">我</span>
+                            <% } else if( address_selected.tag_id == 2 ){ %>
+                                <span class="u_tag friend">朋友</span>
+                            <% } else if( address_selected.tag_id == 3){ %>
+                                <span class="u_tag family">亲人</span>
+                            <% } else if( address_selected.tag_id == 4){ %>
+                                <span class="u_tag company">公司</span>
+                            <% } else if( address_selected.tag_id == 5){ %>
+                                <span class="u_tag other">其它</span>
+                            <% } %>
+
+                            <span class="u_phone"><%= getPhone(address_selected.telphone) %></span>
+
+                        </div>
+
+                        <div class="order-address-text" ><span><%= address_selected.default_addr==1?'[默认]':'' %></span><%= address_selected.province_name+address_selected.city_name+address_selected.county_name+address_selected.address %></div>
+
+                    </div>
+                    <i class="icon icon-arow"></i>
+
+                <% } else { %>
+
+                    <div class="flex-hor">
+                        <div class="row">
+                            <div class="col-offset-1 col-11 order-address-text">添加收货地址</div>
+                        </div>
+                    </div>
+                    <i class="icon icon-arow"></i>
+
+                <% } %>
+            </script>
+        </a>
+         <!-- 边框图片-->
+        <div class="bottom-img"></div>
+
+        <!--订单电话    处方药 -->
+        <div vm-attr-class="'order-type-cf clear '+(rx_exist==1?'':'hide')" class="hide" >
+            <div class="box-hor order-cf-phone">
+                <div><span>*</span>您的电话号码</div>
+                <input class="flex-hor" type="text" name="callback_phone" vm-value="callback_phone" placeholder="在此输入您的电话号码" >
+            </div>
+            <div vm-attr-class="is_touch_machine?'hide':'box-hor order-cf-camera'" class="hide">
+                <div class="flex-hor order-cf-msg">
+                    处方信息
+                </div>
+                <div class="order-camera-div" vm-html="ordonnance_photo">
+                    <script type="text/html">
+                        <% if(ordonnance_photo){ %>
+                            <img src="data:image/jpeg;base64,<%= ordonnance_photo %>" alt=""/>
+                        <% } else { %>
+                            <i class="icon-camera"></i>
+                        <% } %>
+                        <input type="file" accept="image/*" vm-value="ordonnance_file" vm-on-change="getFile()" class="file-phone">
+                    </script>
+                </div>
+            </div>
+            <div class="order-cf-tips" >注：处方药订单预定成功后将由专业药师进行审核，上传处方可缩 短审核时间(仅限1张)</div>
+        </div>
+
+        <!--    海外优选     实名认证-->
+        <div vm-attr-class="is_global==1&&address_selected&&address_selected.id?'authentication-name':'hide'" class="hide" >
+            <p>*海关要求购买跨境商品需提供收货人的实名信息</p>
+            <div class="authentication-con" vm-html="is_saveIdentityNumber ">
+
+                <script type="text/html">
+                    <i class="icon icon-people"></i>
+                    <span vm-html="address_selected.consignee"></span>
+                    <% if( is_saveIdentityNumber ){ %>
+                        <!--已认证-->
+                        <input type="text" placeholder="在此输入身份证号码" vm-value="identity_number" value="cart_data.identityNumber" class="input-card" maxlength="18" readonly="readonly" >
+                        <a href="javascript:;">认证成功</a>
+
+                    <% } else { %>
+                        <!--尚未认证-->
+                        <input type="text" placeholder="在此输入身份证号码" vm-value="identity_number" value="cart_data.identityNumber" class="input-card" maxlength="18" >
+                        <a href="javascript:;" vm-on-click="saveIdentityNumber()">保存</a>
+                    <% } %>
+
+                </script>
+
+            </div>
+
+        </div>
+
+
+        <div vm-html="goodsList + allIncreaseBuyList + allGiftList + goods_num" >
+            <script type="text/html">
+
+            <% if( goods_num > 1 ) { %>
+                <!--   订单列表  多个商品  -->
+                <div class="order-product-list" >
+                    <div class="order-product-swipe" data-act="product-list-swipe" >
+                        <div class="product-all" >
+                            <% if( goodsList && goodsList.length ){ %>
+                            <% goodsList.forEach(function(item){ %>
+                                <!--普通商品-->
+                                <% if( item.group_id == 0 ){ %>
+                                    <div class="product-all-list"><span style="background-image: url(<%= item.goods_image %>)"></span></div>
+                                    <!--加价购商品-->
+                                    <% if( item.increaseBuyList && item.increaseBuyList.length ){ %>
+                                        <% item.increaseBuyList.forEach(function(increase) { %>
+                                            <div class="product-all-list"><span style="background-image: url(<%= increase.goods_image %>)"></span></div>
+                                        <% }) %>
+                                    <% } %>
+
+                                <% } else if( item.group_id > 0  ) { %>
+                                                      <!--套餐-->
+                                    <% if(item.groupGoodsList && item.groupGoodsList.length) { %>
+                                        <% item.groupGoodsList.forEach(function(list){ %>
+                                            <div class="product-all-list"><span style="background-image: url(<%= list.goods_image %>)"></span></div>
+                                        <% }) %>
+                                    <% } %>
+
+                                <% } %>
+                            <% }); %>
+                            <% } %>
+
+                            <% if( allIncreaseBuyList && allIncreaseBuyList.length ){ %>
+                                <% allIncreaseBuyList.forEach(function(item){ %>
+                                    <div class="product-all-list"><span style="background-image: url(<%= item.goods_image %>)"></span></div>
+                                <% }); %>
+                            <% } %>
+
+                        </div>
+                    </div>
+                    <a href="?goodList" class="order-product-total" >
+                        <span vm-html="'共' + cart_data.totalQty + '件'"> </span>
+                        <i class="icon-order-bill"></i>
+                    </a>
+                </div>
+
+            <% } else if( goods_num == 1 ) { %>
+                <!--   订单列表  单个商品 -->
+                <div class="order-product-one"  >
+                    <% if( goodsList && goodsList.length ){ %>
+                    <% goodsList.forEach(function(item){ %>
+                        <div class="box-hor order-product-buy">
+                            <div class="product-one-img">
+                                <span style="background-image: url(<%= item.goods_image %>)"></span>
+                            </div>
+                            <div class="flex-hor product-one-desc ">
+                                <div class="product-one-name">
+                                    <% if( item.is_global == 1  ){ %>
+                                    <i class="icon icon-hwg">海外优选</i>
+                                    <% } else if( item.drug_type == 1 ) { %>
+                                    <i class="icon icon-rx"></i>
+                                    <% } else if( item.drug_type == 2 ) { %>
+                                    <i class="icon icon-frxr"></i>
+                                    <% } else if( item.drug_type == 3 ) { %>
+                                    <i class="icon icon-frxg"></i>
+                                    <% } %>
+                                    <%= item.goods_name %>
+                                </div>
+                                <div class="product-one-other">
+                                    <span class="buy-price">&yen;<%= item.is_global==1?item.goods_price:item.discount_price %></span>
+                                    <span class="buy-number">x<%= item.goods_number %> </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--赠品-->
+                        <% if( (item.bind_gift && item.bind_gift.length)  || (item.giftList && item.giftList.length) || (allGiftList && allGiftList.length) ){ %>
+                            <div class="zp-list" >
+
+                                <% item.bind_gift.forEach(function(bind_gift){ %>
+                                <div class="row " >
+                                    <div class="col-11">[赠品]<%= bind_gift.goods_name %> </div>
+                                    <div class="col-1">x<%= bind_gift.goods_number %></div>
+                                </div>
+                                <% }); %>
+
+                                <% item.giftList.forEach(function(giftList){ %>
+                                <div class="row " >
+                                    <div class="col-11">[赠品]<%= giftList.goods_name %> </div>
+                                    <div class="col-1">x<%= giftList.goods_number %></div>
+                                </div>
+                                <% }); %>
+
+                                <% allGiftList.forEach(function(allGiftList){ %>
+                                <div class="row " >
+                                    <div class="col-11">[赠品]<%= allGiftList.goods_name %> </div>
+                                    <div class="col-1">x<%= allGiftList.goods_number %></div>
+                                </div>
+                                <% }); %>
+
+                            </div>
+                        <% } %>
+
+                    <% }); %>
+                    <% } %>
+                </div>
+            <% } %>
+
+            </script>
+        </div>
+
+        <!--支付方式 -->
+        <div class="clear order-zf">
+            <!--配送方式-->
+            <a href="?shipping_way" class="clear" >
+                <div class="row ">
+                    <div class="col-3 text-left">支付配送</div>
+                    <div class="col-8 text-right gray-light-color" vm-html="getShippingWay(payment_id)?getShippingWay(payment_id):'在线支付'" ></div>
+                    <div class="col-1"><i class="icon-order-bill"></i></div>
+                </div>
+                <div vm-attr-class="expressText?'invoice-p':'hide'" class="hide" vm-html="o2o_data + o2o_fee + expressText + express_type + shipping_time_id" >
+                    <script type="text/html">
+                        <% if( o2o_data && o2o_fee && express_type > 1 && shipping_time_id > 1 ){ %>
+                            <i class="icon icon-time"></i><%= o2o_data %>
+                        <% } else if(shipping_time_id > 1 ) { %>
+                            <i class="icon icon-time"></i><%= expressText %>
+                        <% } else {  %>
+                            <%= expressText %>
+                        <% } %>
+
+                    </script>
+                </div>
+            </a>
+
+            <!--发票信息-->
+            <a href="javascript:;" vm-attr-class="is_global==1?'hide':'border-none clear'" class="hide" vm-on-click="goInvoice()" >
+                <div class="row " >
+                    <div class="col-3 text-left">发票信息</div>
+                    <div vm-attr-class="invoice_type > 0 && str_invoice?'col-8 text-right gray-light-color':'col-8 text-right ' " vm-html="invoice_type>0&&str_invoice?'电子发票':'无需发票'"></div>
+                    <div class="col-1"><i class="icon-order-bill"></i></div>
+                </div>
+                <div vm-attr-class="'invoice-p '+ (invoice_type>0&&str_invoice?'':'hide')" vm-html="str_invoice"></div>
+            </a>
+
+            <!--海外优选商品 的发票-->
+            <div vm-attr-class="is_global!=1?'hide':'row'" class="hide">
+                <div class="col-3 text-left">发票信息</div>
+                <div class="col-8 text-right">海外优选商品不支持开发票</div>
+                <div class="col-1"></div>
+            </div>
+        </div>
+
+        <!--优惠券-->
+        <div class="hide" vm-attr-class="is_global==1?'hide':'order-zf clear'">
+            <!--海外优选商品时隐藏优惠券-->
+            <a href="?coupon" class="hide" vm-attr-class="coupon_list.length>0?'row':'hide'" >
+                <div class="col-7 text-left">优惠券/兑换码</div>
+                <div class="col-4 text-right" vm-html="chosen_coupon_sn + coupon_list" >
+                    <script type="text/html">
+                        <% if( chosen_coupon_sn.length > 0 ){ %>
+                        <span vm-html="'- &yen;'+(cart_data.couponPrice || 0)"></span>
+                        <% } else { %>
+                        <span vm-html="coupon_list.length"></span>张可用
+                        <% } %>
+                    </script>
+                </div>
+                <div class="col-1"><i class="icon-order-bill"></i></div>
+            </a>
+            <div vm-attr-class="balance>0?'row':'hide'" class="hide" >
+                <div class="col-5 text-left">
+                    <label class="balance-check-box" vm-on-click="setBalance()" >
+                        <input type="checkbox"  value="1" vm-value="isBalance" class="js-type" />
+                        <span class="icon-check"></span>
+                        <span class="balance-check-text">余额</span>
+                    </label>
+                </div>
+                <div class="col-7 text-right" vm-html="isBalance + cart_data.costBalance + cart_data.balance" >
+                    <script type="text/html">
+                        <% if( isBalance == 1 ){ %>
+                        抵扣<span><%= '&yen;' + cart_data.costBalance %></span>
+                        <% } else { %>
+                        可抵扣<span><%= '&yen;' + cart_data.balance %></span>
+                        <% } %>
+
+                    </script>
+                </div>
+
+            </div>
+        </div>
+
+        <!--留言    -->
+        <input type="text" class="order-send-msg"   vm-value="leave_word" placeholder="选填:给客服留言（100字以内）" maxlength="100"/>
+
+        <!--商品金额-->
+        <div class="order-money clear">
+
+            <div class="row">
+                <div class="col-5 order-money-left">商品合计</div>
+                <div class="col-7 order-money-right" vm-html="'&yen;'+(cart_data.goodsTotalPrice || '0.00')">&yen;0.00</div>
+            </div>
+
+            <div class="hide" vm-attr-class="is_global==1?'hide':'row'">
+                <div class="col-5 order-money-left">优惠券</div>
+                <div class="col-7 order-money-right" vm-html="'- &yen;'+(cart_data.couponPrice || coupon_list.length+'张可用' )">-&yen;0.00</div>
+            </div>
+
+            <div class="row">
+                <div class="col-5 order-money-left">活动优惠</div>
+                <div class="col-7 order-money-right" >
+                    <span vm-attr-class="cart_data.minusPrice>0?'icon-tips':'hide'" class="hide">满减</span>
+                    <span vm-attr-class="cart_data.rebatePrice>0?'icon-tips':'hide'" class="hide">满折</span>
+                    <span vm-html="'-&yen;'+(cart_data.freePrice || '0.00')">-&yen;0.00</span>
+                </div>
+            </div>
+
+            <div class="hide" vm-attr-class="is_global==1?'hide':'row'">
+                <div class="col-5 order-money-left">余额</div>
+                <div class="col-7 order-money-right" vm-html="'-&yen;'+( cart_data.costBalance || '0.00')">-&yen;0.00</div>
+            </div>
+
+            <div class="row">
+                <div class="col-5 order-money-left">运费</div>
+                <div class="col-7 order-money-right" >
+                    <span vm-attr-class="freightInfo_tips?'icon-tips':'hide'" class="hide" vm-html="freightInfo_tips"></span>
+                    <span  vm-html="'+&yen;'+( freight ||'0.00')" >+&yen;0.00</span>
+                </div>
+            </div>
+
+            <div class="hide" vm-attr-class="is_global==1?'row':'hide'">
+                <div class="col-5 order-money-left">进口税</div>
+                <div class="col-7 order-money-right" vm-html="'+&yen;'+(cart_data.taxAmount || '0.00')">+&yen;0.00</div>
+            </div>
+
+        </div>
+
+        <!--海外优选协议-->
+        <div vm-html="is_show_global_agreement" >
+            <script type="text/html">
+                <%if( is_global == 1 && is_show_global_agreement == 1){%>
+                    <div class="global_agreement">
+                        <label for="alobal_agreement">
+                            <span class="check-box">
+                                <input type="checkbox" value="1" id="alobal_agreement" vm-value="global_agreement" >
+                                <span class="icon-check"></span>
+                            </span>
+                            我已阅读并同意<a href="?hwg_agreement" >《百洋海外优选协议》</a>
+                        </label>
+                    </div>
+                <%}%>
+            </script>
+        </div>
+
+        <!--提交订单按钮-->
+        <div class="order-confirm-footer" >
+            <div>应付金额:<span vm-html="'&yen;'+(cart_data.costPrice || '0.00')">&yen;0.00</span></div>
+            <button type="button" vm-on-click="orderSubmit()" vm-html="rx_exist==1? '提交预订':'确认订单'"></button>
+        </div>
+
+    </div>
+
+    <!--海外优选协议-->
+    <div page-router="?hwg_agreement" class="global-agreement">
+        <!--头部-->
+        <header class="order-header top-header">
+            <h1 class="title" >百洋海外优选协议</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+        <div class="order-hwg-content">
+            <p>1. 购买百洋海外优选商品需要做入境申报，根据中国海关的要求，需要您配合上传身份证信息以便通关配送。</p>
+            <p>2. 商品均从境外或境内保税仓（含自贸区）发货，所有配送日期均以收到身份证信息并被审核通过后起算，境外发货一般在4-22个工作日内到货，保税仓发货一般在3-10个工作日内到货。</p>
+            <p>3. 您在下单购买“海外优选”商品时，须知晓并承诺所购商品均为个人合理自用，不得作二次销售，并自愿承担所购商品质量、性能、安全与卫生标准等同中国法定标准不一致所隐含的风险。如需购买符合中国产品标准的进口商品，请至百洋进口商品专区。</p>
+            <p>4. 百洋海外优选商品无法提供发票，暂不支持换货及无理拒收商品等；海外优选规则细则，请以商家商品描述为准。</p>
+            <p>5. 身份验证：当顾客以个人名义购买百洋商品时，依据中国海关要求，商品入境申报时，需要进行”实名认证“，请您配合上传个人身份证信息，并保证所提供的信息真实完整，以确保商品得以清关发货。</p>
+            <p>6. 因海外优选商品须报备海关，支付完成后不可修改订单信息和取消订单。</p>
+            <p> 若顾客在下单后未按规定上传有效的身份证信息，平台有权直接取消订单，具体包括不限于：</p>
+            <p>1） 顾客订单付款后48小时没有上传相关信息；</p>
+            <p>2） 顾客上传无效的身份证信息；</p>
+            <p>3） 顾客上传的身份证信息已被海关封号；</p>
+        </div>
+    </div>
+
+    <!--配送方式-->
+    <div page-router="?shipping_way" class="shipping-way" >
+        <!--头部-->
+        <header class="order-header top-header">
+            <h1 class="title" >选择支付配送方式</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+        <div class="hide" vm-attr-class="o2o_promote_text ? 'promotion-message' : 'hide'">
+            <span data-act="toggle" data-param="class=open" vm-html="o2o_promote_text || ''" class="message js-promote-text"></span>
+        </div>
+
+        <p class="title"><i class="icon icon-pay-way"></i> 支付方式</p>
+
+        <div class="shipping-way-list clear" vm-html="is_freight_collect + shipping_way_id + paymentList" >
+            <script type="text/html">
+                <% if( paymentList && paymentList.length ){ %>
+                    <% paymentList.forEach(function(item,index) { %>
+                        <div class="<%= is_freight_collect==0&&item.payment_id==3?'hide': shipping_way_id ==item.payment_id ? 'chose-shipping-way active':'chose-shipping-way' %>" vm-on-click="choseShippingWay(<%= item.payment_id %>, <%= index %> )" ><%= item.payment_name %></div>
+                    <% }); %>
+                <% } %>
+            </script>
+        </div>
+        <div class="clear shipping-way-time" >
+            <p class="title"><i class="icon icon-pay-way"></i> 配送方式</p>
+
+            <div class="shipping-time-list clear" vm-html="show_express_list + shipping_time_id">
+                <script type="text/html">
+                    <% if( show_express_list && show_express_list.length ){ %>
+                        <% show_express_list.forEach(function(list) { %>
+                            <div class="<%= list.express_type == shipping_time_id?'chose-shipping-way active':'chose-shipping-way' %> " vm-on-click="choseShippingTime(<%= list.express_type %>)"><%= list.express_name %></div>
+                        <% }); %>
+                    <% } %>
+                </script>
+            </div>
+            <div vm-html="show_express_list + shipping_time_id">
+                <script type="text/html">
+                    <% if( show_express_list && show_express_list.length ){ %>
+                        <% show_express_list.forEach(function(list) { %>
+                            <% if(list.express_type==0){ %>
+                                <!--普通配送-->
+                                <p vm-attr-class="shipping_time_id==0?'shipping-way-normal':'hide'" class="hide" ><%= list.prompt  %></p>
+
+                            <% } else if(list.express_type > 1) { %>
+                                <!--限时-->
+                                <p vm-attr-class="shipping_time_id>1?'tips':'hide'" class="hide"><%= list.o2o_tips %>，查看<a vm-on-click="openShippingDesc()"  href="javascript:;">《配送说明》</a></p>
+
+                            <% } %>
+
+                        <% }); %>
+                    <% } %>
+                </script>
+            </div>
+
+            <div vm-attr-class="shipping_time_id>1?'shipping-time-div row':'hide'" class="hide" >
+
+                <div class="title-tips">配送时间</div>
+
+                <div class="time-text"  vm-html=" o2o_data + o2o_fee + shipping_time_id " >
+                    <script type="text/html">
+                        <% if(o2o_data && o2o_fee && shipping_time_id > 1){ %>
+                            <span><%= o2o_data %></span>
+                            <% if( o2o_fee > 0 ){ %>
+                                <span>运费 <em>¥<%= o2o_fee %></em></span>
+                            <% } else { %>
+                                <span>免运费</span>
+                            <% } %>
+
+                        <% } else { %>
+                            <span>请选择配送时间，最快两小时送达</span>
+                        <% } %>
+                    </script>
+                </div>
+                <i class="icon icon-shipping-time" vm-on-click="o2o_region&&o2o_region.show()"></i>
+            </div>
+
+        </div>
+
+        <!--选择支付方式与配送方式确定的按钮-->
+        <a href="javascript:;" class="shipping-way-save shipping_way" vm-on-click="saveShippingWay()" >确定 </a>
+
+    </div>
+
+    <!--收货地址列表-->
+    <div page-router="?address" >
+        <!--头部-->
+        <header class="order-header top-header">
+            <h1 class="title" >选择收货地址 </h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <div class="user-address-list" vm-html=" address_list ">
+            <!--地址列表-->
+            <script type="text/html">
+                <% if( address_list && address_list.length ){ %>
+                <ul class="address-list" id="address_list" >
+                    <% address_list.forEach(function(item ) { %>
+                    <li >
+                        <div class="li-div" <%if( (address_list.length > 1 ) || (address_list.length == 1 && item.default_addr!='1' ) ) {%>data-act="chosen-swipe"<%}%> >
+                            <div class="list-content ">
+                                <div class="div-box">
+                                    <!--has-chosen 已选择的类-->
+                                    <div class="<%= item.id==addr_id?'list-text has-chosen':'list-text ' %>" vm-on-click="setAddressId('<%= item.id %>')">
+                                        <div class="address-user clear">
+                                            <span class="name"><%= item.consignee %></span>
+                                            <!-- 标签 -->
+                                            <% if(item.tag_id == 1){ %>
+                                            <span class="address-tag wo">我</span>
+                                            <% } else if(item.tag_id == 2){ %>
+                                            <span class="address-tag friend">朋友</span>
+                                            <% } else if(item.tag_id == 3){ %>
+                                            <span class="address-tag family">亲人</span>
+                                            <% } else if(item.tag_id == 4){ %>
+                                            <span class="address-tag company">公司</span>
+                                            <% } else if(item.tag_id == 5){ %>
+                                            <span class="address-tag other">其他</span>
+                                            <% } %>
+                                            <span class="phone"><%=  getPhone(item.telphone)  %></span>
+                                        </div>
+                                        <p class="address-text">
+                                            <% if(item.default_addr=='1'){ %>
+                                            <span class="moren">[默认]</span>
+                                            <% } %>
+                                            <%= item.province_name + item.city_name + item.county_name + item.address  %>
+                                        </p>
+                                    </div>
+                                    <a href="?add_address" class="list-edit" vm-on-click="edit('<%= item.id %>')" >
+                                        <i class="list-address-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <a href="javascript:;" class="<%= item.default_addr=='1'?'hide':'list-default' %>" vm-on-click="setDefault('<%= item.id %>')" >
+                                <span>设为<br/>默认</span>
+                            </a>
+                            <a href="javascript:;" class="<%= address_list.length== 1&&item.default_addr!='1'?'hide':'list-delete' %>" vm-on-click="del('<%= item.id %>')" >
+                                <span>删除</span>
+                            </a>
+                        </div>
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } else if(address_list && !address_list.length) {%>
+                <div class="empty">列表为空！</div>
+                <% } %>
+
+                <a href="?add_address" class="add-btn " vm-on-click="add()" >
+                    <div>新增收货地址</div>
+                </a>
+
+            </script>
+        </div>
+    </div>
+
+    <!--新增收货地址-->
+    <div page-router="?add_address">
+        <!--头部-->
+        <header class="order-header top-header">
+            <h1 class="title" vm-html="address_type=='add'?'新增收货地址':'修改收货地址'"></h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <div class="add-address">
+
+            <p class="hide" vm-attr-class="geolocation?'get-position':'hide'" vm-html="geolocation">
+                <script type="text/html">
+                    <i class="icon icon-position"></i>
+                    <% if(geolocation){ %>
+                    <% if(geolocation.state == 'loading'){ %>
+                    <span>正在获取您的地址...</span>
+                    <% } else if(geolocation.state == 'success'){ %>
+                    <span><%= geolocation.address %></span>
+                    <% } else if(geolocation.state == 'fail') { %>
+                    <span>位置加载失败！</span>
+                    <% } %>
+                    <% } %>
+                </script>
+            </p>
+
+            <form id="form-address">
+                <div class="row lxr">
+                    <span>收货人</span>
+                    <input type="text" data-validate="empty" vm-value="address_info.consignee" class="" value="" placeholder="请输入收货人姓名" >
+                </div>
+                <div class="row lxdh">
+                    <span>联系电话</span>
+                    <input type="text" data-validate="empty,phone" vm-value="address_info.telphone" class="" value="" placeholder="请输入收货人手机号码" >
+                </div>
+                <div class="row region" vm-on-click="selectAddress()">
+                    <span>省市区</span>
+                    <input type="text" vm-value="address_info.province" class="hide" data-validate="empty" value=""/>
+                    <input type="text" vm-value="address_info.city" class="hide" data-validate="empty" value=""/>
+                    <input type="text" vm-value="address_info.county" class="hide" data-validate="empty" value=""/>
+                    <div class="area" >
+                        <input type="text" vm-value="address_text" placeholder="请点击选择送货区域" readonly="readonly" value="" >
+                        <i class="icon-arrow"></i>
+                    </div>
+                </div>
+                <div class="row xxdz">
+                    <span>详细地址</span>
+                    <input type="text" class="detailed-add" data-validate="empty" vm-value="address_info.address" value="" placeholder="请输入详细地址">
+                </div>
+                <div class="row postcode">
+                    <span>邮政编码</span>
+                    <input type="tel" vm-value="address_info.zipcode" value="" class="postcode" placeholder="选填">
+                </div>
+                <div class="row add-tages">
+                    <span>添加标签</span>
+                    <div class="add-tag">
+                        <img vm-attr-src="getTagImg(address_info.tag_id)" vm-attr-class="'tag '+(address_info.tag_id > 0 ?'':'hide')" class="hide">
+                        <i class="show-tag" vm-attr-class="'show-tag '+(is_select_tag?'on':'')" vm-on-click="toggleTag()"></i>
+                    </div>
+                </div>
+                <div class="hide" vm-attr-class="'row tags '+(is_select_tag?'':'hide')">
+                    <div><span  vm-on-click="setTag(1)" vm-attr-class="address_info.tag_id==1?'on':''">我</span></div>
+                    <div><span  vm-on-click="setTag(2)" vm-attr-class="address_info.tag_id==2?'on':''">朋友</span></div>
+                    <div><span  vm-on-click="setTag(3)" vm-attr-class="address_info.tag_id==3?'on':''">亲人</span></div>
+                    <div><span  vm-on-click="setTag(4)" vm-attr-class="address_info.tag_id==4?'on':''">公司</span></div>
+                    <div><span  vm-on-click="setTag(5)" vm-attr-class="address_info.tag_id==5?'on':''">其他</span></div>
+                </div>
+
+                <div class="row set-default">
+                    <label class="check-box">
+                        <input type="checkbox" class="js-type" vm-value="address_info.default_addr" value="1" >
+                        <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                            <circle cx="17" cy="17" r="16"/>
+                            <path d="M8,17 L14,22 L26,11"/>
+                        </svg>
+                    </label>
+                    <span>设为默认地址</span>
+                </div>
+            </form>
+
+            <a href="javascript:;" class="save-btn " vm-on-click="save()" >
+                <div>保存并使用</div>
+            </a>
+
+        </div>
+
+    </div>
+
+    <!--发票信息-->
+    <div page-router="?invoice" class="invoice-flex-content " >
+        <!--头部-->
+        <header class="order-header top-header">
+            <h1 class="title" >发票信息</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <p vm-attr-class="is_touch_machine?'hide':'invoice-tips'" class="hide">7月1日起，开具企业发票需提供企业抬头及税号，否则发票将 无法用于企业报销。</p>
+
+        <!--选择发票-->
+        <div class="chose-invoice ">
+            <div class="title">
+                <i class="icon icon-invoice-way"></i>选择发票
+                <a href="?invoice-question">发票问题<i class="icon icon-quest"></i></a>
+            </div>
+            <div class="chose-invoice-list clear">
+                <div vm-attr-class="'chose-invoice-way '+ (is_show_invoice?'active':'') " vm-on-click="choseInvoiceWay(1)" >电子发票</div>
+                <div vm-attr-class="'chose-invoice-way '+ (is_show_invoice?'':'active') " vm-on-click="choseInvoiceWay(0)" >不开发票</div>
+            </div>
+            <p class="p-tips">如需要纸质发票请联系客服</p>
+        </div>
+        <!--发票内容-->
+        <div vm-attr-class="is_show_invoice?'invoice-type':'hide'">
+            <!--发票抬头-->
+            <div class="invoice-top">
+                <P>发票抬头</P>
+                <div class="chosen-person">
+
+                    <div class="chosen-type clear">
+                        <div class="pull-left">
+                            <label class="check-box" vm-on-click="setPerson(1)" >
+                                <input type="radio" value="1" vm-attr-checked="is_person==1" name="person">
+                                <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                    <circle cx="17" cy="17" r="16"/>
+                                    <path d="M8,17 L14,22 L26,11"/>
+                                </svg>
+                            </label>
+                            <span class="span-text">个人</span>
+                        </div>
+                        <div class="pull-left">
+                            <label class="check-box" vm-on-click="setPerson(2)" >
+                                <input type="radio" value="2" vm-attr-checked="is_person==2" name="person">
+                                <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                    <circle cx="17" cy="17" r="16"/>
+                                    <path d="M8,17 L14,22 L26,11"/>
+                                </svg>
+                            </label>
+                            <span class="span-text">单位</span>
+                        </div>
+                    </div>
+
+                    <div class="invoice-list">
+                        <span>抬头</span>
+                        <input type="text" vm-attr-class="is_person==1?'':'hide'" class="hide" vm-value="median_person_text" placeholder="可输入抬头">
+                        <input type="text" vm-attr-class="is_person==2?'':'hide'" class="hide" vm-value="median_company_text" placeholder="可输入抬头">
+                    </div>
+
+                    <div vm-attr-class="is_person==2?'invoice-list list-border':'hide'" class="hide">
+                        <span>税号</span>
+                        <input type="text" vm-value="taxpayer_number" placeholder="请输入税号">
+                    </div>
+
+                </div>
+            </div>
+            <!--发票分类-->
+            <div class="invoice-classify">
+                <p >发票内容</p>
+                <div class="classify-type">
+                    <label class="check-box" >
+                        <input type="radio" value="1" checked="" name="classify" >
+                        <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                            <circle cx="17" cy="17" r="16"/>
+                            <path d="M8,17 L14,22 L26,11"/>
+                        </svg>
+                    </label>
+                    <span vm-html="rx_exist==1?'药品':'明细'"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--保存发票信息-->
+        <div class="invoice-save" >
+            <a href="javascript:;" class="save-btn " vm-on-click="setInvoice()" >确认</a>
+        </div>
+
+    </div>
+
+    <!--优惠券-->
+    <div page-router="?coupon" class="order-coupons-con">
+        <!--头部-->
+        <header class="order-header top-header">
+            <h1 class="title">优惠券</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <a href="?coupons_rule" class="use-rule" ><i class="icon icon-user-rule"></i>使用规则</a>
+
+        <ul class="select-coupons-list" vm-html="coupon_list">
+            <script type="text/html">
+                <% if(coupon_list && coupon_list.length){ %>
+                    <% coupon_list.forEach(function(coupon) { %>
+                        <!--折扣优惠券-->
+                        <li>
+                            <label class="check-box">
+                                <input type="radio" value="<%= coupon.record_id %>" vm-attr-checked="chosen_coupon_sn=='<%= coupon.record_id  %>'" vm-on-click="setUseCoupon('<%= coupon.record_id %>')" class="js-shop" name="coupon-list">
+                                <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                    <circle cx="17" cy="17" r="16"/>
+                                    <path d="M8,17 L14,22 L26,11"/>
+                                </svg>
+                            </label>
+                            <!--折扣/现金-->
+                            <div class="<%= coupon.coupon_type==1?'clear box-hor coupon-xj':coupon.coupon_type==2?'clear box-hor coupon-zk':'clear box-hor coupon-zk' %>">
+                                <div class="discount">
+                                    <% if(coupon.coupon_type==1){ %>
+                                        <%= coupon.coupon_value %><span>元</span>
+                                    <% } else if(coupon.coupon_type==2) { %>
+                                        <%= coupon.coupon_value %><span>折</span>
+                                    <% } else { %>
+                                        <%= '包邮' %>
+                                    <% } %>
+                                </div>
+                                <!--说明-->
+                                <div class="explain flex-hor">
+                                    <div class="explain-xx">
+                                        <p class="name"><%= coupon.coupon_name %></p>
+                                        <p class="sm"><%= coupon.coupon_name %></p>
+                                        <p class="<%= coupon.coupon_type==1?'time-limited time-xj':coupon.coupon_type==2?'time-limited time-zk':'time-limited' %> ">有效日期至<%= getDateString(coupon.expiration) %></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    <% }); %>
+                <% } %>
+            </script>
+        </ul>
+
+        <!--领取优惠券-->
+        <div class="coupon-save" >
+            <a href="javascript:;" class="save-btn" vm-on-click="setCoupon()">确定</a>
+        </div>
+
+    </div>
+
+    <!--优惠券使用规则-->
+    <div page-router="?coupons_rule" class="global-agreement" >
+        <!--头部-->
+        <header class="order-header top-header">
+            <h1 class="title" >优惠券说明</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+        <div class="order-hwg-content">
+            <p>1.优惠券分为全场 、品类、品牌、单品</p>
+            <p>2.如果参加了包邮，那么根据优惠券的使用范围，如果涉及了包邮商品，则需要减掉优惠券的使用金额</p>
+            <p>3.如果参加了满赠，那么根据优惠券的使用范围，如果涉及了满赠活动商品，则需要减掉优惠券的使用金额</p>
+        </div>
+    </div>
+
+    <!--商品清单-->
+    <div page-router="?goodList" class="order-goods-list" >
+
+        <header class="order-header top-header">
+            <h1 class="title" >商品清单</h1>
+            <a href="javascript:;" class="goods-number" vm-html="'共'+ cart_data.totalQty +'件'" ></a>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <ul vm-html="goodsList + allIncreaseBuyList + allGiftList" >
+            <script type="text/html">
+
+                <!--遍历商品列表-->
+                <% if( goodsList && goodsList.length ){ %>
+                <%  goodsList.forEach(function(item){ %>
+                    <% if( item.group_id == 0 ){ %>
+                    <li>
+                        <div class="goods-list-div " >
+                            <!--正常商品-->
+                            <div class="box-hor is_hg">
+                                <div class="goods-list-img"><span style="background-image: url(<%= item.goods_image %>)"></span></div>
+                                <div class="goods-list-con flex-hor">
+                                    <div class="goods-list-name">
+                                        <% if( item.is_global == 1  ){ %>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                        <% } else if( item.drug_type == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                        <% } else if( item.drug_type == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                        <% } else if( item.drug_type == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                        <% } %>
+                                        <%= item.goods_name %>
+                                    </div>
+                                    <div class="goods-list-other ">
+                                        <span class="goods-list-price">&yen;<%= item.is_global==1?item.goods_price:item.discount_price %></span>
+                                        <span class="goods-list-number">x <%= item.goods_number %> </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--换购商品-->
+                            <% if( item.increaseBuyList && item.increaseBuyList.length ){ %>
+                                <% item.increaseBuyList.forEach(function(increaseBuy) { %>
+                                    <div class="box-hor is_hg">
+                                        <div class="goods-list-img"><span style="background-image: url(<%= increaseBuy.goods_image %>)"></span></div>
+                                        <div class="goods-list-con flex-hor">
+                                            <div class="goods-list-name">
+                                                <span>换购</span>
+                                                <% if( increaseBuy.is_global == 1  ){ %>
+                                                <i class="icon icon-hwg">海外优选</i>
+                                                <% } else if( increaseBuy.drug_type == 1 ) { %>
+                                                <i class="icon icon-rx"></i>
+                                                <% } else if( increaseBuy.drug_type == 2 ) { %>
+                                                <i class="icon icon-frxr"></i>
+                                                <% } else if( increaseBuy.drug_type == 3 ) { %>
+                                                <i class="icon icon-frxg"></i>
+                                                <% } %>
+                                                <%= increaseBuy.goods_name %>
+                                            </div>
+                                            <div class="goods-list-other ">
+                                                <span class="goods-list-price">&yen;<%= increaseBuy.discount_price %></span>
+                                                <span class="goods-list-number">x <%= increaseBuy.goods_number %> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            <% } %>
+
+                        </div>
+
+                        <!--赠品-->
+                        <% if( (item.bind_gift && item.bind_gift.length) || ( item.giftList && item.giftList.length ) ){ %>
+                        <div class="zp-list" >
+                            <% item.bind_gift.forEach(function(gift){ %>
+                            <div class="row " >
+                                <div class="col-11">[赠品]<%= gift.goods_name %></div>
+                                <div class="col-1">x<%= gift.goods_number  %></div>
+                            </div>
+                            <% }); %>
+
+                            <% item.giftList.forEach(function(giftList){ %>
+                            <div class="row " >
+                                <div class="col-11">[赠品]<%= giftList.goods_name %></div>
+                                <div class="col-1">x<%= giftList.goods_number  %></div>
+                            </div>
+                            <% }); %>
+
+                        </div>
+                        <% } %>
+
+                    </li>
+
+                    <% } else if( item.group_id > 0 && item.groupGoodsList && item.groupGoodsList.length ){ %>
+                    <!--套餐-->
+                        <li>
+                            <p class="goods-list-title"><span>套餐</span><%= item.group_name %></p>
+                            <% item.groupGoodsList.forEach(function(group){ %>
+
+                                <div class="goods-list-div group-goods " >
+                                    <div class="box-hor is_hg">
+                                        <div class="goods-list-img"><span style="background-image: url(<%= group.goods_image %>)"></span></div>
+                                        <div class="goods-list-con flex-hor">
+                                            <div class="goods-list-name">
+                                                <% if( group.is_global == 1  ){ %>
+                                                <i class="icon icon-hwg">海外优选</i>
+                                                <% } else if( group.drug_type == 1 ) { %>
+                                                <i class="icon icon-rx"></i>
+                                                <% } else if( group.drug_type == 2 ) { %>
+                                                <i class="icon icon-frxr"></i>
+                                                <% } else if( group.drug_type == 3 ) { %>
+                                                <i class="icon icon-frxg"></i>
+                                                <% } %>
+                                                <%= group.goods_name %>
+                                            </div>
+                                            <div class="goods-list-other ">
+                                                <span class="goods-list-price">&yen;<%= group.discount_price  %> </span>
+                                                <span class="goods-list-number">x<%= group.goods_number %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--套餐单品赠品-->
+                                <% if( group.bind_gift && group.bind_gift.length ){ %>
+                                    <div class="zp-list" >
+                                        <% group.bind_gift.forEach(function(gift){ %>
+                                            <div class="row " >
+                                                <div class="col-11">[赠品]<%= gift.goods_name %></div>
+                                                <div class="col-1">x<%= gift.goods_number  %></div>
+                                            </div>
+                                        <% }); %>
+
+                                    </div>
+                                <% } %>
+
+                            <% }) %>
+
+                            <div class="group-total" >套餐优惠价：<span>&yen;<%= item.discount_total  %></span></div>
+                            <!--套餐赠品-->
+                            <% if( item.giftList && item.giftList.length ){ %>
+                                <div class="zp-list" >
+                                    <% item.giftList.forEach(function(giftList){ %>
+                                    <div class="row " >
+                                        <div class="col-11">[赠品]<%= giftList.goods_name %></div>
+                                        <div class="col-1">x<%= giftList.goods_number  %></div>
+                                    </div>
+                                    <% }); %>
+                                </div>
+                            <% } %>
+
+                        </li>
+
+                    <% } %>
+
+                <%  }); %>
+                <%  } %>
+
+                <!--遍历全场加价购商品-->
+                <% if( allIncreaseBuyList && allIncreaseBuyList.length ){ %>
+                    <%  allIncreaseBuyList.forEach(function(item){ %>
+                        <li>
+                            <div class="goods-list-div " >
+                                <!--正常商品-->
+                                <div class="box-hor is_hg">
+                                    <div class="goods-list-img"><span style="background-image: url(<%= item.goods_image %>)"></span></div>
+                                    <div class="goods-list-con flex-hor">
+                                        <div class="goods-list-name">
+                                            <% if( item.is_global == 1  ){ %>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                            <% } else if( item.drug_type == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                            <% } else if( item.drug_type == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                            <% } else if( item.drug_type == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                            <% } %>
+                                            <%= item.goods_name %>
+                                        </div>
+                                        <div class="goods-list-other ">
+                                            <span class="goods-list-price">&yen;<%= item.is_global==1?item.goods_price:item.discount_price %></span>
+                                            <span class="goods-list-number">x <%= item.goods_number %> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    <% }); %>
+                <%  } %>
+
+                <!--全场赠品-->
+                <% if( allGiftList && allGiftList.length ){ %>
+                    <div class="zp-all-list" >
+                        <%  allGiftList.forEach(function(allgift){ %>
+                        <div class="row " >
+                                <div class="col-11">[赠品]<%= allgift.goods_name %></div>
+                                <div class="col-1">x<%= allgift.goods_number  %></div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <%  } %>
+
+            </script>
+        </ul>
+
+    </div>
+
+    <!--发票问题-->
+    <div page-router="?invoice-question" class="invoice-question">
+        <header class="order-header top-header">
+            <h1 class="title" >电子发票</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+        <div class="invoice-question-con" >
+            <p class="title" >1.可以开发票吗？</p>
+            <p class="p-text">商城开具正规发票，发票抬头和内容在下单页面“发票信息”里面选择即可。商城推行电子发票。如需要纸质发票，请联系客服热线400-679-9859或咨询在线客服。</p>
+            <p class="title" >2.什么是电子发票？</p>
+            <p class="p-text">电子发票是基于有效交易结果开具的电子收付款凭证，是一种发票快照或发票数据。电子发票和纸质发票具有同等法律效力，国家税务总局和各地税务机关均已出台相关政策文件予以大力支持。</p>
+            <p class="title">3.怎样收到电子发票？</p>
+            <p class="p-text">订单发货后由系统自动发送到您账户中，详细见我的→我的订单→订单详情页进行查看；如未收到，请联系客服热线400-679-9859或咨询在线客服。</p>
+            <p class="title">4.开电子发票可以选择大类吗？</p>
+            <p class="p-text">很抱歉，目前开具电子发票只能选明细一项。</p>
+            <p class="title">5.可以开增值税发票吗？</p>
+            <p class="p-text">很抱歉，目前商城开具不了增值发票。</p>
+            <p class="title">6.余额支付可以开发票吗？</p>
+            <p class="p-text">很抱歉，目前余额支付金额不开具发票</p>
+        </div>
+
+    </div>
+
+    <!--支付密码输入弹出框-->
+    <div vm-attr-class="'popup popup-password '+(popup_set_password?'':'hide')" class="hide">
+        <div class="popup-content">
+            <h3 class="popup-title">请输入6位支付密码 <i class="icon-close" vm-on-click="closePasswordPopup()">&times;</i></h3>
+            <div class="popup-msg row">
+                <input type="tel" oninput="value=value.replace(/[^\d]/g, '')"  autocomplete="none" class="pay_password" vm-value="pay_password" vm-on-input="passwordSubmit()" maxlength="6"/>
+                <span class="col-2"><em vm-html="pay_password.length>0?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>1?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>2?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>3?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>4?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>5?'&bull;':''"></em></span>
+            </div>
+            <div class="popup-footer clear">
+                <a href="javascript:window.location='user-assets.html?redirect=' + encodeURIComponent(window.location) + '#page=reset-pay-password-select';" class="pull-right">忘记支付密码？</a>
+            </div>
+        </div>
+    </div>
+
+    <!--不支持配送地区 弹窗-->
+    <div vm-attr-class="is_show_ShippingDesc?'popupwin':'hide'" class="hide">
+        <div class="popupwin-con">
+            <div class="title">查看详情 <a href="javascript:;" vm-on-click="closeShippingDesc()" >&times;</a></div>
+            <p class="text-h">青岛崂山区暂不支持当日达地区</p>
+            <p class="text-p">辖流亭、夏庄、惜福镇、王哥庄、返岭、沙子口、南宅科、乌衣巷等8个区。</p>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('order-confirm')</script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>浏览足迹</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body>
+    <div class="wrap box user-track-all">
+        <!--公共头部-->
+        <header class="user-order top-header">
+            <h1 class="title title-red">浏览足迹</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="user-track-content flex-content" vm-controller="user-record" id="track_scroll">
+                <div vm-html="record_list">
+                    <script type="text/html">
+                        <%if(record_list && record_list.length){%>
+                            <div class="track-list">
+                                <!--<div class="track-list-time"><i class="icon icon-time"></i>今天</div>-->
+                                <%record_list.forEach(function(item){%>
+                                    <div class="<%= item.status==0?'track-list-con out-stock':'track-list-con'%>">
+                                        <div class="track-product ">
+                                            <a href="product/<%=item.product_id%>.html">
+                                                <span style="background-image: url( <%= item.default_image %> )"></span>
+                                                <!--缺货状态-->
+                                                <%if(item.stock_out == 1){%>
+                                                    <div class="icon-collect out-stock"></div>
+                                                <%}%>
+                                                <!--下架状态-->
+                                                <%if(item.status == 0){%>
+                                                    <div class="icon-collect un-shelve"></div>
+                                                <%}%>
+                                            </a>
+                                        </div>
+                                        <div class="track-product-con">
+                                            <a href="product/<%=item.product_id%>.html">
+                                                <p class="track-product-name"><%=item.product_name%></p>
+                                            </a>
+                                            <div class="track-price">
+                                                <span>	&yen;<%=item.price%></span>
+                                                <span>&yen;<%=item.market_price%></span>
+                                                <a href="javascript:;" class="icon icon-delete" vm-on-click="deleteRecord('<%= item.record_id %>')"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <%})%>
+                            </div>
+                        <%}else if(record_list && !record_list.length){%>
+                            <div class="user-track-null" ><span></span></div>
+                            <a href="index.html" class="go-index-btn">去逛逛</a>
+                        <%}%>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-track')</script>
+</body>
+</html>
+

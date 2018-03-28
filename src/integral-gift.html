@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>优惠券详情</title>
+    <link rel="stylesheet" href="css/integral.css"/>
+</head>
+<body>
+
+    <!--头部-->
+    <div vm-controller="gift-data" >
+
+
+        <div vm-html="gift_data + is_enough ">
+
+            <script type="text/html">
+
+                <header  class="top-header">
+                    <h1 class="title" ><%= gift_data.name %></h1>
+                    <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                    <!--头部右边按钮 导航菜单 -->
+                    {{require('template/topnav.html', {'page':'user-index'})}}
+
+                </header>
+
+                <!--礼品详情-->
+                <div  class="gift-img">
+
+                    <% if( gift_data.detail_image && gift_data.detail_image.length ) {  %>
+
+                        <div class="gift-img-money">
+                            <img src="<%= gift_data.detail_image %>"/>
+                        </div>
+
+                    <% } else if( gift_data.type=='coupon' ){   %>
+                    <!--满减-->
+                        <div class=" quan-write quan-money ">
+                            <div><span><%= gift_data.value %></span>元</div>
+                            <div><%= gift_data.name %></div>
+                            <div><%= gift_data.description %></div>
+                        </div>
+
+                    <% }  else  if( gift_data.type=='discount' ){  %>
+                    <!--折扣 -->
+                        <div class=" quan-write quan-discount ">
+                            <div><span><%= gift_data.value %></span>折</div>
+                            <div><%= gift_data.name %></div>
+                            <div><%= gift_data.description %></div>
+                        </div>
+
+                    <% }  else  if( gift_data.type=='free_ship' ){  %>
+                    <!--包邮-->
+                        <div class=" quan-write quan-free ">
+                            <div><span>包邮</span></div>
+                            <div><%= gift_data.name %></div>
+                            <div><%= gift_data.description %></div>
+                        </div>
+
+                    <% }  %>
+
+                </div>
+                <div class="gift-head new-year">
+                    <div class="first-title"><%= gift_data.points_gifts_name %></div>
+                    <div class="gift-head-packing"><span><%= gift_data.need_points %></span>积分</div>
+                </div>
+                <!--礼品简介-->
+                <div class="gift-border">
+                <div class="gift-head">
+                    <div class="title">*礼品简介</div>
+                    <div><%= gift_data.name %> X <%= gift_data.exchange_num %></div>
+                </div>
+                <!--使用须知-->
+                <div class="gift-head">
+                    <div class="title">*使用须知</div>
+                    <% if(gift_data.instructions_for_use && gift_data.instructions_for_use.length){ %>
+                        <% gift_data.instructions_for_use.forEach(function(item,index){ %>
+                            <div class="content"><%= item  %></div>
+                        <% }) %>
+                    <% } %>
+                </div>
+                <!-- 兑换规则-->
+                <div class="gift-head">
+                    <div class="title">*兑换规则</div>
+                    <% if(gift_data.exchange_rule_desc && gift_data.exchange_rule_desc.length){ %>
+                        <% gift_data.exchange_rule_desc.forEach(function(item,index){ %>
+                            <div class="content"><%= item  %></div>
+                        <% }) %>
+                    <% } %>
+                </div>
+
+                <% if(gift_data.is_login == 0 ){ %>
+
+                    <a href="javascript:;" class="gift-button" vm-on-click="goLogin()">
+                        <span class="login_in">请先登录</span>
+                    </a>
+
+
+                <%} else if ( !is_enough ){%>
+
+                    <a href="javascript:;" class="gift-button">
+                        <span class="not_enough">积分不够</span>
+                    </a>
+
+                <%} else { %>
+
+                    <a href="javascript:;" class="gift-button" vm-on-click="exchange_gift()">
+                        <span class="exchange">积分兑换</span>
+                    </a>
+
+                <% } %>
+
+
+
+                </div>
+
+            </script>
+        </div>
+
+    </div>
+
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('integral-gift')</script>
+
+</body>
+</html>

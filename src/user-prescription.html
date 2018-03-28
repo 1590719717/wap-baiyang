@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>我的处方</title>
+    <!--<link rel="stylesheet" href="css/index.css"/>-->
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body>
+<div class="wrap box user-prescription">
+
+    <!--公共头部菜单-->
+    <header class="search-box top-header">
+        <h1 class="title">我的处方</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':'user-index'})}}
+
+    </header>
+
+    <div class="flex">
+
+        <div class="flex-content user-prescription" vm-controller="user-prescription" data-act="prescription-scroll">
+
+            <ul class="prescription-list" vm-html="list">
+                <script type="text/html">
+                    <%if(list && list.length){%>
+
+                        <%list.forEach(function(item){%>
+                            <%if(item.status==1){%><!-- 1未购买 2已购买 3作废 4自动失效-->
+                                <li>
+                            <%}else if(item.status==2){%>
+                                <li class="taken">
+                            <%}else if(item.status==3){%>
+                                <li class="invalid">
+                            <%}else if(item.status==4){%>
+                                <li class="cancel">
+                            <%}else{%>
+                                <li>
+                            <%}%>
+                                <a href="user-prescription-details.html?id=<%=item.yfz_prescription_id%>">
+                                    <div class="prescription-top">
+                                        <span class="prescription-number">处方号：<%=item.yfz_prescription_id%></span>
+                                        <span class="doctor">医生：<%=item.doctor_name%></span>
+                                        <span class="state">
+                                            <i></i>
+                                            <%if(item.status==1){%><!-- 1未购买 2已购买 3作废 4自动失效-->
+                                                待取药
+                                            <%}else if(item.status==2){%>
+                                                已取药
+                                            <%}else if(item.status==3){%>
+                                                作废
+                                            <%}else if(item.status==4){%>
+                                                失效
+                                            <%}%>
+
+                                        </span>
+                                    </div>
+                                    <div class="prescription-center">
+                                        <%=item.diagnose%>
+                                    </div>
+                                </a>
+
+                                <div class="prescription-footer" vm-on-click="buyPrescription('<%=item.yfz_prescription_id%>');">
+                                    <span class="time"><%=item.create_time%></span>
+                                    <%if(item.status==1){%><!-- 1未购买 2已购买 3作废 4自动失效-->
+                                        <span class="buy-btn">一键购买</span>
+                                    <%}%>
+                                </div>
+                            </li>
+                        <%})%>
+                    <%} else { %>
+                        <%if(showad){%>
+                            <div class="no-prescription" id="yifuzhen">
+                                <div class="no">
+                                    <img src="images/wu.png">
+                                </div>
+                                <% if( !is_touch_machine ) { %>
+                                    <div class="bottom">
+                                        <a href="http://app.bestyoo.com.cn/member.html" target="_blank">
+                                            <img src="images/button1.png">
+                                        </a>
+                                    </div>
+                                <% } %>
+                            </div>
+                        <%}%>
+                    <% } %>
+                </script>
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+<script src="js/config.js"></script>
+<script>seajs.use('user-prescription')</script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+@charset "utf-8";
+/*!
+ * @author yuchunfeng
+ * @date 2017/5/77
+ * @version 1.0.0
+ * @description 退货详情
+ */
+
+@import "../skin/{{Config.skin_file}}";
+
+.wrap {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+/**************
+ **退货详情
+ ***********************************************************************************/
+body.user-refund-detail {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: visible;
+    background-color: #eee;
+
+    //订单详情
+    .order-detail-content {
+        margin-bottom: (20 / @rem750);
+
+        //订单状态
+        .order-detail-type {
+            background-color: #fff;
+            padding: (20 / @rem750);
+
+            p {
+                margin: 0;
+                color: #333;
+                font-size: (26 / @rem750);
+                line-height: (44 / @rem750);
+
+                &.order-type-p span {
+                    color: @base_color;
+                }
+
+            }
+
+        }
+
+        //商品详情
+        .order-detail-product {
+            margin-top: (20 / @rem750);
+            background-color: #fff;
+
+            .order-product-p {
+                height: (84 / @rem750);
+                line-height: (84 / @rem750);
+                padding: 0 (20 / @rem750);
+                color: #333333;
+                font-size: (26 / @rem750);
+                border-bottom: #dedede solid 1px;
+                margin: 0;
+            }
+            //商品列表
+            .order-list-wrap {
+                padding: 0 (20 / @rem750);
+                border-bottom: #dedede solid 1px;
+            }
+            .order-detail-list {
+                box-sizing: border-box;
+                height: (188 / @rem750);
+                padding-top: (30 / @rem750);
+                display: block;
+                border-bottom: #dedede solid 1px;
+                &:last-child {
+                    border-bottom: 0
+                }
+
+                .order-product {
+                    width: (128 / @rem750);
+                    height: (128 / @rem750);
+                    background: url(../images/default-img.png?v1.0.2) no-repeat 50% 50%;
+                    background-size: contain;
+                    overflow: hidden;
+
+                    span {
+                        box-sizing: border-box;
+                        display: inline-block;
+                        width: 100%;
+                        height: (128 / @rem750);
+                        border: #dddddd solid 1px;
+
+                        background: url(../images/default-img.png?v1.0.2) no-repeat 50% 50%;
+                        background-size: contain;
+                    }
+                }
+
+                .order-product-msg {
+                    box-sizing: border-box;
+                    width: (562 / @rem750);
+                    height: 100%;
+                    line-height: 1.5em;
+                    position: relative;
+                    padding-bottom: (30 / @rem750);
+
+                    p {
+                        width: 100%;
+                        margin: 0;
+                    }
+                    .product-name {
+                        font-size: (24 / @rem750);
+                        color: #666;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+
+                    }
+                    .product-price {
+                        position: absolute;
+                        left: 0;
+                        bottom: (30 / @rem750);
+                        z-index: 1;
+                        color: #333333;
+                        font-size: (28 / @rem750);
+                        .tag-span {
+                            display: inline-block;
+                            float: left;
+                            margin-left: (10/@rem750);
+                            color: @tag_span_text;
+                            font-size: (20/@rem750);
+                            padding: 0 (10/@rem750);
+                            background-color: @tag_span_bgcolor;
+                            border-radius: 3px;
+
+                        }
+                    }
+
+                    .icon-hwg {
+                        display: inline-block;
+                        font-size: (20 / @rem750);
+                        line-height: 1em;
+                        padding: 3px 2px 2px;
+                        border-radius: 2px;
+                        vertical-align: middle;
+                        color: #fff;
+                        background-color: #8b49f6;
+                        font-weight: 400;
+                        font-style: normal;
+                        margin-left: 0;
+                        margin-right: 0;
+                    }
+
+                }
+
+            }
+
+            // 商品数量
+            .product-num {
+                color: #666;
+                &::first-letter {
+                    font-size: smaller;
+                }
+            }
+            .present {
+                box-sizing: border-box;
+                padding: 0 (20 / @rem750);
+                font-size: (24 / @rem750);
+                line-height: (58 / @rem750);
+                overflow: hidden;
+
+                .present-name {
+                    color: #666;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            //联系客服l
+            .btn-kf {
+                width: 100%;
+                padding: (20 / @rem750);
+                box-sizing: border-box;
+                overflow: hidden  ;
+
+                a {
+                    text-align: center;
+                    text-decoration: none;
+                    height: (56 / @rem750);
+                    line-height: (56 / @rem750);
+                    color: #333;
+                    font-size: (30 / @rem750);
+                    box-sizing: border-box ;
+
+                    &:first-child {
+                        border-right: #dedede solid 1px   ;
+                    }
+
+                }
+                .icon-detail-kf {
+                    .icon_detail_kf() ;
+                    vertical-align: middle ;
+                }
+
+                .icon-detail-tel {
+                    .icon_detail_tel() ;
+                    vertical-align: middle ;
+                }
+            }
+        }
+        //退货说明
+        .refund-desc {
+            margin-top: (20 / @rem750);
+            width: 100%;
+            padding: 0 (20 / @rem750) (30 / @rem750) (20 / @rem750);
+            box-sizing: border-box;
+            background-color: #ffffff;
+
+            p {
+                margin: 0;
+                height: (84 / @rem750) ;
+                line-height: (84 / @rem750) ;
+                color:#333333 ;
+                font-size: (26 / @rem750);
+            }
+            .refund-desc-text {
+                width: 100%;
+                height: (380/ @rem750);
+                padding: (20 / @rem750);
+                background-color: #f2f2f2;
+                color: #333;
+                font-size: (26 / @rem750);
+                box-sizing: border-box;
+                border-radius: 3px;
+            }
+
+        }
+
+        //照片凭证
+        .refund-img {
+            margin-top: (20 / @rem750);
+            width: 100%;
+            padding: 0 (20 / @rem750) (30 / @rem750) (20 / @rem750);
+            box-sizing: border-box;
+            background-color: #ffffff;
+
+            p {
+                margin: 0;
+                height: (86 / @rem750) ;
+                line-height: (86 / @rem750) ;
+                color:#333333 ;
+                font-size: (26 / @rem750);
+            }
+
+            .refund-list-img {
+                width: 100%;
+                overflow: hidden;
+
+                a {
+                    display: block;
+                    float: left;
+                    height: (132 / @rem750) ;
+                    line-height: (132 / @rem750) ;
+                    width: (132 / @rem750) ;
+                    margin: (20 / @rem750) (5 / @rem750);
+                    text-align: center ;
+                    background: url(../images/default-img.png) no-repeat 50% 50% ;
+                    background-size: contain;
+                    border: #cccccc solid 1px;
+                    text-decoration: none;
+                    vertical-align: middle;
+                    overflow: hidden;
+                    box-sizing: border-box;
+
+                    img {
+                        max-width: 100%;
+                        max-height: 100%;
+                        width: auto;
+                        height: auto;
+                        margin: auto;
+                        text-align: center;
+                        vertical-align: middle;
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    //按钮
+    .footer-div {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+    }
+    .btn-wap {
+        width: 100%;
+        padding: (25 / @rem750) (20 / @rem750);
+        box-sizing: border-box;
+        background-color: #fff;
+        border-top: #dedede solid 1px;
+        overflow: hidden;
+
+        a {
+            display: inline-block;
+            float: right;
+            text-decoration: none;
+            text-align: center;
+            width: (150 / @rem750);
+            height: (56 / @rem750);
+            line-height: (56 / @rem750);
+            border-radius: 3px;
+            font-size: (30 / @rem750);
+            border: #b5b5b5 solid 1px;
+            color: #333;
+        }
+    }
+
+    div.btn-wap:empty{
+        display: none;
+    }
+
+
+
+    //查看图片
+
+    .wap {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        .flex-content {
+            background-color: #eeeeee;
+        }
+
+        .btn-back {
+            display: block;
+            width: 3rem;
+            height: (75 / 24rem);
+            line-height: (75 / 24rem);
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+
+            .icon-arrow {
+                margin: 0;
+                vertical-align: middle;
+                width: (30 / 24rem);
+                height: (30 / 24rem);
+                border: 1px solid #666;
+                border-width: 1px 0 0 1px;
+                -webkit-transform: rotate(-45deg);
+                transform:         rotate(-45deg);
+            }
+        }
+
+        .swipe-wrap {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+
+            &::after {
+                content: attr(scroll-index);
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: (75 / 24rem);
+                line-height: (75 / 24rem);
+                text-align: center;
+                font-size: (28 / 24rem);
+                color: #333;
+                background-color: #ffffff;
+                border-bottom: 1px solid #c8c8c8;
+                z-index: 1;
+            }
+
+        }
+        .swipe-list {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+
+            .swipe-item {
+                box-sizing: border-box;
+                height: 100%;
+                width: 100%;
+                background-size: contain;
+                background-position: 50% 50%;
+                background-repeat: no-repeat;
+                padding: (20 / @rem750);
+                background-clip: content-box;
+            }
+        }
+
+    }
+
+}
+
+.pc-view body.user-refund-detail .btn-wap{
+    max-width: 640px;
+    margin: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

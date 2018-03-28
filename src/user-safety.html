@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>安全中心</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-safety">
+    <div class="wrap box"  vm-controller="user-safety">
+        <header class="user-account top-header">
+            <h1 class="title" vm-html="title_text"></h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex" >
+            <!-- 安全中心首页 -->
+            <div class="account-safety-content flex-content hide" id="wrap-index">
+                <a href="javascript:;" vm-on-click="pageRouter('p1')" class="box-hor">
+                    <div class="flex-hor safety-list">
+                        <p>修改密码</p>
+                        <p>*建议您定期更改密码以保护账户安全</p>
+                    </div>
+                    <i class="icon-arow"></i>
+                </a>
+                <a href="javascript:;" vm-on-click="pageRouter('m1')"  class="box-hor">
+                    <div class="flex-hor safety-list">
+                        <p>修改手机验证号码 <span vm-html="getMobile(mobile)"></span></p>
+                        <p>*若您的验证手机已丢失或停用，请立即修改更换</p>
+                    </div>
+                    <i class="icon-arow"></i>
+                </a>
+            </div>
+
+            <!--修改密码step1-->
+            <div class="account-mpsw-content flex-content hide" id="wrap-p1">
+                <div class="modify-psw-top clear">
+                    <div class="step-img1"><span></span></div>
+                    <p><span>验证身份</span> <span>修改密码</span></p>
+                </div>
+                <div class="modify-psw-mid">
+                    <p>手机：<span vm-html="getMobile(mobile)"></span></p>
+                    <div class="row modify-psw-form">
+                        <input type="text" name="verify" vm-value="old_mobile_code" placeholder="请输入短信验证码" class="col-8">
+                        <!--点击后按钮的背景颜色 .click-color -->
+                        <button type="button" data-act="mobile_code" data-param="type=1" class="col-4 btn">获取验证码</button>
+                    </div>
+                    <!--点击获取验证码按钮后显示该段文字-->
+                    <p class="hide" vm-attr-class="'send-tip '+(is_send?'':'hide')">短信已发送至您的手机，如在60秒内还没有收到短信验证码，请重新获取验证码。</p>
+                </div>
+                <a href="javascript:;" vm-on-click="checkCode('p2')" class="btn-next" vm-attr-class="'btn-next '+(old_mobile_code?'active':'')">下一步</a>
+                <p class="modiry-phone-tip"><span>温馨提示：</span><br>设置手机验证码后，可用于快速找回密码及支付密码，接收账户资产变更提醒。
+                    <br>验证身份遇到问题？您可以<span data-act="ntkf">联系客服</span></p>
+            </div>
+
+            <!--修改密码step2-->
+            <div class="account-mpsw-content flex-content hide" id="wrap-p2">
+                <div class="modify-psw-top clear">
+                    <div class="step-img2"><span></span></div>
+                    <p class="modify-phone-text"><span>验证身份</span> <span>修改密码</span></p>
+                </div>
+                <div class="modify-psw-mid">
+                    <div class="row modify-psw-form">
+                        <input vm-attr-type="show_password?'text':'password'" name="password" vm-value="password" placeholder="新密码" class="col-10" maxlength="18">
+                        <label class="toggle-psw col-2">
+                            <input type="checkbox" value="1" vm-value="show_password"/>
+                            <i class="icon-eye"></i>
+                        </label>
+                    </div>
+                    <div class="row modify-psw-form">
+                        <input  vm-attr-type="show_r_password?'text':'password'" name="new-psw" vm-value="r_password" placeholder="确认密码" class="col-10" maxlength="18">
+                        <label class="toggle-psw col-2">
+                            <input type="checkbox" value="1" vm-value="show_r_password"/>
+                            <i class="icon-eye"></i>
+                        </label>
+                    </div>
+                </div>
+                <!--按钮点击后的背景色 .active-->
+                <button class="btn-next" vm-attr-class="'btn-next '+(password&&r_password?'active':'')" type="button" vm-on-click="modifyPassword()">确认</button>
+            </div>
+
+            <!--修改手机号码step1-->
+            <div class="account-mpsw-content flex-content hide" id="wrap-m1">
+                <div class="modify-psw-top clear">
+                    <div class="step-img1"><span></span></div>
+                    <p><span>验证身份</span> <span>修改手机号码</span></p>
+                </div>
+                <div class="modify-psw-mid">
+                    <p>手机：<span vm-html="getMobile(mobile)"></span></p>
+                    <div class="row modify-psw-form">
+                        <input type="text" name="verify" vm-value="old_mobile_code" placeholder="请输入短信验证码" class="col-8">
+                        <button type="button" data-act="mobile_code" data-param="type=1" class="col-4">获取验证码</button>
+                    </div>
+                    <!--点击获取验证码按钮后显示该段文字-->
+                    <p class="hide" vm-attr-class="'send-tip '+(is_send?'':'hide')">短信已发送至您的手机，如在60秒内还没有收到短信验证码，请重新获取验证码。</p>
+                </div>
+                <a href="javascript:;" vm-on-click="checkCode('m2')" class="btn-next" vm-attr-class="'btn-next '+(old_mobile_code?'active':'')">下一步</a>
+
+                <p class="modiry-phone-tip"><span>温馨提示：</span><br>设置手机验证码后，可用于快速找回密码及支付密码，接收账户资产变更提醒。
+                    <br>验证身份遇到问题？您可以<span data-act="ntkf">联系客服</span></p>
+            </div>
+
+            <!--修改手机号码step2-->
+            <div class="account-mpsw-content flex-content hide" id="wrap-m2">
+                <div class="modify-psw-top clear">
+                    <div class="step-img2"><span></span></div>
+                    <p class="modify-phone-text"><span>验证身份</span> <span>修改手机号码</span></p>
+                </div>
+                <div class="modify-psw-mid">
+                    <input type="tel" name="tellphone" vm-value="n_mobile" pattern="\d+" placeholder="请输入新的手机号码"  class="clear"/>
+                    <div class="row modify-psw-form">
+                        <input type="text" name="verify" vm-value="mobile_code" placeholder="请输入短信验证码" class="col-8">
+                        <button type="button" data-act="mobile_code" data-param="type=2" class="col-4 btn">获取验证码</button>
+                    </div>
+                    <!--点击获取验证码按钮后显示该段文字-->
+                    <p class="hide" vm-attr-class="'send-tip '+(is_send?'':'hide')">短信已发送至您的手机，如在60秒内还没有收到短信验证码，请重新获取验证码。</p>
+                </div>
+                <button type="button" vm-on-click="modifyPhone()" class="btn-next" vm-attr-class="'btn-next '+(n_mobile&&mobile_code?'active':'')">确认</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-safety')</script>
+</body>
+</html>
+

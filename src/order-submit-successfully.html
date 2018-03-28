@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>支付成功</title>
+    <link rel="stylesheet" href="css/order-submit-successful.css"/>
+</head>
+<body class="order-submit-successfully" vm-controller="order-pay">
+
+    <div >
+
+        <!--公共头部菜单-->
+        <header class="order-submit top-header">
+            <h1 class="title" vm-html="rx_exist+payment_id">
+                <script type="text/html">
+                    <% if(rx_exist==1){ %>
+                        提交预定
+
+                    <% } else if(payment_id==3){  %>
+                        提交成功
+
+                    <% }else { %>
+                        支付成功
+
+                    <%  } %>
+                </script>
+            </h1>
+            <a href="javascript:;" vm-on-click="view_url('user-order.html')" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <!--内容区-->
+        <div class="order-submit-content " vm-html="rx_exist+order_id+real_pay+payment_id+order_status+is_parent">
+            <script type="text/html">
+                <% if(rx_exist == 1 ){ %>
+                <!--处方药-->
+                <div class="order-rx-exist ">
+                    <div class="order-top"><span></span></div>
+                    <!--订单的各个状态-->
+                    <div class="order-type clear">
+                        <div class="order-type-item active">
+                            <div class="order-type-book">
+                                <i class="icon"></i>
+                            </div>
+                            <div class="red-line"></div>
+                            <p>提交预订</p>
+                        </div>
+                        <div class="order-type-item ">
+                            <div class="red-line"></div>
+                            <div class="order-type-reviewed">
+                                <i class="icon"></i>
+                            </div>
+                            <p>药师审核</p>
+                        </div>
+                        <div class="order-type-item ">
+                            <div class="order-type-sure">
+                                <i class="icon"></i>
+                            </div>
+                            <p>确认预订</p>
+                        </div>
+                    </div>
+                    <p class="order-rx-tips">药师会在15分钟内审核您的预定订单</p>
+                    <div class="order-submit-btn clear">
+                        <a href="javascript:;" class="look-order" vm-on-click="view_url('<%= is_parent==1?'user-order.html#all':'user-order-detail.html?id='+ order_id  %> ')" >查看预订</a>
+                        <a href="javascript:;" class="go-index" vm-on-click="view_url('index.html')" >返回首页</a>
+                    </div>
+                    <p class="order-rx-tips2"><i class="icon icon-order-tips"></i>温馨提示：预订成功后，您可到我的订单内查看订单状态。</p>
+                </div>
+
+                <% } else if( order_status ) { %>
+                <!--普通订单的支付成 -->
+                <div class="order-common ">
+                    <div class="order-common-top">
+                        <span></span>
+                    </div>
+                    <p class="order-pay-text">
+                        <i class="icon icon-pay-shipping"></i><%= payment_id==3?'提交成功':'支付成功' %>
+                    </p>
+                    <div class="order-detail">
+                        <p >订单编号：<%= order_id %></p>
+                        <% if(payment_id == 1){    %>
+                            <!--支付宝-->
+                            <p >支付方式：支付宝支付 </p>
+                        <% } else if (payment_id == 2){  %>
+                            <!--微信-->
+                            <p >支付方式：微信支付 </p>
+
+                        <% } else if (payment_id == 3){  %>
+                            <!--货到付款-->
+                            <p >支付方式：货到付款 </p>
+
+                        <% } else if (payment_id == 5){  %>
+                            <!--苹果-->
+                            <p >支付方式：苹果支付 </p>
+
+                        <% } else if (payment_id == 6){  %>
+                            <!--银联支付-->
+                            <p >支付方式：银联支付 </p>
+
+                        <% } else {  %>
+
+                            <p >支付方式：在线支付 </p>
+
+                        <% } %>
+
+                        <p ><%= payment_id==3?'应付金额':'支付金额' %>：<span>&yen;<%= real_pay %></span></p>
+
+                    </div>
+
+                    <div class="order-common-btn clear">
+                        <a href="javascript:;" class="look-order" vm-on-click="view_url('<%= is_parent==1?'user-order.html#all':'user-order-detail.html?id='+ order_id  %>')" >查看订单</a>
+                        <a href="javascript:;" class="go-index" vm-on-click="view_url('index.html')" >返回首页</a>
+                    </div>
+
+                </div>
+                <% } %>
+
+                <a href="javascript:;" vm-attr-href="bottom_link" class="order-submit-bottom" vm-html="bottom_img?'<img src=\'' + bottom_img + '\'/>':''"></a>
+
+            </script>
+        </div>
+
+    </div>
+
+    <!--建议退出登录   弹窗-->
+    <div  vm-attr-class="is_popup_logout ?'popup popup-is-logout':'hide'" class="hide" >
+        <div class="popup-is-logout-content">
+            <p>为了保护账户安全，建议您安全退出账户。</p>
+            <div class="clear">
+                <a class="pull-left go-out" vm-on-click="goExit()" href="javascript:;">退出</a>
+                <a class="pull-right go-shipping" vm-on-click="goBuy()" href="javascript:;">继续购物</a>
+            </div>
+        </div>
+    </div>
+
+    <!--下单关注百洋公众号弹窗-->
+    <div vm-attr-class="is_focus == 0 ?'popup popup-focus':'hide'" class="hide" id="popup_focus">
+        <div class="popup-focus-content" id="focus_content">
+            <div class="focus-top"><span></span></div>
+
+            <div vm-attr-class="is_from_wx?'hide':'focus-text'" class="hide" >
+                <div class="focus-by-img" ><span></span></div>
+                <div class="focus-by-text" ><span>公众号搜索：</span><br/><span>百洋商城（baiyjk）</span></div>
+            </div>
+
+            <div vm-attr-class="is_from_wx?'wechat-focus-text':'hide'" class="hide" >
+                <img src="images/icon-wechat-focus.png" alt=""/>
+                <div>
+                    <span></span>
+                    <p>长按关注</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('order-submit-successfully')</script>
+</body>
+</html>

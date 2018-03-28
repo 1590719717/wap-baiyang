@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>个人中心</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-index-all" >
+
+    <div vm-controller="user-index" >
+        <!-- 头部  -->
+        <div class="user-top">
+            <div class="clear"><a href="user-account.html" class="icon icon-user-set js-check-psw"></a></div>
+            <a href="user-account.html" class="user-avator js-check-psw" vm-css-background-image="'url(' + (portrait || '{{Config.cdn_url}}images/user-header.png') + ')'"></a>
+            <a href="user-account.html" class="user-name js-check-psw" vm-html="nick_name"></a>
+            <!--  微信内 没完善个人信息时显示 -->
+            <!--<a href="javascript:;" vm-on-click="go_bind_wx()" vm-attr-class="is_dummy==1?'user-write-msg':'hide'" class="hide">您的账号信息尚未完善，请完善绑定账号&gt;</a>-->
+        </div>
+
+        <div class="content">
+
+            <!--我的订单-->
+            <div class="user-type clear">
+                <div class="user-list row">
+                    <div class="col-4 list-title">全部订单</div>
+                    <div class="col-8 list-right">
+                        <a href="user-order.html#all" class="js-check-psw">查看所有订单 &gt; </a>
+                    </div>
+                </div>
+                <div class="order-list">
+                    <a href="user-order.html#paying" class="js-check-psw">
+                        <i class="icon icon-pay" ></i>
+                        <p>待付款</p>
+                                    <span class="add_count" vm-html="order_paying">
+                                        <script type="text/html">
+                                            <% if(order_paying > 0) {%>
+                                            <svg width="50" height="50" viewBox="0 0 50 50" preserveAspectRatio="xMidYMid">
+                                                <circle r="25" cx="25" cy="24"></circle>
+                                                <text x="25" y="25" dy="0.3em" text-anchor="middle" font-size="30px"><%= order_paying %></text>
+                                            </svg>
+                                            <% } %>
+                                        </script>
+                                    </span>
+                    </a>
+                    <a href="user-order.html#shipping" class="js-check-psw">
+                        <i class="icon icon-send" ></i>
+                        <p>待发货</p>
+                                    <span class="add_count" vm-html="order_shipping">
+                                        <script type="text/html">
+                                            <% if(order_shipping > 0) {%>
+                                            <svg width="50" height="50" viewBox="0 0 50 50" preserveAspectRatio="xMidYMid">
+                                                <circle r="25" cx="25" cy="24"></circle>
+                                                <text x="25" y="25" dy="0.3em" text-anchor="middle" font-size="30px"><%= order_shipping %></text>
+                                            </svg>
+                                            <% } %>
+                                        </script>
+                                    </span>
+                    </a>
+                    <a href="user-order.html#shipped" class="js-check-psw">
+                        <i class="icon icon-get" ></i>
+                        <p>待收货</p>
+                                    <span class="add_count" vm-html="order_shipped">
+                                        <script type="text/html">
+                                            <% if(order_shipped > 0) {%>
+                                            <svg width="50" height="50" viewBox="0 0 50 50" preserveAspectRatio="xMidYMid">
+                                                <circle r="25" cx="25" cy="24"></circle>
+                                                <text x="25" y="25" dy="0.3em" text-anchor="middle" font-size="30px"><%= order_shipped %></text>
+                                            </svg>
+                                            <% } %>
+                                        </script>
+                                    </span>
+                    </a>
+                    <a href="user-order.html#evaluating" class="js-check-psw">
+                        <i class="icon icon-evaluae" ></i>
+                        <p>待评价</p>
+                                    <span class="add_count" vm-html="order_evaluating">
+                                        <script type="text/html">
+                                            <% if(order_evaluating > 0) {%>
+                                            <svg width="50" height="50" viewBox="0 0 50 50" preserveAspectRatio="xMidYMid">
+                                                <circle r="25" cx="25" cy="24"></circle>
+                                                <text x="25" y="25" dy="0.3em" text-anchor="middle" font-size="30px"><%= order_evaluating %></text>
+                                            </svg>
+                                            <% } %>
+                                        </script>
+                                    </span>
+                    </a>
+                    <a href="user-refund-list.html" class="js-check-psw">
+                        <i class="icon icon-back" ></i>
+                        <p>退款/售后</p>
+                                    <span class="add_count" vm-html="order_refund">
+                                        <script type="text/html">
+                                            <% if(order_refund > 0) {%>
+                                            <svg width="50" height="50" viewBox="0 0 50 50" preserveAspectRatio="xMidYMid">
+                                                <circle r="25" cx="25" cy="24"></circle>
+                                                <text x="25" y="25" dy="0.3em" text-anchor="middle" font-size="30px"><%= order_refund %></text>
+                                            </svg>
+                                            <% } %>
+                                        </script>
+                                    </span>
+                    </a>
+                </div>
+            </div>
+
+            <!--我的资产-->
+            <div class="user-type mt-list clear">
+                <div class="user-list row">
+                    <div class="col-4 list-title">我的资产</div>
+                    <div class="col-8 list-right">
+                        <a href="user-assets.html" class="js-check-psw">查看全部资产 &gt; </a>
+                    </div>
+                </div>
+                <div class="row money-list " data-act="guide-bonus, guide-balance">
+                    <a href="user-assets.html#page=integral" class="col-3 js-check-psw">
+                        <p><span vm-html="member_credit"></span><br>积分</p>
+                    </a>
+                    <a href="user-assets.html#page=coupon" class="col-3 js-check-psw">
+                        <p><span vm-html="coupon_num"></span><br>优惠券</p>
+                    </a>
+                    <a href="user-asset-balance.html" class="col-3 js-check-psw">
+                        <p><span vm-html="balance"></span><br>余额</p>
+                    </a>
+                    <a vm-attr-href="isFromBYTouchMachine?'user-bonus-list.html':'user-bonus-index.html'" class="col-3 js-check-psw">
+                        <p><i class="icon icon-user-bonus"></i><br>红包</p>
+                    </a>
+                </div>
+            </div>
+
+            <!--广告轮播图-->
+            <div vm-html="advertisement">
+                <script type="text/html">
+                    <% if(advertisement && advertisement.length){ %>
+                    <div class="scroll-wrap clear" data-act="swipe">
+                        <ul class="scroll-list">
+                            <% advertisement.forEach(function(item){     %>
+                            <li class="scroll-item">
+                                <a href="<%= item.location %>" style="background-image: url(<%= item.image_url %>)"></a>
+                            </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                    <% } %>
+                </script>
+            </div>
+
+            <!--分类-->
+            <div class="user-all-type clear">
+                <a href="user-collection.html"  class="js-check-psw">
+                    <i class="icon icon-user-collect"></i>
+                    <p>商品收藏</p>
+                </a>
+                <a  href="user-track.html"  class="js-check-psw">
+                    <i class="icon icon-user-track"></i>
+                    <p>浏览足迹</p>
+                </a>
+                <a href="group-order.html" class="js-check-psw">
+                    <i class="icon icon-user-group"></i>
+                    <p>拼团订单</p>
+                </a>
+                <a href="user-address.html" class="js-check-psw">
+                    <i class="icon icon-user-address"></i>
+                    <p>收货地址</p>
+                </a>
+                <a href="user-prescription.html" class="js-check-psw">
+                    <i class="icon icon-user-recipel"></i>
+                    <p>我的处方</p>
+                </a>
+                <a href="user-help.html">
+                    <i class="icon icon-user-help"></i>
+                    <p>客服帮助</p>
+                </a>
+                <a href="user-about.html">
+                    <i class="icon icon-user-about"></i>
+                    <p>关于我们</p>
+                </a>
+                <a href="https://m.baiyangwang.com/wapspecial/special/2017/04/04/index.html">
+                    <i class="icon icon-investment"></i>
+                    <p>百洋招商</p>
+                </a>
+            </div>
+
+            <!--我的资产-->
+            <div class="hide" vm-attr-class="is_business_user==1?'user-type mt-list clear':'hide'">
+                <div class="user-list row">
+                    <div class="col-12 list-title">我的业务</div>
+                </div>
+                <div class="user-busy clear">
+                    <a href="user-cross-shopping.html"  class="">
+                        <i class="icon icon-user-shopping"></i>
+                        <p>跨境代购</p>
+                    </a>
+                    <a href="javascript:;"  class="hide">
+                        <i class="icon icon-user-doctor"></i>
+                        <p>名下医生</p>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!--底部页脚导航-->
+        {{require('template/footer.html', {'page':'user-index'})}}
+
+    </div>
+
+    <!--长时间未操作，要输入密码 弹窗-->
+    <div vm-controller="check-password">
+        <div vm-attr-class="is_check?'popup popup-psw-again':'hide'" class="hide">
+            <div class="popup-psw-content">
+                <div class="popup-psw-title">
+                    请输入登录密码
+                    <a class="close-psw-btn" href="index.html">&times;</a>
+                    <a class="sure-psw-btn" vm-on-click="check_password()" href="javascript:;">确定</a>
+                </div>
+                <div class="psw-text">
+                    <input type="password" vm-value="password" name="password" />
+                </div>
+
+                <div class="other-way clear">
+                    <span class="error-text" vm-html="error_msg"></span>
+                    <a href="javascript:;" vm-on-click="switch_user('login.html')" class="change-menber">切换账号</a>
+                    <a href="javascript:;" vm-on-click="switch_user('find-password.html')" class="find-psw">忘记密码？</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-index')</script>
+</body>
+</html>
+

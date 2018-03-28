@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>评价</title>
+    <link rel="stylesheet" href="css/order-evaluate.css"/>
+</head>
+<body class="order-evaluate-all" >
+
+    <div  vm-controller="evaluate">
+
+
+        <!--评价 商品列表-->
+        <div page-router="" vm-html="product_list">
+            <script type="text/html">
+                <!--公共头部-->
+                <header class="user-order top-header">
+                    <h1 class="title" >评价晒单</h1>
+                    <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                    <!--头部右边按钮 导航菜单 -->
+                    {{require('template/topnav.html', {'page':'user-index'})}}
+
+                </header>
+
+                <% if( product_list && product_list.length ){ %>
+                <% product_list.forEach(function(product_list,index) { %>
+                <!--评论列表-->
+                <div class="share-list clear box-hor">
+                    <a href="product/<%= product_list.goods_id %>.html" class="share-product">
+                        <img src="<%=product_list.goods_image%>"/>
+                    </a>
+                    <div class="share-con flex-hor">
+                        <a href="product/<%= product_list.goods_id %>.html" class="share-product-name"><%=product_list.goods_name%></a>
+                        <% if(product_list.comment_status == 3){    %>
+                            <p class="share-product-flag ">此商品暂不支持评价</p>
+                        <% } %>
+                        <div class="share-product-price">
+                            <span>&yen;<%=product_list.price%></span>
+                            <span>&yen;<%=product_list.market_price%></span>
+                            <% if(product_list.comment_status == 0){ %>
+                                <a href="?goods_evaluate" vm-on-click="getGoodsMsg(<%= index %>)" ><i class="icon icon-order-evaluat"></i>评价晒单</a>
+                            <% }else if(product_list.comment_status == 1){ %>
+                                <a href="?goods_evaluate" vm-on-click="getGoodsMsg(<%= index %>)" ><i class="icon icon-order-evaluat"></i>追加晒单</a>
+                            <% }else if(product_list.comment_status == 2){  %>
+                                <a href="?look_evaluate" vm-on-click="getGoodsMsg(<%= index %>)" ><i class="icon icon-look-evaluat"></i>查看评价</a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+                <% } %>
+            </script>
+        </div>
+
+        <!--商品评价  追加评价  -->
+        <div page-router="?goods_evaluate"  class="goods-evaluate" >
+            <!--公共头部-->
+            <header class="user-order top-header">
+                <h1 class="title" vm-html="title" ></h1>
+                <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                <!--头部右边按钮 导航菜单 -->
+                {{require('template/topnav.html', {'page':'user-index'})}}
+
+            </header>
+
+            <!--商品信息-->
+            <div class="evaluat-product clear box-hor" vm-html=" degree + goods_msg">
+                <script type="text/html">
+                    <% if( goods_msg){ %>
+                        <a href="<%= goods_msg.goods_id?'product/'+goods_msg.goods_id+'.html':'javascript:;' %> " class="evaluat-product-img" >
+                            <img src="<%= goods_msg.goods_image %>" />
+                        </a>
+                        <div class="flex-hor">
+                            <a href="<%= goods_msg.goods_id?'product/'+goods_msg.goods_id+'.html':'javascript:;' %> " class="evaluat-product-name"><%= goods_msg.goods_name %></a>
+                            <div class="evaluat-panel">
+                                <span>评分</span>
+                                <i class="<%= degree > 0?'icon icon-order-evalut icon-evaluat-get':'icon icon-order-evalut' %> " vm-on-click="goods_msg.comment_status==0?setDegree(1):''" ></i>
+                                <i class="<%= degree > 1?'icon icon-order-evalut icon-evaluat-get':'icon icon-order-evalut' %> " vm-on-click="goods_msg.comment_status==0?setDegree(2):''" ></i>
+                                <i class="<%= degree > 2?'icon icon-order-evalut icon-evaluat-get':'icon icon-order-evalut' %> " vm-on-click="goods_msg.comment_status==0?setDegree(3):''" ></i>
+                                <i class="<%= degree > 3?'icon icon-order-evalut icon-evaluat-get':'icon icon-order-evalut' %> " vm-on-click="goods_msg.comment_status==0?setDegree(4):''" ></i>
+                                <i class="<%= degree > 4?'icon icon-order-evalut icon-evaluat-get':'icon icon-order-evalut' %> " vm-on-click="goods_msg.comment_status==0?setDegree(5):''" ></i>
+                            </div>
+                        </div>
+                    <% } %>
+                </script>
+
+            </div>
+            <!--评价-->
+            <div vm-html="goods_msg" >
+                <script type="text/html">
+                    <% if( goods_msg){ %>
+                        <% if( goods_msg.comment_status == 0 ){ %>
+                            <textarea vm-value="message" placeholder="长度在1~500个字之间，您的使用体验对我们很重要，请写出您的感受" maxlength="500"></textarea>
+                        <% } else if( goods_msg.comment_status == 1 ){ %>
+                            <div class="evaluat-msg" vm-html="message"></div>
+                        <% } %>
+                    <% } %>
+                </script>
+            </div>
+
+            <div class="order-evalut-img clear" vm-html=" update_photo.length ">
+                <script type="text/html">
+
+                    <% if(update_photo && update_photo.length ){ %>
+                        <% update_photo.forEach(function(item, index) {   %>
+                            <% if( index < 4 ){ %>
+                                <div class="file-img">
+                                    <img src="data:image/jpeg;base64,<%= item %>" />
+                                    <i class="icon-close" vm-on-click="deleteImg(<%=index%>)">-</i>
+                                </div>
+                            <% } %>
+
+                        <% }) %>
+                    <% } %>
+
+                    <% if(update_photo && update_photo.length < 4){ %>
+                        <div class="take-photo">
+                            <img src="images/take-photo.jpg" />
+                            <input type="file" accept="image/*" vm-on-change="getFile(this)" multiple>
+                        </div>
+                    <% } %>
+
+                </script>
+            </div>
+
+            <!--发表评论按钮    -->
+            <button vm-attr-class="message?'evaluat-btn btn-active':'evaluat-btn btn-default'"   class="evaluat-btn btn-default" vm-on-click="submitData()">发表评价</button>
+
+        </div>
+
+        <!--查看评价-->
+        <div page-router="?look_evaluate" >
+            <!--公共头部-->
+            <header class="user-order top-header">
+                <h1 class="title" >查看评价</h1>
+                <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                <!--头部右边按钮 导航菜单 -->
+                {{require('template/topnav.html', {'page':'user-index'})}}
+
+            </header>
+            <!--商品的评价信息-->
+            <div class="look-evaluate-content" vm-html=" degree + goods_msg + message + img_photo "   >
+                <script type="text/html">
+                    <% if( goods_msg){ %>
+                        <!--商品信息-->
+                        <a href="<%= goods_msg.goods_id?'product/'+goods_msg.goods_id+'.html':'javascript:;' %> " class="evaluat-product clear box-hor">
+                            <div class="evaluat-product-img" >
+                                <img src="<%= goods_msg.goods_image %>" />
+                            </div>
+                            <div class="flex-hor">
+                                <p class="evaluat-product-name" ><%= goods_msg.goods_name %></p>
+                                <div class="evaluat-panel">
+                                    <span>评分</span>
+                                    <% for(var i = 0 ; i < degree ; i++){   %>
+                                        <i class="icon icon-order-evalut icon-evaluat-get"></i>
+                                    <% }  %>
+                                    <% for(var j = degree ; j < 5 ; j++){   %>
+                                        <i class="icon icon-order-evalut"></i>
+                                    <% }  %>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!--评价信息-->
+                        <p class="evaluat-msg" ><%= message %></p>
+
+                        <!--评价的图片-->
+                        <div class="order-evalut-img row" >
+
+                            <% if(img_photo && img_photo.length){ %>
+                            <% img_photo.forEach(function(item , index){  %>
+
+                            <a href="javascript:;" vm-on-click="scrollImg(<%= index %>)" class="col-3">
+                                <img src="<%=item%>" />
+
+                            </a>
+
+                            <%  })  %>
+                            <% }  %>
+
+                        </div>
+
+                    <% } %>
+                </script>
+
+            </div>
+
+        </div>
+
+        <!--评论图片查看-->
+        <div class="hide" vm-attr-class="show_comment_img?'dialog':'hide'">
+            <div class="dialog-content album" vm-html="photo_arr" vm-on-click="close_comment_img()">
+                <script type="text/html">
+                    <% if(photo_arr && photo_arr.length){ %>
+                        <div class="swipe-wrap" data-act="swipe" data-param="auto=0&index=<%= scroll_index %>">
+                            <ul class="swipe-list clear">
+                                <% photo_arr.forEach(function(src) { %>
+                                <li class="swipe-item pull-left" style="background-image: url(<%= src %>)"></li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    <% } %>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-evaluate-share')</script>
+
+</body>
+</html>
+

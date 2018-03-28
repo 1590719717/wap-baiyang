@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>我的资产</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body>
+<div class="wrap box">
+    <!--公共头部菜单-->
+    <header  class="top-header">
+        <h1 class="title" id="top-title">我的资产</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':'user-index'})}}
+
+    </header>
+    <div class="flex">
+        <!--内容区 滚动区-->
+
+        <div class="user-assets-list-con  flex-content hide" id="assets">
+            <!--我的资产首页-->
+            <div class="user-assets-list " vm-controller="user-assets">
+                <div class="user-assets-type">
+                    <!--积分-->
+                    <a href="#page=integral" class="list-item">
+                        <i class="icons icon-integral"></i>
+                        <span class="lb">积分</span>
+                            <span class="pull-right">
+                                <i class="icon-arrow"></i>
+                                <span vm-attr-class="credit>0 ? 'num red-color':'num gray-color'"
+                                      vm-html="credit"></span>
+                            </span>
+                    </a>
+
+                    <!--优惠券-->
+                    <a href="#page=coupon" class="list-item">
+                        <i class="icons icon-coupon"></i>
+                        <span class="lb">优惠券</span>
+                            <span class="pull-right">
+                                <i class="icon-arrow"></i>
+                                <span vm-attr-class="coupon_count>0 ? 'num red-color':'num gray-color'"
+                                      vm-html="coupon_count"></span>
+                            </span>
+                    </a>
+
+                    <!--余额-->
+                    <a href="user-asset-balance.html" class="list-item">
+                        <i class="icons icon-money-left"></i>
+                        <span class="lb">余额</span>
+                            <span class="pull-right">
+                                <i class="icon-arrow"></i>
+                                <span vm-attr-class=" balance>0 ?'num red-color':'num gray-color'"
+                                      vm-html="'&yen;'+ balance"></span>
+                            </span>
+                    </a>
+
+                    <!--红包-->
+                    <a vm-attr-href="isFromBYTouchMachine?'user-bonus-list.html':'user-bonus-index.html'" class="list-item">
+                        <i class="icons icon-packets"></i>
+                        <span class="lb">红包</span>
+                            <span class="pull-right">
+                                <i class="icon-arrow"></i>
+                            </span>
+                    </a>
+                </div>
+
+                <!--设置支付密码-->
+                <div vm-html="is_set_pay_password">
+                    <script type="text/html">
+                        <% if(is_set_pay_password == 0){ %>
+                        <a href="#page=set_password" class="settings-password">
+                            <i class="icons icon-lock"></i>
+                            <span class="lb">设置支付密码</span>
+                            <i class=" pull-right icon-arrow"></i>
+                        </a>
+                        <% } else { %>
+                        <a href="#page=reset-pay-password-select" class="settings-password">
+                            <i class="icons icon-lock"></i>
+                            <span class="lb">重置支付密码</span>
+                            <i class="pull-right icon-arrow"></i>
+                        </a>
+                        <% } %>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="user-coupon-content-con flex-content hide" id="coupon">
+            <!--优惠券-->
+            <div class="user-coupon-content " data-act="tab" vm-controller="user-coupon">
+                <div class="input-coupon-num">
+                    <input type="text" placeholder="如有优惠券码 可输入兑换" vm-value="coupon_code" class="coupon-num">
+                    <span vm-attr-class="coupon_code?'activation-btn active':'activation-btn'"
+                          vm-on-click="activateCoupon()">激活</span>
+                </div>
+                <!--优惠券分类（可用，不可用，状态on）-->
+                <div class="row coupon-classify">
+                    <div class="col-6 available js-tab-title" >
+                        <span vm-html="'未使用（'+coupon_unused_num+'）'"></span>
+                    </div>
+                    <div class="col-6 unusable js-tab-title" >
+                        <span vm-html="'不可用（'+coupon_used_num+'）'"></span>
+                    </div>
+                </div>
+                <!--优惠券列表（可用列表，不可用列表）,-->
+                <div class="list-warp">
+                    <ul class="available-list js-tab-content hide" vm-html=" usable + notice ">
+                        <script type="text/html">
+                            <% if(usable && usable.length){ %>
+                            <% usable.forEach(function(item, i) { %>
+                                <!--包邮的优惠券 暂不处理-->
+                                <% if(item.coupon_type != 3 ){ %>
+                                    <li class="<%= item.coupon_type == 1 ? 'xjq':item.coupon_type == 2 ?'zkq':'' %><%= item.is_present == '1' ? ' present' : '' %>">
+                                        <% if(item.url){ %>
+                                        <a href="<%= item.url || 'javascript:;' %>">
+                                            <% } %>
+                                            <!--折扣/现金-->
+                                            <div class="discount">
+                                                <% if( item.coupon_type == 1 ){ %>
+                                                <%= Number(item.coupon_value)  %><span class="xj">元</span>
+                                                <% } else if(item.coupon_type == 2){ %>
+                                                <%= item.coupon_value %><span class="zk">折</span>
+                                                <% } else if(item.coupon_type == 3){  %>
+                                                <!--包邮 -->
+                                                <%= '包邮' %>
+                                                <% }  %>
+                                            </div>
+                                            <!--说明-->
+                                            <div class="explain">
+                                                <div class="explain-xx">
+                                                    <p class="name"><%= item.coupon_name %></p>
+
+                                                    <p class="sm"><%= item.coupon_description %></p>
+
+                                                    <p class="<%=item.coupon_type == 1 ?'time-limited time-xj':item.coupon_type == 2 ?'time-limited time-zk':'time-limited' %>">
+                                                        有效日期至<%= getDataString(item.remain_time + item.server_time) %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <!--操作-->
+                                            <!--待使用-->
+                                            <div class="operation go-use"></div>
+                                        <% if(item.url){ %>
+                                        </a>
+                                        <% } %>
+
+                                        <% if(item.is_present == '1') { %>
+                                            <div class="share-coupon clear">
+                                                <span vm-on-click="share_coupon(usable[<%= i %>])">点击赠送好友</span>
+                                                <a href="#page=about_share" class="about-share-coupon">?</a>
+                                            </div>
+                                        <% } %>
+                                    </li>
+                                <% } %>
+
+                            <% }); } %>
+                            <% if(notice && notice.length){ %>
+                            <!--优惠券预告-->
+                            <div class="coupons-notice">
+                                <div class="line-bg"></div>
+                                <div class="coupons-notice-text"><span>★</span>优惠券预告<span>★</span></div>
+                            </div>
+                            <% notice.forEach(function(item, i) { %>
+                                <% if( item.coupon_type != 3 ) { %>
+                                    <li class="<%= item.coupon_type ==1 ? 'xjq':item.coupon_type ==2 ?'zkq':'' %><%= item.is_present == '1' ? ' present' : '' %>">
+                                        <!--折扣/现金-->
+                                        <div class="discount">
+                                            <% if( item.coupon_type == 1 ){ %>
+                                            <%= Number(item.coupon_value) %><span class="xj">元</span>
+                                            <% } else if(item.coupon_type == 2){ %>
+                                            <%= item.coupon_value %><span class="zk">折</span>
+                                            <% } else if(item.coupon_type == 3){  %>
+                                            <!--包邮 -->
+                                            <%= '包邮' %>
+                                            <% }  %>
+                                        </div>
+                                        <!--说明-->
+                                        <div class="explain">
+                                            <div class="explain-xx">
+                                                <p class="name"><%= item.coupon_name %></p>
+
+                                                <p class="sm"><%= item.coupon_description %></p>
+
+                                                <p class="<%=item.coupon_type ==1?'time-limited time-xj':item.coupon_type ==2?'time-limited time-zk':'time-limited' %>">
+                                                    倒计时<span class="time-down" data-act="count_down"
+                                                             data-param="start_time=<%= item.start_use_time %>"></span></p>
+                                            </div>
+                                        </div>
+                                        <!--操作-->
+                                        <!--待开始-->
+                                        <div class="operation star-Coupons"></div>
+                                        <% if(item.is_present == '1') { %>
+                                        <div class="share-coupon clear">
+                                            <span vm-on-click="share_coupon(notice[<%= i %>])">点击赠送好友</span>
+                                            <a href="#page=about_share" class="about-share-coupon">?</a>
+                                        </div>
+                                        <% } %>
+                                    </li>
+                                <% } %>
+                            <% }); %>
+                            <% } %>
+                            <% if(usable && !usable.length && notice && !notice.length){ %>
+                            <li class="kong">
+                                <div class="kong-bq"></div>
+                            </li>
+                            <% } %>
+                        </script>
+                    </ul>
+                    <ul class="unusable-list js-tab-content hide" vm-html="disabled">
+                        <script type="text/html">
+                            <% if(disabled && disabled.length) { %>
+                            <% disabled.forEach(function(item, i) { %>
+                                <% if( item.coupon_type != 3) { %>
+                                    <li class="<%= item.coupon_type ==1 ? 'xjq': item.coupon_type ==2 ?'zkq' : '' %><%= item.is_present == '1' && item.coupon_status == 3 ? ' present' : '' %>">
+                                        <!--折扣/现金-->
+                                        <div class="discount">
+                                            <% if( item.coupon_type == 1 ){ %>
+                                            <%= Number(item.coupon_value) %><span class="xj">元</span>
+                                            <% } else if(item.coupon_type == 2){ %>
+                                            <%= item.coupon_value %><span class="zk">折</span>
+                                            <% } else if(item.coupon_type == 3){  %>
+                                            <!--包邮 -->
+                                            <%= '包邮' %>
+                                            <% }  %>
+                                        </div>
+                                        <!--说明-->
+                                        <div class="explain">
+                                            <div class="explain-xx">
+                                                <p class="name"><%= item.coupon_name %></p>
+
+                                                <p class="sm"><%= item.coupon_description %></p>
+
+                                                <p class="<%=item.coupon_type ==1?'time-limited time-xj':item.coupon_type ==2?'time-limited time-zk':'time-limited' %>">
+                                                    有效日期至<%= getDataString( item.remain_time+item.server_time ) %>
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                        <!--操作-->
+                                        <% if(item.is_present == '1' && item.coupon_status == 3) { %>
+                                        <div class="share-coupon clear">
+                                            <span vm-on-click="share_coupon(disabled[<%= i %>])">继续赠送</span>
+                                            <span vm-on-click="revoke_coupon(disabled[<%= i %>])">撤销赠送</span>
+                                        </div>
+                                        <!--赠送中-->
+                                        <div class="operation status-giving"></div>
+                                        <% } else if(item.coupon_status == 4){ %>
+                                        <!-- 已赠送 -->
+                                        <div class="operation gift-finished"></div>
+                                        <% } else if(item.coupon_status == 1){ %>
+                                        <!-- 已过期 -->
+                                        <div class="operation out-off-time"></div>
+                                        <% } else if(item.coupon_status == 2) { %>
+                                        <!-- 已使用 -->
+                                        <div class="operation out-off-used"></div>
+                                        <% } %>
+                                    </li>
+                                <% } %>
+                            <% }); %>
+                            <% } else if(disabled && !disabled.length) { %>
+                            <li class="kong">
+                                <div class="kong-bq"></div>
+                            </li>
+                            <% } %>
+                        </script>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-coupon-content-con flex-content hide" id="about-share">
+            <!--关于优惠券分享-->
+            <div class="about-share-content ">
+                <p class="title">1.可转赠的券</p>
+                <p>只有被标记为“可赠送”的券，才能参与被转赠。以优惠券的券面展示标记为准。</p>
+
+                <p class="title">2.赠送方式</p>
+                <p>可通过“微信、朋友圈、QQ、QQ空间、二维码或链接”转赠给好友。</p>
+
+                <p class="title">3.转赠中状态</p>
+                <p>当您转赠给好友后，这张优惠券从“未使用”列表转移“不可用”列表中展示，显示转赠中状态，转赠状态中的优惠券不可被使用，但在您的好友领取前，您可以选择撤回转赠。</p>
+
+                <p class="title">4.转赠途中过期</p>
+                <p>如果24小时内优惠券过期且好友未领取，则此优惠券会自动退回您的账户，在“不可用”列表中显示已过期。</p>
+
+                <p class="title">5.已转赠状态</p>
+                <p>当您的好友领取后，这张优惠券在“不可用”列表中显示为已转赠状态，不可被您使用，且不可撤回。</p>
+
+                <p class="title">6.转赠途中过期</p>
+                <p>如果24小时内优惠券过期且好友未领取，则此优惠券会自动退回您的账户，在“不可用”列表中显示已过期。</p>
+
+                <p class="title">7.超24h未领取</p>
+                <p>当您的优惠券超过24小时未被领取，则自动退回您的账户中，从“不可用”转移到“未使用”列表中展示，且您可以继续使用。</p>
+
+                <p class="title">8.其他</p>
+                <p>(1) 只要未被领取，支持继续赠送，即发给更多人，直到该券被领取。赠出未被领的券，只有撤销后才能被自己使用，撤销后全部赠送路径失效。
+                <br>(2) 一张优惠券只能被一人领取。
+                <br>(3) 可转赠优惠券只要未过有效使用期，领取后仍可继续转赠，直到被使用或过期。</p>
+
+
+            </div>
+        </div>
+
+        <div class="user-integral-content-con flex-content hide" id="integral">
+            <!--积分-->
+            <div class="user-integral-content " vm-controller="user-assets">
+                <div class="integral-warp">
+                    <div class="integral">
+                        <p class="integral-num"><em vm-html="credit"></em><span>分</span></p>
+                    </div>
+                </div>
+                <div class="integral-will">
+                    <div></div>
+                    <p>积分商城即将上线，敬请期待！</p>
+                </div>
+                <!--<img src="images/user-integral-null.png">-->
+            </div>
+        </div>
+
+        <div class="user-pay-password-con user-assets flex-content hide" id="pay-password">
+            <!--设置支付密码-->
+            <div class=" user-pay-password " vm-controller="user-password-set">
+                <div class="reset-pay-sns" id="pay-sns">
+                    <form id="form-getcoder">
+                        <div class="mobile-code-warp">
+                            <div class="clear">
+                                <i class="icon-phone"></i>
+
+                                <div class="phone" vm-html="mobile_display"></div>
+                            </div>
+                            <div class="">
+                                <input type="text" class="yzm" placeholder="请输入短信验证码" maxlength="4"
+                                       data-validate="empty,number,minlen(4),maxlen(4)" vm-value="mobile_code">
+                                <span class="hqyzm" data-act="mobile_code">获取验短信证码</span>
+                            </div>
+                        </div>
+                        <!--验证提示语-->
+                        <!--<p class="tsy" vm-html="tsy">请输入正确的验证码!</p>-->
+                        <div class="confirm-btn" data-act="check-code">确定</div>
+                    </form>
+                </div>
+
+                <div class="reset-pay-pw hide" id="pay-sns-pw">
+                    <form id="form-sns">
+                        <p class="tsy1">请输入6位支付密码</p>
+
+                        <div class="input-warp row">
+                            <input type="tel" oninput="value=value.replace(/[^\d]/g, '')" autocomplete="none"
+                                   maxlength="6" data-validate="empty,integer,minlen(6),maxlen(6)" name="password"
+                                   vm-value="newPassword1">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <span class="col-2"><em vm-html="newPassword1.length>0?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>1?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>2?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>3?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>4?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>5?'&bull;':''"></em></span>
+                        </div>
+                        <p class="tsy2">请再次输入支付密码</p>
+
+                        <div class="input-warp row">
+                            <input type="tel" oninput="value=value.replace(/[^\d]/g, '')" autocomplete="none"
+                                   maxlength="6"
+                                   data-validate="empty,integer,minlen(6),maxlen(6),checkval([name='password'])"
+                                   vm-value="newPassword2">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <span class="col-2"><em vm-html="newPassword2.length>0?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>1?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>2?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>3?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>4?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>5?'&bull;':''"></em></span>
+                        </div>
+                        <!--验证提示语-->
+                        <!--<p class="tsy">两次输入的密码不一致！</p>-->
+                        <div class="confirm-btn" data-act="pay-pw-btn">确定</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-pay-password-con user-assets flex-content hide" id="reset-pay-password-select">
+            <!--选择重置密码方式-->
+            <div class="user-pay-password-select " vm-controller="reset-pay-password-select">
+                <p class="user-reset-pw-tips">你正在为<span vm-html="mobile"></span>重置密码</p>
+                <a href="#page=reset-pay-password-pw" class="user-reset-btn">
+                    我记得原支付密码
+                    <i class="icon-arrow"></i>
+                </a>
+
+                <a href="#page=reset-pay-password-sns" class="user-reset-btn">
+                    我忘记支付密码了
+                    <i class="icon-arrow"></i>
+                </a>
+
+            </div>
+        </div>
+
+        <div class="user-pay-password-con user-assets flex-content hide" id="reset-pay-password-pw">
+            <!--重置支付密码记得原密码-->
+            <div class="user-pay-password " vm-controller="reset-pay-password-pw">
+                <div class="reset-pay-pw">
+                    <form id="reset-pay-password-pw-old">
+                        <div id="reset-pay-password-pw-step01">
+                            <p class="tsy1">请输入原有的支付密码</p>
+
+                            <div class="input-warp row">
+                                <input type="tel" oninput="value=value.replace(/[^\d]/g, '')" autocomplete="none"
+                                       maxlength="6" data-validate="empty,integer,minlen(6),maxlen(6)"
+                                       vm-value="oldPassword">
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <span class="col-2"><em vm-html="oldPassword.length>0?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="oldPassword.length>1?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="oldPassword.length>2?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="oldPassword.length>3?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="oldPassword.length>4?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="oldPassword.length>5?'&bull;':''"></em></span>
+                            </div>
+                            <div class="confirm-btn" data-act="confirm-old-btn">确定</div>
+                        </div>
+                    </form>
+                    <form id="reset-pay-password-pw-new">
+                        <div id="reset-pay-password-pw-step02">
+                            <p class="tsy1">请输入6位支付密码</p>
+
+                            <div class="input-warp row">
+                                <input type="tel" oninput="value=value.replace(/[^\d]/g, '')" autocomplete="none"
+                                       maxlength="6" data-validate="empty,integer,minlen(6),maxlen(6)" name="password"
+                                       vm-value="newPassword1">
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <span class="col-2"><em vm-html="newPassword1.length>0?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword1.length>1?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword1.length>2?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword1.length>3?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword1.length>4?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword1.length>5?'&bull;':''"></em></span>
+                            </div>
+                            <p class="tsy2">请再次输入支付密码</p>
+
+                            <div class="input-warp row">
+                                <input type="tel" oninput="value=value.replace(/[^\d]/g, '')" autocomplete="none"
+                                       maxlength="6"
+                                       data-validate="empty,integer,minlen(6),maxlen(6),checkval([name='password'])"
+                                       vm-value="newPassword2">
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                                <span class="col-2"><em vm-html="newPassword2.length>0?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword2.length>1?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword2.length>2?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword2.length>3?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword2.length>4?'&bull;':''"></em></span>
+                                <span class="col-2"><em vm-html="newPassword2.length>5?'&bull;':''"></em></span>
+                            </div>
+                            <!--验证提示语-->
+                            <p class="tsy hide"></p>
+
+                            <div class="confirm-btn" data-act="reset-pay-pw-btn">确定</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-pay-password-con user-assets flex-content hide" id="reset-pay-password-sns">
+            <!--重置支付密码通过手机找回-->
+            <div class="user-pay-password " vm-controller="reset-pay-password-sns">
+                <div class="reset-pay-sns" id="reset-pay-sns">
+                    <form id="form-reset-getcoder">
+                        <div class="mobile-code-warp">
+                            <div class="">
+                                <i class="icon-phone"></i>
+
+                                <div class="phone" vm-html="mobile_display"></div>
+                            </div>
+                            <div class="">
+                                <input type="text" class="yzm" placeholder="请输入短信验证码" maxlength="4"
+                                       data-validate="empty,number,minlen(4),maxlen(4)" vm-value="mobile_code">
+                                <span class="hqyzm" data-act="mobile_code">获取验短信证码</span>
+                            </div>
+                        </div>
+                        <!--验证提示语-->
+                        <!--<p class="tsy" vm-html="tsy">请输入正确的验证码!</p>-->
+                        <div class="confirm-btn" data-act="reset-check-code">确定</div>
+                    </form>
+                </div>
+
+                <div class="reset-pay-pw hide" id="reset-pay-sns-pw">
+                    <form id="form-reset-sns">
+                        <p class="tsy1">请输入6位支付密码</p>
+
+                        <div class="input-warp row">
+                            <input type="tel" oninput="value=value.replace(/[^\d]/g, '')" autocomplete="none"
+                                   maxlength="6" data-validate="empty,integer,minlen(6),maxlen(6)" name="password"
+                                   vm-value="newPassword1">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <span class="col-2"><em vm-html="newPassword1.length>0?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>1?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>2?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>3?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>4?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword1.length>5?'&bull;':''"></em></span>
+                        </div>
+                        <p class="tsy2">请再次输入支付密码</p>
+
+                        <div class="input-warp row">
+                            <input type="tel" oninput="value=value.replace(/[^\d]/g, '')" autocomplete="none"
+                                   maxlength="6"
+                                   data-validate="empty,integer,minlen(6),maxlen(6),checkval([name='password'])"
+                                   vm-value="newPassword2">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <span class="col-2"><em vm-html="newPassword2.length>0?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>1?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>2?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>3?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>4?'&bull;':''"></em></span>
+                            <span class="col-2"><em vm-html="newPassword2.length>5?'&bull;':''"></em></span>
+                        </div>
+                        <!--验证提示语-->
+                        <!--<p class="tsy">两次输入的密码不一致！</p>-->
+                        <div class="confirm-btn" data-act="reset-pay-pw-sns-btn">确定</div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="js/config.js"></script>
+<script>seajs.use('user-assets')</script>
+</body>
+</html>

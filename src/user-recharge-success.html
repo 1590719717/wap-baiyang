@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>支付成功页</title>
+    <link rel="stylesheet" href="css/user-balance.css"/>
+</head>
+
+<body class="user-asset-balance" >
+    <!--支付成功-->
+    <div class="wrap box " vm-controller="user-recharge-success"  >
+
+        <header class="top-header" >
+            <h1 class="title" vm-html="pay_status==1?'支付成功':pay_status==0?'支付失败':''"></h1>
+            <a href="javascript:location.replace('user-asset-balance.html');" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+
+        <div class="flex"  >
+            <!--支付成功-->
+            <div vm-attr-class="pay_status==1?'flex-content balance-pay-con':'hide'" class="hide" >
+                <div class="pay-success-icon"><span></span></div>
+                <p class="pay-success-text">您已支付成功</p>
+                <div class="pay-text">
+                    <p>
+                        <span>充值单号</span>
+                        <span vm-html="orderId"></span>
+                    </p>
+                    <p>
+                        <span>充值金额</span>
+                        <span class="red-color" vm-html="'&yen;'+ money" ></span>
+                    </p>
+                    <p>
+                        <span>支付方式</span>
+                        <span vm-html="pay_way"></span>
+                    </p>
+
+                </div>
+                <a href="user-asset-balance.html" >确定</a>
+            </div>
+            <!--支付失败-->
+            <div vm-attr-class="pay_status==0?'flex-content balance-pay-con':'hide'" class="hide" >
+                <div class="pay-fail-icon"><span></span></div>
+                <p class="pay-success-text">支付失败，请重新支付</p>
+                <div class="pay-text">
+                    <p>
+                        <span>失败原因</span>
+                        <span>网络异常</span>
+                    </p>
+                </div>
+                <a href="user-asset-balance.html">重新支付</a>
+            </div>
+        </div>
+        <div class="pay-footer">
+            <p>客观莫着急如有需求可联系<a href="javascript:;" data-act="ntkf">百洋客服</a><br/>或致电百洋客服热线:<a href="tel:400-6799-859">400-6799-859</a></p>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-recharge-success')</script>
+
+</body>
+</html>

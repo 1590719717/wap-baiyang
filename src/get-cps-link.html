@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{require('template/head.html')}}
+    <title>百洋商城</title>
+</head>
+<body>
+    <div class="popup popup-loading">
+        <div class="popup-content">
+            <div class="clock"></div>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script>
+        (function(win, config) {
+
+            // cps邀请码
+            var invite_code = decodeURIComponent((location.search.substr(1).match(/(^|&)invite_code=([^&]*)(&|$)/) || [])[2] || '');
+
+            if(invite_code){
+                seajs.use('ajax', function(ajax) {
+                    // 获取应渠道下的链接
+                    ajax({
+                        type: 'post',
+                        url: config.url + 'wap/cps_user/get_cps_link',
+                        data: {
+                            invite_code: invite_code
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data && data.code == 200 && data.data && data.data.link) {
+
+                                var link_hash = data.data.link.split('#');
+                                var link_search = link_hash[0].split('?');
+
+                                if(link_search[1]){
+                                    if(/(^|&)invite_code=([^&]*)(&|$)/.test(link_search[1])){
+                                        link_search[1] = link_search[1].replace(/(^|&)invite_code=([^&]*)(&|$)/, '$1invite_code=' + invite_code + '$3')
+                                    } else {
+                                        link_search[1] += '&invite_code=' + invite_code;
+                                    }
+                                } else {
+                                    link_search[1] = 'invite_code=' + invite_code;
+                                }
+
+                                location.replace(link_search.join('?') + (link_hash[1] ? '#' + link_hash[1] : ''));
+
+                            } else {
+                                alert('页面不存在！');
+                                location.replace('/index.html')
+                            }
+                        }
+                    });
+                });
+            } else {
+                location.replace('/index.html')
+            }
+        })(window, Config);
+    </script>
+</body>
+</html>

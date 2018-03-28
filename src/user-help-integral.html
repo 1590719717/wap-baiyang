@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>会员积分权益</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-help-other">
+    <div class="wrap box">
+        <header class="user-help top-header">
+            <h1 class="title">会员积分权益</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="help-buy-content flex-content">
+
+                <div class="row help-item">
+                    <div class="col-1 ">
+                        <div class="help-circle">1</div>
+                    </div>
+                    <div class="col-11 botm-line">
+                        <p class="help-list-title">百洋积分有什么用？</p>
+                        <div class="item-top row-98">因商城正在调整中，积分商城功能暂无法使用，敬请谅解，用户累计的积分将在新版积分商城里使用，敬请期待。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 ">
+                        <div class="help-circle bg-circle-2">2</div>
+                    </div>
+                    <div class="col-11 botm-line">
+                        <p class="help-list-title color-blue">怎么查看我的积分？</p>
+                        <div class="item-top row-98">登录账户，在“个人中心-我的钱包”查看积分明细。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 ">
+                        <div class="help-circle bg-circle-3">3</div>
+                    </div>
+                    <div class="col-11 botm-line">
+                        <p class="help-list-title color-yellow">怎么赚取积分？</p>
+                        <div class="item-top row-98">目前商城可通过购物获取积分，后期将开放签到积分、评论积分等更多积分获取通道，敬请期待。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

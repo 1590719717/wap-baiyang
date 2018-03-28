@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>支付成功</title>
+    <link rel="stylesheet" href="css/order.css"/>
+    <link rel="stylesheet" href="css/group-purchase.css"/>
+</head>
+<body vm-controller="group-success">
+	<div class="wrap box group-submit-successfully" >
+		<!--公共头部菜单-->
+        <header class="order-submit top-header">
+            <h1 class="title">支付成功</h1>
+            <a href="javascript:;" vm-on-click="view_url('group-order.html')" class="btn-back"><i class="icon icon-arrow"></i></a>
+			<!--头部右边按钮 导航菜单 -->
+			{{require('template/topnav.html', {'page':''})}}
+
+        </header>
+        <div class="flex">
+        	<!--内容区 滚动区-->
+            <div class="group-submit-content flex-content" vm-html="order_id+payment_name+real_pay+balance+goods_amount+is_head+gfa_user_count+gfa_join_num+fight_buy+vacancy_num+gf_id+gfa_type">
+            	<script type="text/html">
+            		<% if( order_status ) { %>
+		            	<div class="group-success">
+		            		<div class="group-suceess-top">
+		            			<img src="images/group-submit-success.png" />
+		            		</div>
+		            		<div class="group-suceess-tips">
+		            			<!--支付方式图标-->
+		            			<div class="group-icon-area hide">
+		            				<% if(payment_id == 1){    %>
+		                                <!--支付宝-->
+		                                <i class="iconsuccess icon-pay-alipay"></i>
+		                            <% } else if (payment_id == 2){  %>
+		                                <!--微信-->
+		                                <i class="iconsuccess icon-pay-weixin"></i>
+		                            <% } else if (payment_id == 3){  %>
+		                                <!--货到付款-->
+
+		                            <% } else if (payment_id == 4){  %>
+		                                <!--红包没有图标-->
+		                            <% } else if (payment_id == 5){  %>
+		                                <!--苹果-->
+		                                <i class="iconsuccess icon-pay-apple"></i>
+		                            <% } else if (payment_id == 6){  %>
+		                                <!--银联支付-->
+		                                <i class="iconsuccess icon-pay-bank"></i>
+		                            <% } else if (payment_id == 7){  %>
+		                                <!--余额-->
+		                                <i class="iconsuccess icon-pay-balance"></i>
+		                            <% } else { %>
+		                            <% } %>
+		            			</div>
+		            			<div class="group-text-area">
+		            				<i class="iconsuccess icon-pay-success"></i><span class="group-suceess-tips-text">支付成功</span>
+		            			</div>
+		            		</div>
+		            		<div class="order-detail">
+		            			<p>订单编号：<%= order_id %></p>
+		            			<p>支付方式：<%= payment_name %></p>
+		            			<p>支付金额：<span>&yen;<%= real_pay %></span></p>
+		            		</div>
+		            		<div class="order-dashed"></div>
+		            		<div class="group-member-area">
+		            			<% if(is_head == 1){    %>
+		            				<h3 class="group-member-title">您已开团成功！升级为团长！</h3>
+		            			<% } else if (is_head == 0){  %>
+		            				<% if(gfa_user_count == gfa_join_num){ %>
+		            					<% if(gfa_type == 1){ %>
+		            						<h3 class="group-member-title">恭喜您！<%= gfa_user_count %>人拼团成功，请耐心等待抽奖！</h3>
+		            					<% }else{ %>
+		            						<h3 class="group-member-title">恭喜您！<%= gfa_user_count %>人拼团成功，会为您尽快发货！</h3>
+		            					<% } %>
+		            					
+		            				<% } else {  %>
+		            					<h3 class="group-member-title">恭喜您！参团成功！</h3>
+		            				<% } %>
+		            			<% } %>
+		            			<!--拼团成员头像-->
+		            			<div class="member-list clear">
+		            				<!--团长头像-->
+		            				<% if(fight_buy && fight_buy.length){ %>
+		            					<% fight_buy.forEach(function(item) { %>
+		            						<% if(item.is_head == 1){ %>
+		            							<% if(item.headimgurl != ''){ %>
+						            				<div class="member-header member-commander member-default">
+					            						<img src="<%= item.headimgurl %>" />
+					            						<span class="team-head">团长</span>
+						            				</div>
+				            					<% }else{ %>
+				            						<div class="member-header member-commander member-default">
+					            						<span class="team-head">团长</span>
+						            				</div>	
+				            					<% } %>
+					            					
+				            				<% }else{ %>
+				            					<% if(item.headimgurl != ''){ %>
+						            				<div class="member-header member-default">
+					            						<img src="<%= item.headimgurl %>" />
+						            				</div>
+				            					<% }else{ %>
+				            						<div class="member-header member-default">
+						            				</div>	
+				            					<% } %>
+				            				<% } %>
+			            				<% }); %>
+			            				
+			            				<!--填补空缺位置-->
+			            				<% for(var i = 0; i < vacancy_num; i++){ %>
+			            					<div class="member-header"></div>
+			            				<% } %>
+		            				<% } %>
+		            			</div>
+		            			<% if(gfa_user_count != gfa_join_num){%>
+		            				<p class="group_tips">还差<span><%= vacancy_num %></span>人就能拼团成功啦，快邀请小伙伴一起参团吧！</p>
+		            			<%}%>
+		            			<div class="btn_area">
+		            				<!--拼团成功时按钮组-->
+		            				<%if(gfa_user_count == gfa_join_num){%>
+		            					<a href="javascript:void(0)" class="view" vm-on-click="view_url('group-list.html')">参加其他热团</a>
+		            					<a href="javascript:void(0)" class="attend" vm-on-click="view_url('group-order-detail.html?id=<%= order_id %>')">查看拼团订单</a>		            					
+		            				<%}else{%>
+		            					<a href="javascript:void(0)" class="view" vm-on-click="view_url('group-list.html')">参加其他热团</a>
+		            					<a href="group-join.html?group_id=<%= gf_id %>&&is_show=1" class="attend">立即邀请好友</a>
+		            				<%}%>
+
+		            			</div>
+		            		</div>
+		            	</div>
+            		
+		            	<div class="warm-prompt">
+		            		<i class="icon warm-prompt-icon"></i>温馨提示：预订成功后，您可到我的拼团订单内查看订单状态。
+		            	</div>
+		            	<!--广告位-->
+		            	<a href="javascript:;" vm-attr-href="bottom_link" class="order-submit-bottom" vm-html="bottom_img?'<img src=\'' + bottom_img + '\'/>':''"></a>
+            	<% } %>
+            	</script>
+            </div>
+        </div>
+	</div>
+	<!--建议退出登录   弹窗-->
+    <div  vm-attr-class="is_popup_logout ?'popup popup-is-logout':'hide'">
+        <div class="popup-is-logout-content">
+            <p>为了保护账户安全，建议您安全退出账户。</p>
+            <div class="clear">
+                <a class="pull-left go-out" vm-on-click="goExit()" href="javascript:;">退出</a>
+                <a class="pull-right go-shipping" vm-on-click="goBuy()" href="javascript:;">继续购物</a>
+            </div>
+        </div>
+    </div>
+
+
+	<script src="js/config.js"></script>
+    <script>seajs.use('group-submit-successfully')</script>
+</body>
+</html>

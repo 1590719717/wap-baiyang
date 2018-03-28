@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>余额</title>
+    <link rel="stylesheet" href="css/user-balance.css"/>
+</head>
+
+<body class="user-asset-balance" >
+
+    <!--余额首页-->
+    <div class="wrap box" vm-controller="user-balance"  >
+        <header class="top-header" >
+            <h1 class="title" vm-html="title"></h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div  class="flex" >
+
+            <!--余额首页-->
+            <div page-router=""  class="flex-content balance-index" vm-html="balance">
+                <script type="text/html">
+                    <div class="top-img">
+                        <span></span>
+                    </div>
+                    <p>当前余额<br/><span><%= balance %></span></p>
+
+                    <% if(!is_touch){ %>
+                    <a href="user-recharge.html" class="a-btn btn-recharge" >充值</a>
+                    <% } %>
+
+                    <a href="<%= get_bonus_link() %>" class="a-btn btn-bonus" >
+                        <% if(is_touch){ %>红包列表<% } else { %>发红包<% } %>
+                    </a>
+
+                    <a href="?balance-detail" class="a-pull-btn btn-detail">余额明细</a>
+                    <a href="?balance-rule" class="a-pull-btn btn-rule"><i class="icon icon-ask"></i><span>余额说明</span></a>
+                </script>
+            </div>
+
+            <!--明细余额-->
+            <div page-router="?balance-detail"  class="flex-content user-balance-content" id="user-balance-detail">
+                <ul class="balance-detail-con" vm-html="list" >
+                    <script type="text/html">
+                        <% if(list && list.length){ %>
+                        <% list.forEach(function(item){ %>
+                        <li>
+                            <div class="recharge-title clear">
+                                <span><%= item.resume %></span>
+                                <span class="<%= item.is_add == 0 ?'money-minus':'money-add' %>"><%= item.amount %>元</span>
+                            </div>
+                            <p class="<%= item.source_type == 14?'recharge-tips':'hide' %>">充值单号：<%= item.type_id %></p>
+                            <div class="recharge-time clear">
+                                <span class="pull-left"><%= item.create_time %></span>
+                                <% if(item.pay_type_name){ %>
+                                <span class="pull-right"><%= item.pay_type_name %></span>
+                                <% } %>
+
+                            </div>
+                        </li>
+                        <% }); %>
+                        <% } else {%>
+                            <!--余额为空-->
+                            <div class="balance-null "><span></span></div>
+                            <!--<p  class="balance-null-text"></p>-->
+                        <% } %>
+
+                    </script>
+                </ul>
+            </div>
+
+            <!--余额说明   -->
+            <div page-router="?balance-rule"  class="flex-content user-balance-desc-rule" >
+                <div class="balance-desc">
+                    <p class="balance-desc-titel">
+                        <i class="icon icon-balance-money"></i>
+                        <span>什么是余额？</span>
+                    </p>
+                    <p class="balance-desc-con">余额是您在百洋商城的一个账户，您可以使用余额 在商城内进行商品的购买支付，使用余额支付需要 在“我的资产”中设置支付密码！（在百洋商城中余 额支付密码与红包支付密码相同）</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-assets-balance')</script>
+
+</body>
+</html>

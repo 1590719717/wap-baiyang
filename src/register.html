@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>注册</title>
+    <link rel="stylesheet" href="css/page.css"/>
+</head>
+<body>
+    <div class="wrap box">
+        <header  class="top-header">
+            <h1 class="title">快速注册</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+        <section class="content scroll-wrap flex">
+            <div class="flex-content" vm-controller="register">
+                <form action="" class="register-form" id="form-register">
+                    <div class="form-control row">
+                        <input type="text" class="verify col-10" name="image_code" vm-value="image_code" data-validate="empty" placeholder="请输入验证码"/>
+                        <img vm-attr-src="image_src" vm-on-click="getCaptcha()" class="verify-img col-2" alt=""/>
+                    </div>
+                    <div class="form-control offset-control row">
+                        <input class="col-8" type="text" name="mobile" vm-value="mobile" data-validate="empty,phone" placeholder="请输入手机号"/>
+                        <button type="button" data-act="mobile_code" vm-attr-class="'col-4 btn btn-sm '+(mobile&&image_code?'btn-default':'btn-disabled')" class="col-4 btn btn-disabled btn-sm">获取短信验证码</button>
+                    </div>
+                    <div class="form-control row">
+                        <input class="col-12" type="text" name="mobile_code" vm-value="mobile_code" data-validate="empty" placeholder="请输入短信验证码"/>
+                    </div>
+                    <div class="form-control offset-control row">
+                        <input class="col-9" type="password" vm-attr-type="password_view?'text':'password'" name="password" vm-value="password" data-validate="empty,password" placeholder="请设置6-18位登录密码"  maxlength="18"/>
+                        <label class="toggle-psw col-2">
+                            <input type="checkbox" vm-value="password_view"/>
+                            <i class="icon-eye"></i>
+                        </label>
+                    </div>
+                    <div class="btn-wrap">
+                        <button type="submit" vm-attr-class="mobile&&password&&mobile_code&&image_code?'btn btn-default':'btn btn-disabled'" class="btn btn-disabled">完 成</button>
+                    </div>
+                    <div class="bottom-tips">
+                        <p>注册即视为同意 <a href="protocol.html" class="agreement">《百洋商城用户注册协议》</a></p>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('register')</script>
+</body>
+</html>

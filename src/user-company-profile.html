@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>公司简介</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body>
+    <div class="wrap box user-company">
+        <header class="company-header top-header">
+            <h1 class="title">公司简介</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="user-company-desc-content flex-content">
+                <div class="company-img"></div>
+
+                <div class="company-list">
+                    <div class="list-title"><i class="icon icon-company"></i>经营范围</div>
+                    <div class="list-text">百洋商城设有“家中常备药”、“专科用药”、“男科用药”、“母婴专场”、“老年专场”、“医疗器械体检”、“计生情趣”、“滋补保健”、“个护美妆”九个子频道，主要经营产品有药品、孕婴用品、健康品、医疗器械、药妆产品、生活日化等九大类、近万种产品。</div>
+                </div>
+
+                <div class="company-list">
+                    <div class="list-title"><i class="icon icon-company"></i>服务保障</div>
+                    <div class="list-text">百洋商城以百分百为广大消费者健康负责为经营原则，在经营过程中，绝对严格执行《药品质量管理规范》，分别从产品的采购、入库、管理、发货、验货过程严把产品质量关，绝对正品保证，让消费者真正感觉到安全又放心。</div>
+                </div>
+
+                <div class="company-list">
+                    <div class="list-title"><i class="icon icon-company"></i>全新服务理念</div>
+                    <div class="list-text">百洋商城自行开发的B2C电子商务平台、全新的Businessto Family一站式家庭健康购物理念、独具特色的代客送礼服务、门店整洁高档的VIP服务体验区，均在同行业处于领先水平。</div>
+                </div>
+
+                <div class="company-list">
+                    <div class="list-title"><i class="icon icon-company"></i>订购方式</div>
+                    <div class="list-text">同时支持网上下订单和电话订购（<a class="text-red" href="tel:4006799859">400-6799-859</a>）两种订购方式，在满足了上班一族的网上订购需求的同时，也满足了不会上网人群的电话订购需求。</div>
+                </div>
+
+                <div class="company-list">
+                    <div class="list-title"><i class="icon icon-company"></i>配送方式</div>
+                    <div class="list-text">百洋商城在青岛支持自提、货到付款服务，其他城市圆通能派送的区域都支持货到付款，省外快递发货1-3天即可送达。真正做到方便又快捷。</div>
+                </div>
+
+                <div class="company-list">
+                    <div class="list-title"><i class="icon icon-company"></i>企业愿望</div>
+                    <div class="list-text">百洋商城自成立以来，一直稳扎稳打，诚实经营。我们相信只有诚实守信的企业才能赢得客户长久的支持和信赖，我们也相信只有基础牢固的企业才能经得起风吹雨打，终究会取得长足的发展、辉煌的成绩。</div>
+                </div>
+
+                <div class="company-list"></div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

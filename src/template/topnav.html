@@ -1,0 +1,12 @@
+<% var id = 'top-nav-'+ parseInt(Math.random() * 1E8); %>
+<% if(typeof page === 'undefined'){ page = null; } %>
+<a href="javascript:;" class="btn-menu" data-act="menu" data-param="<%= 'id=' + id   %>"><i class="icon icon-menu"></i></a>
+<!--头部弹出菜单-->
+<nav class="top-nav row" id="<%= id %>">
+    <a class="col-3" href="<% if(page=='index'){ %>javascript:;<% } else { %>/index.html<% } %>"><i class="icon icon-index"></i>首页</a>
+    <a class="col-3" href="javascript:;" data-act="search"><i class="icon icon-search"></i>搜索</a>
+    <a class="col-3 <% if(page=='shopping-car'){ %>active<% }%>" href="<% if(page=='shopping-car'){ %>javascript:;<% } else { %>/shopping-car.html<% } %>"><i class="icon icon-car"></i>购物车</a>
+    <a class="col-3 <% if(page=='user-index'){ %>active<% }%>" href="/user-index.html"><i class="icon icon-user"></i>我的</a>
+</nav>
+
+

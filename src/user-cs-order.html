@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>订单列表</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body >
+    <div class="wrap box user-cs-order" vm-controller="order-data" >
+        <!--公共头部菜单-->
+        <header  class="top-header">
+            <h1 class="title" vm-html="user_name +'的订单'"></h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="user-cs-order-con flex-content" id="order_list" vm-html="list" >
+                <script type="text/html">
+                    <% if( list && list.length ){   %>
+                        <%list.forEach(function(item){%>
+                        <div class="order-item clear">
+                            <a href="user-cs-order-detail.html?user_id=<%= user_id %>&order_id=<%= item.order_sn %>">
+                                <div class="order-type clear">
+                                    <p class="order-number">订单编号：<%= item.order_sn %></p>
+                                </div>
+                                <!--商品列表-->
+                                <div class="order-list-wrap">
+                                <% if( item.product_list && item.product_list ){   %>
+                                    <% item.product_list.forEach(function(product){  %>
+                                        <div class="order-list clear">
+                                            <div class="order-product pull-left">
+                                                <span style="background-image: url(<%= product.default_image %>)"></span>
+                                            </div>
+                                            <div class="order-product-msg pull-right">
+                                                <p class="product-name"><%= product.product_name %></p>
+                                                <% if( product.is_global ){ %>
+                                                    <p><i class="icon icon-hwg">海外优选</i></p>
+                                                <% }  %>
+                                                <p class="product-price clear">
+                                                    <span class="pull-left">&yen;<%= product.price %></span>
+                                                    <span class="product-num pull-right">&times;<%= product.qty %></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                <% } %>
+                                </div>
+                            </a>
+                            <!--订单商品总计-->
+                            <div class="order-count clear">
+                                <span class="pull-left">共<em><%= item.total_qty %></em>件</span>
+                                <span class="pull-right">合计：<em>&yen;<%= item.order_amount %></em><span class="fare-text">（含进口税:&yen;<%= item.order_tax_amount %>）</span></span>
+                            </div>
+                        </div>
+                        <% }) %>
+                    <% } %>
+                </script >
+            </div>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-cs-order')</script>
+</body>
+</html>
+

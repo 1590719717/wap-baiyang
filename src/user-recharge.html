@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>充值</title>
+    <link rel="stylesheet" href="css/user-balance.css"/>
+</head>
+
+<body class="user-asset-balance" >
+    <!--充值  -->
+    <div class="wrap box " vm-controller="user-recharge" >
+
+        <header class="top-header" >
+            <h1 class="title" vm-html="title" ></h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+
+        <div class="flex" >
+            <!--充值-->
+            <div page-router=""  class="flex-content balance-recharge-con " >
+                <p>自定义金额</p>
+                <div class="recharge-content">
+                    <input type="tel" class="money-text" name="money" vm-value="money_txt" placeholder="请输入不低于100元的整数金额" maxlength="8" id="money_inp" />
+                    <ul>
+                        <li>
+                            <input type="radio" value="100" vm-attr-checked="money_txt==100 || chosen == 100" vm-on-click="setMoney(100)" name="money-list">
+                            <span>100元</span>
+                        </li>
+                        <li>
+                            <input type="radio" value="200" vm-attr-checked="money_txt==200 || chosen == 200" vm-on-click="setMoney(200)" name="money-list">
+                            <span>200元</span>
+                        </li>
+                        <li>
+                            <input type="radio" value="300" vm-attr-checked="money_txt==300 || chosen == 300" vm-on-click="setMoney(300)" name="money-list">
+                            <span>300元</span>
+                        </li>
+                        <li>
+                            <input type="radio" value="500" vm-attr-checked="money_txt==500 || chosen == 500" vm-on-click="setMoney(500)" name="money-list">
+                            <span>500元</span>
+                        </li>
+                        <li>
+                            <input type="radio" value="800" vm-attr-checked="money_txt==800 || chosen == 800" vm-on-click="setMoney(800)" name="money-list">
+                            <span>800元</span>
+                        </li>
+                        <li>
+                            <input type="radio" value="1000" vm-attr-checked="money_txt==1000 || chosen == 1000" vm-on-click="setMoney(1000)" name="money-list">
+                            <span>1000元</span>
+                        </li>
+                    </ul>
+                    <div class="recharge-common" >
+                        <label >
+                            <input type="checkbox"  value="1" vm-value="is_common" />
+                            <span class="icon-check"></span>
+                        </label>
+                        <p class="common-text">我已阅读<a href="?balance-comment">《百洋商城余额用户协议》</a></p>
+
+                    </div>
+
+                    <a href="javascript:;" vm-attr-class="chosen>0&&is_right || is_right&&money_txt.length>0?'recharge-btn active':'recharge-btn'" vm-on-click="balancePay()" vm-html="chosen + money_txt " >
+                        <script type="text/html">
+                            <% if( chosen > 0 ){ %>
+                            <%= '充值 ' + chosen + '元' %>
+                            <% } else if( money_txt.length > 0 ) { %>
+                            <%= '充值 ' + money_txt + '元' %>
+                            <% } else { %>
+                            <%= '立即充值' %>
+                            <% } %>
+                        </script>
+                    </a>
+                    <p class="recharge-tips">温馨提示：充值金额仅限在百洋商城使用（处方药、海外购商品除外）。</p>
+                </div>
+            </div>
+
+            <!--支付方式-->
+            <div page-router="?balance-pay"  class="flex-content balance-pay-list" >
+                <div class="balance-pay-top" vm-html="'&yen;'+money_finally"></div>
+                <ul>
+                    <li vm-attr-class="is_fromWx?'hide':'box-hor'" class="hide" >
+                        <i class="icon icon-pay-alipay"></i>
+                        <div class="flex-hor order-pay-text">
+                            <p>支付宝支付</p>
+                            <p>支付宝安全支付，单笔最多可充值50万</p>
+                        </div>
+                        <label >
+                            <input type="radio" value="alipay" vm-value="pay_type" name="pay-way" vm-on-click="setPayWay('alipay')" >
+                            <svg preserveAspectRatio="xMidYMid" viewBox="0 0 34 34" width="34" height="34" >
+                                <circle cx="17" cy="17" r="16"></circle>
+                                <path d="M8,17 L14,22 L26,11"></path>
+                            </svg>
+                        </label>
+                    </li>
+                    <li vm-attr-class="is_fromWx?'box-hor':'hide'" class="hide" >
+                        <i class="icon icon-pay-wechat"></i>
+                        <div class="flex-hor order-pay-text">
+                            <p>微信支付</p>
+                            <p>微信安全支付，单笔最多可充值30万</p>
+                        </div>
+                        <label >
+                            <input type="radio" value="wechat" vm-value="pay_type" name="pay-way" vm-on-click="setPayWay('wechat')" >
+                            <svg preserveAspectRatio="xMidYMid" viewBox="0 0 34 34" width="34" height="34" >
+                                <circle cx="17" cy="17" r="16"></circle>
+                                <path d="M8,17 L14,22 L26,11"></path>
+                            </svg>
+                        </label>
+                    </li>
+                    <li vm-attr-class="is_fromWx||isFromBYTouchMachine?'hide':'box-hor'" class="hide" >
+                        <i class="icon icon-pay-bank"></i>
+                        <div class="flex-hor order-pay-text">
+                            <p>银联支付</p>
+                            <p>单笔充值额度根据所持银行卡而定</p>
+                        </div>
+                        <label >
+                            <input type="radio" value="chinapay" vm-value="pay_type" name="pay-way" vm-on-click="setPayWay('chinapay')" >
+                            <svg preserveAspectRatio="xMidYMid" viewBox="0 0 34 34" width="34" height="34" >
+                                <circle cx="17" cy="17" r="16"></circle>
+                                <path d="M8,17 L14,22 L26,11"></path>
+                            </svg>
+                        </label>
+                    </li>
+                </ul>
+                <a href="javascript:;" vm-attr-class="pay_type=='chinapay'?'':is_can_pay?'':'disable-btn'" vm-on-click="payMoney()" >确认支付&nbsp;<span vm-html="'&yen;'+money_finally" ></span></a>
+            </div>
+
+            <!--余额用户协议   -->
+            <div page-router="?balance-comment"  class="flex-content user-balance-desc-content" >
+
+                <h1>百洋商城余额使用规则：</h1>
+                <p>1. 余额是指用户在百洋商城支付订单时，可用于抵付现金 的金额。</p>
+                <p>2. 余额可用于商城红包发放</p>
+                <p>3. 余额充值可以开具发票，但需要联系客服，并向客服提 供开票人信息和寄送地址。</p>
+                <p>4. 在线充值的主要途径有：<br/>
+                    <span>(1)在线充值余额，在“我的余额”中给自己的账号充值；</span><br/>
+                    <span>(2)参与百洋商城外其他渠道活动，以积分或其他形式兑换余额；</span><br/>
+                    <span>(3)系统自动退款金额；</span><br/>
+                    <span>(4)企业充值发余额至账户。</span>
+                </p>
+                <p>5. 百洋商城余额不支持提现。</p>
+                <p>6. 余额不支持转账。</p>
+                <p>7. 若余额不足以支付订单金额，则不足部分仍需继续使用其他方式予以支付；若余额金额较多，支付订单后仍有剩余，则剩余部分再次购买时可继续使用。</p>
+                <p>8. 因国家相关规定，充值的余额不支持购买跨境产品。 </p>
+                <p>9. 使用余额支付的订单退款，如果订单申请退款成功， 订单中余额支付的金额将返还到余额中。 </p>
+                <p>10. 用户不得利用余额进行违反百洋商城反作弊活动，否则百洋商城有权采取终止该订单的效力、停止向用户提供订单产品、查封用户账号等措施，并有权通过法律途径向用户追讨经济损失。</p>
+                <p>11. 充值额度根据不同的支付方式所绑定额银行卡的不同充值最大金额也有所不同，具体请查看支付额度总表。 </p>
+                <div>
+                    <span></span>
+                </div>
+                <p>12. 最终解释权归百洋商城所有。 </p>
+
+            </div>
+
+        </div>
+
+        <!--充值-->
+        <div vm-attr-class="is_recharge?'recharge-footer':'hide'" class="hide" >
+            <p>充值成功后，金额将转入到您的百洋商城余额中<br/>如需开具发票请联系 <a href="javascript:;" data-act="ntkf">百洋客服</a></p>
+        </div>
+
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-recharge')</script>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>百洋商城</title>
+    <!--<link rel="stylesheet" href="css/page.css"/>-->
+    <link rel="stylesheet" href="css/product-list.css"/>
+</head>
+<body class="product-list" vm-controller="product-list">
+
+    <div>
+        <header class="search-box" id="header">
+            <span class="btn-search" data-act="search" vm-html="keyword"></span>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+
+        <div vm-attr-class="data_attr&&data_attr.length?'nav-wrap btom':'nav-wrap'" class="nav-wrap" id="nav-wrap">
+            <!--排序菜单-->
+            <nav class="sort-nav row">
+                <a href="javascript:;" vm-on-click="sort('all')" class="col-3 type-all " vm-attr-class="'col-3 '+(sort_field=='all'?'active ':'')">综合</a>
+                <a href="javascript:;" vm-on-click="sort('sales')" class="col-3 type-sales " vm-attr-class="'col-3 '+(sort_field=='sales'?'active ':'')">销量</a>
+                <a href="javascript:;" vm-on-click="sort('price')" class="col-3 type-price " vm-attr-class="'col-3 '+(sort_field=='price'?'active ' + sort_type:'')">价格</a>
+                <a href="javascript:;" vm-on-click="sort('filter')" class="col-3 type-all " vm-attr-class="'col-3 '+(sort_field=='filter'?'active':'')" >筛选</a>
+            </nav>
+            <!--筛选菜单-->
+            <nav class="filter-nav row" vm-html="data_attr + click_attr " >
+                <script type="text/html">
+                    <% if( data_attr && data_attr.length ) { %>
+                        <% data_attr.forEach(function(item,index) { %>
+                            <% if( index < 4 ){ %>
+                                <% var flag =  check_value['chosen'+index] && check_value['chosen'+index].length ; %>
+                                <a href="javascript:;" class="<%= click_attr==index?'col-3 open':flag?'col-3 active':'col-3' %> " vm-on-click="show_filter_param(<%= index %>)">
+                                    <% if( flag&&click_attr!=index ) { %>
+                                        <span><%= check_value['chosen'+index][0].split('_')[0] %></span>
+                                    <% } else { %>
+                                        <span><em><%= item.attrNames %></em><i></i></span>
+                                    <% } %>
+
+                                </a>
+                            <% } %>
+                        <% })  %>
+                    <% } %>
+                </script>
+            </nav>
+
+            <!--筛选条件-->
+            <article vm-attr-class="filter_param?'filter-param':'hide'" class="hide" vm-html="click_attr + popup_attr" >
+                <script type="text/html">
+                    <div class="param-list row">
+                        <form >
+                        <div class="clear">
+                            <% if( popup_attr && popup_attr.length ) { %>
+                            <% popup_attr.forEach(function(item) { %>
+                            <label class="param-item col-6">
+                                <% var name_attr ='has'+ click_attr; %>
+                                <input type="checkbox" name="<%=name_attr%>"  value="<%= item %>" vm-value="<%= "flag_check['"+ name_attr + "']" %>"  />
+                                <span><%= item.split('_')[0]  %></span>
+                            </label>
+                            <% })  %>
+                            <% } %>
+                        </div>
+                        <div class="clear" >
+                            <button class="btn btn-cancel col-6" type="button" vm-on-click="filter_list_reset()" >重置</button>
+                            <button class="btn btn-confirm col-6" type="button" vm-on-click="filter_list_sure()" >确定</button>
+                        </div>
+                        </form>
+                    </div>
+
+                    <i class="layout" vm-on-click="close_filter_param()" ></i>
+
+                </script>
+            </article>
+        </div>
+
+        <section class="content goods-list">
+            <ul vm-html="data">
+                <script type="text/html">
+                    <% if(data && data.length){ %>
+                        <% data.forEach(function(item) { %>
+                            <li class="goods-item">
+                                <a href="product/<%= item.goodsId %>.html">
+                                    <span class="goods-pic">
+                                        <% if(item.goodsImage){ %>
+                                            <em class="pic" style="background-image: url(<%= item.goodsImage %>)"></em>
+                                        <% } %>
+                                        <!--下架-->
+                                        <% if(item.isOnSale == 0){ %>
+                                            <i class="icon-out-sale"></i>
+                                        <!--售罄-->
+                                        <% } else if( (item.stock - 0) <= 0 ) {  %>
+                                            <i class="icon-out-stock"></i>
+                                        <% } %>
+                                    </span>
+                                    <span class="goods-title">
+                                        <% if( item.isGlobal == 1  ){ %>
+                                            <i class="icon icon-hwg">海外优选</i>
+                                        <% } else if( item.drugType == 1 ) { %>
+                                            <i class="icon icon-rx"></i>
+                                        <% } else if( item.drugType == 2 ) { %>
+                                            <i class="icon icon-frxr"></i>
+                                        <% } else if( item.drugType == 3 ) { %>
+                                            <i class="icon icon-frxg"></i>
+                                        <% } %>
+                                        <%= item.goodsName %>
+                                    </span>
+
+                                    <span class="goods-price">
+                                        <em class="now-price">&yen;<%=  item.price %></em>
+
+                                        <% if( item.tag_name ){ %>
+                                            <i class="icon icon-zxj"><%= item.tag_name %></i>
+                                        <% } %>
+
+                                        <% if(item.promotionData){ %>
+
+                                            <% if(item.promotionData.fullMinus == 1){ %>
+                                                <i class="icon icon-mj">满减</i>
+                                            <% } %>
+                                            <% if(item.promotionData.fullDiscount == 1){ %>
+                                                <i class="icon icon-mj">满折</i>
+                                            <% } %>
+                                            <% if(item.promotionData.fullGift == 1){ %>
+                                                <i class="icon icon-mz">满赠</i>
+                                            <% } %>
+                                            <% if(item.promotionData.farePurchase == 1){ %>
+                                                <i class="icon icon-mj">加价购</i>
+                                            <% } %>
+                                            <% if(item.promotionData.expressFree == 1){ %>
+                                                <i class="icon icon-by">包邮</i>
+                                            <% } %>
+                                            <% if(item.promotionData.limited == 1){ %>
+                                                <i class="icon icon-mj">限购</i>
+                                            <% } %>
+
+                                        <% } %>
+                                    </span>
+                                    <% if(item.is_global == 1){ %>
+                                        <span class="icon-hwg-productlist"><i class="icon icon-hwg"></i></span>
+                                    <% } %>
+                                    <span class="comment">
+                                        <% if(item.drugType != 1){ %>
+                                            <em class="red-text"><%= item.commentNumber %></em>条评价
+                                            <em>好评<%= item.praise %>%</em>
+                                        <% } %>
+                                    </span>
+                                    <span class="sold">
+                                        <% if(item.drugType != 1){ %>
+                                            已售<em class="red-text"><%= item.saleNum %></em>件
+                                        <% } %>
+                                    </span>
+                                </a>
+                            </li>
+                        <% }); %>
+                    <% } else if( empty ) { %>
+                        <li class="empty">没有找到相关商品，换个词试试吧</li>
+                    <% } %>
+                </script>
+            </ul>
+        </section>
+    </div>
+
+    <!--搜索弹窗-->
+    <div vm-attr-class="is_filter?'filter':'hide'" class="hide" id="filter_popup"  >
+
+        <div class="filter-param box" id="filter_con" >
+            <div class="flex"  >
+                <ul class="flex-content"  vm-html="data_attr" >
+                    <script type="text/html">
+                        <form >
+                        <li class="param price">
+                            <p class="title clear">
+                                <span>价格区间</span>
+                            </p>
+                            <div class="value clear">
+                                <input type="tel" class="min-price pull-left" placeholder="最低价" value="" vm-value="downPrice" maxlength="10" />
+                                <i class="pull-left"></i>
+                                <input type="tel" class="max-price pull-right" placeholder="最高价" value="" vm-value="upPrice" maxlength="10" />
+                            </div>
+                        </li>
+
+                        <% if( data_attr && data_attr.length ) { %>
+                            <% data_attr.forEach(function(item, li_index ) { %>
+                                <% var len = item.attrValue.length ; %>
+                                <li class="param" >
+                                    <p class="title clear">
+                                        <span><%= item.attrNames %></span>
+                                        <% if( len  > 3 ){ %>
+                                        <a href="javascript:;" class="toggle" vm-on-click="show_more(this)" ></a>
+                                        <% } %>
+
+                                    </p>
+                                    <div class="value clear">
+                                        <% if( item.attrValue && len ) { %>
+                                        <% item.attrValue.forEach(function(list) { %>
+                                            <label>
+                                                <% var name_attr ='has'+ li_index; %>
+                                                <input type="checkbox" name="<%=name_attr%>"  value="<%= list %>" vm-value="<%= "flag_check['"+ name_attr + "']" %>"  />
+                                                <span><%= list.split('_')[0] %></span>
+                                            </label>
+                                        <% })  %>
+                                        <% } %>
+                                    </div>
+                                </li>
+                            <% })  %>
+                        <% } %>
+                        </form>
+                    </script>
+                </ul>
+            </div>
+            <div class="button-wrap row">
+                <button class="btn reset col-6" type="button" vm-on-click="filter_reset()" >重置</button>
+                <button class="btn submit col-6" type="button" vm-on-click="filter_sure()" >确定</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('product-list')</script>
+</body>
+</html>

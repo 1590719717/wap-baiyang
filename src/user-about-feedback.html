@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>用户反馈</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-feedback-all">
+    <div class="wrap box">
+        <header class="user-header top-header">
+            <h1 class="title">用户反馈</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex" vm-controller="user-feedbak" >
+            <!--内容区 滚动区-->
+            <div class="feedback-content flex-content">
+                <textarea placeholder="您留下的每一个意见和想法,百洋商城将视为重要的参考" vm-value="text_value" maxlength="300"></textarea>
+                <button vm-on-click="submit()" vm-attr-class="text_value?'send-btn btn-active':'send-btn btn-default'"  class="send-btn btn-default" type="button" > 提交</button>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-feedback')</script>
+
+</body>
+</html>

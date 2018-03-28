@@ -1,0 +1,58 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2016/6/7
+ * @version 1.0.0
+ * @description media
+ */
+
+html {
+    font-size: 16px;
+
+    /* ipad
+ **********************************************************************/
+    @media (device-width: 768px) and (device-height: 1024px) {
+        font-size: 28px;
+    }
+
+    /* iphone4/4s
+     **********************************************************************/
+    @media (min-device-width: 320px) and (max-device-height: 480px) {
+        font-size: 12px;
+    }
+    /* iphone6
+     **********************************************************************/
+    @media (min-device-width: 375px) and (max-device-height: 667px) {
+        font-size: 16px;
+    }
+
+    /* iphone6 plus
+     **********************************************************************/
+    @media (min-device-width: 414px) and (max-device-height: 736px) {
+        font-size: 18px;
+    }
+    /* samssung i9100
+     **********************************************************************/
+    @media (min-device-width: 480px) and (device-aspect-ratio: 3/5) {
+        font-size: 14px;
+    }
+    /* samssung i9200
+     **********************************************************************/
+    @media (min-device-width: 800px) and (device-aspect-ratio: 5/8) {
+        font-size: 16px;
+    }
+    /* 横屏处理
+    **********************************************************************/
+    @media (orientation: landscape) and (min-aspect-ratio: 2/3) {
+        height: 225%;
+        font-size: 4vw;
+    }
+    @media (orientation: landscape) and (min-aspect-ratio: 3/4) {
+        height: 177%;
+        font-size: 5vw;
+    }
+    @media (orientation: landscape) and (min-aspect-ratio: 9/16) {
+        height: 316%;
+        font-size: 5vw;
+    }
+}

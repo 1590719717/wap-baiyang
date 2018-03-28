@@ -1,0 +1,2 @@
+@gulp prod
+@cmd

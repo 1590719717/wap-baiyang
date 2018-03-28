@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>物流查看</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-order-lookwl" vm-controller="my-logistics">
+    <div class="wrap box" vm-html="logistics">
+    	<script type="text/html">
+    	<header  class="top-header">
+            <h1 class="title">物流查看</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+        </header>
+        <!--头部tab-->
+    	<div class="wl-tab">
+			<% if(size > 1){ %>
+				<ul class="hide" id="tab_hd" vm-attr-class="'tab-hg clear ' + (size > 2 ? 'three-lab':'two-lab')" data-act="wl_hd">
+	    			<% logistics.forEach(function(item,i) { %>
+	    				<li data-id="<%= item.logistics_id %>">包裹<%= i+1 %></li>
+	    			<% })%>
+	    		</ul>
+    		<% } %>
+    	</div>
+        <div class="flex order-wl-content" id="wl_tab" data-act="wl_bd">
+        	<% if(size > 0){ %>
+        		<% logistics.forEach(function(item) { %>
+        			<section class="flex-content">
+		    			<!--物流信息-->
+		                <div class="order-wl-top box-hor clear" >
+		                    <div class="order-wl-img" data-act="lazy" data-param="style=<%= item.logistics_img %>">
+		                    	<% if(item.logistics_qty){ %>
+		                    		<p><%=item.logistics_qty %></p>
+		                    	<% } %>
+		                    </div>
+		                    <div class="flex-hor order-wl-text">
+		                        <p class="title">配送物流：<%= item.logistics_com %></p>
+		                         <% if(payment_id == 1){    %>
+                                    <!--支付宝-->
+                                    <p >支付方式：支付宝支付 </p>
+
+                                <% } else if (payment_id == 2){  %>
+                                    <!--微信-->
+                                    <p >支付方式：微信支付 </p>
+
+                                <% } else if (payment_id == 3){  %>
+                                    <!--货到付款-->
+                                    <p >支付方式：货到付款 </p>
+
+                                <% } else if (payment_id == 4){  %>
+                                    <!--红包支付-->
+                                    <p >支付方式：红包支付 </p>
+
+                                <% } else if (payment_id == 5){  %>
+                                    <!--苹果-->
+                                    <p >支付方式：苹果支付 </p>
+
+                                <% } else if (payment_id == 6){  %>
+                                    <!--银联支付-->
+                                    <p >支付方式：银联支付 </p>
+
+                                <% } else if (payment_id == 7){  %>
+                                    <!--余额支付-->
+                                    <p >支付方式：余额支付 </p>
+
+                                <% } else {  %>
+                                    <p >支付方式：在线支付 </p>
+
+                                <% } %>
+		                        <p>运单编号：<%= item.logistics_id %></p>
+		                    </div>
+		                </div>
+		                <!--物流跟踪-->
+		                <div class="order-wl-detail">
+		                    <% if(item.context_list && item.context_list.length>0){ %>
+		                    	<% item.context_list.forEach(function(list,i) { %>
+		                    		<% if(i == 0){ %>
+		                    			<div class="order-wl-list active">
+					                        <div class="circle-wl"><span></span></div>
+					                        <div class="order-wl-msg ">
+					                        	<h3><%= list.context %></h3>
+					                        </div>
+					                        <div class="order-wl-time">
+					                        	<p><%= list.time %></p>
+					                        </div>
+					                    </div>
+		                    		<% }else{ %>
+		                    			<div class="order-wl-list">
+					                        <div class="circle-wl"><span></span></div>
+					                        <div class="order-wl-msg ">
+					                        	<h3><%= list.context %></h3>
+					                        </div>
+					                        <div class="order-wl-time">
+					                        	<p><%= list.time %></p>
+					                        </div>
+					                    </div>
+		                    		<% } %>
+				                    
+		                    	<% }) %>
+		                    <% }else{ %>
+		                    	<div class="order-wl-list">
+			                        <div class="circle-wl"><span></span></div>
+			                        <div class="order-wl-none">
+			                        	<p>暂无物流信息</p>
+			                        </div>
+			                    </div>
+		                    <% } %>
+		                </div>
+		    		</section>
+        		<% })%>
+        	<% } %>
+        </div>
+        </script>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-order-wl')</script>
+</body>
+</html>
+

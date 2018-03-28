@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html manifest="manifest.appcache" lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>好货拼团</title>
+    <link rel="stylesheet" href="css/group-purchase.css"/>
+</head>
+<body >
+<div class="wrap box group-pd-all" vm-controller ="group-winners">
+    <header class="user-header top-header">
+        <h1 class="title">好货拼团</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+		<!--头部右边按钮 导航菜单 -->
+		{{require('template/topnav.html', {'page':''})}}
+
+    </header>
+
+    <div class="flex" >
+        <div class="flex-content group-pd-con">
+           
+            <!--参团商品详情-->
+            <div class="group-join">
+            	<div vm-html="group_data">
+            		<script type="text/html">
+                		<% if(group_data){ %>
+                			<div class="group-product">
+	                			<a href="group-product-detail.html?group_id=<%= group_data.gfa_id %>" class="winners-priduct clear">
+			                        <div class="group-product-img"><span style="background-image: url( <%= group_data.first_image %> )"></span></div>
+			                        <div class="group-product-msg">
+			                            <h3 class="product-msg-name">
+			                            	<% if(group_data.gfa_type && (group_data.gfa_type - 0) == 1){ %>
+					        					<em class="group-type">抽奖</em>
+					        				<% }else if(group_data.gfa_user_type && (group_data.gfa_user_type - 0) == 1){ %>
+					        					<em class="group-type">老带新</em>
+					        				<% }else{ %>
+					        					<em class="group-type">拼团</em>
+					        				<% } %>
+			                            	<%= group_data.goods_name %>
+			                            </h3>
+			                            <p class="product-msg-price">
+			                            	<em class="group-tag"><%= group_data.gfa_user_count %>人团</em>
+			                            	<span class="price" data-act="price-part" data-param="price=<%= group_data.gfa_price %>"></span>
+											<del class="markPrice">&yen;<%= group_data.market_price%></del>
+			                            </p>
+			                       	</div>
+			        				<% if(group_data.user_id != '' && group_data.gfa_is_draw == 1){ %>
+			        					<% if(group_data.is_join == 1){ %>
+			        						<% if(group_data.is_win == 0){ %>
+				        						<i class="group-icon group-icon-lottery-fail"></i>
+				        					<% }else if(group_data.is_win == 1){ %>
+				        						<i class="group-icon group-icon-lottery-success"></i>
+				        					<% } %>
+			        					<% } %>
+			        				<% } %>
+			                    </a>
+			                    <% if(group_data.user_id != '' && group_data.gfa_is_draw == 1){ %>
+			    					<% if(group_data.is_join == 1){ %>
+			    						<% if(group_data.is_win == 0){ %>
+			        						<p class="winner-tips">很可惜，本次活动未中奖，没关系，</br>下一个有可能是你哦~</p>
+			        					<% }else if(group_data.is_win == 1){ %>
+			        						<p class="winner-tips">恭喜你！中奖了！就是这么给力</p>
+			        					<% } %>
+			    					<% } %>
+			    				<% } %>
+	                		</div>
+                		<% } %>
+    				</script>
+            	</div>
+                		
+                <div vm-html="winner_cache">
+					<script type="text/html">
+						<% if(winner_cache && winner_cache.length){ %>
+                			<ul class="group-user-list winner-list" >
+								<% winner_cache.forEach(function(item){ %>
+									<% if(group_data.user_id == item.user_id){ %>
+										<li class="box-align active">
+											<div class="user-head me">
+												<div>
+													<% if( item.headimgurl != '' ){ %>
+			                                            <img src="<%= item.headimgurl %>" alt=""/>
+			                                        <% } %>
+												</div>
+											</div>
+											<span class="user-name flex"><%= item.nickname %></span>
+											<span class="time" data-act="showJoinTime" data-param="join_time=<%= item.add_time %>"></span>
+										</li>
+									<% }else{ %>
+										<li class="box-align">
+											<div class="user-head">
+												<div>
+													<% if( item.headimgurl != '' ){ %>
+			                                            <img src="<%= item.headimgurl %>" alt=""/>
+			                                        <% } %>
+												</div>
+											</div>
+											<span class="user-name flex"><%= item.nickname %></span>
+											<span class="time" data-act="showJoinTime" data-param="join_time=<%= item.add_time %>"></span>
+										</li>
+									<% } %>
+									
+								<% }) %>
+								<li class="check-more" vm-attr-class="isClick ? 'hide':'check-more'" vm-on-click="check_more()">查看更多<i class="icon-tigger icon-tigger-down"></i></li>
+							</ul>
+						<% } %>
+					</script>
+                </div>
+				
+           </div>
+
+                
+			<div vm-html="more_group_act">
+				<script type="text/html">
+					<% if(more_group_act && more_group_act.length) { %>
+		            	<div class="group-panel-title">
+		                    <span>其他团购</span>
+		                    <a href="group-list.html">更多<i class="icon icon-group-arrow"></i></a>
+		                </div>
+		                <div class="group-more">
+		                    <div class="group-wrap" data-act="swipe" >
+		                        <ul class="group-list-more" >
+		                            <% more_group_act.forEach(function(item, i) { %>
+		                                <% if(i % 3 == 0){ %>
+		                                    <li class="group-item">
+		                                <% } %>
+		                                    <a href="group-product-detail.html?group_id=<%= item.gfa_id %>">
+		                                        <div class="group-item-img"><span style="background-image: url(<%= item. first_image %>)"></span></div>
+		                                        <p class="group-item-name"><%= item.goods_name %></p>
+		                                        <p class="group-item-price"><span data-act="price-part" data-param="price=<%= item.gfa_price %>"></span><del>&yen;<%= item.market_price %></del></p>
+		                                    </a>
+		                                <% if(i % 3 == 2 || i == more_group_act.length + 1){ %>
+		                                    </li>
+		                                <% } %>
+		                            <% }); %>
+		                        </ul>
+		                    </div>
+		                </div>
+	                <% } %>
+                </script>
+			</div>
+                
+        </div>
+    </div>
+</div>
+
+<script src="js/config.js"></script>
+<script>seajs.use('group-winners')</script>
+
+</body>
+</html>

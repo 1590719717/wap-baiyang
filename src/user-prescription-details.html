@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>处方信息</title>
+    <!--<link rel="stylesheet" href="css/index.css"/>-->
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body>
+<div class="wrap user-prescription-details box" vm-controller="user-prescription-detail">
+
+    <!--公共头部菜单-->
+    <header class="search-box top-header">
+        <h1 class="title">处方信息</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':'user-index'})}}
+
+    </header>
+
+    <div class="flex" vm-html="data">
+        <script type="text/html">
+            <div class="flex-content prescription-details">
+                <div class="prescription-details-top">
+                    <div class="prescription-title">
+                        <span class="prescription-number">处方号：<%=data.yfz_prescription_id%></span>
+                        <span class="doctor">医生：<%=data.doctor_name%></span>
+                        <span class="state">
+                            <i></i>
+                            <%if(data.status==1){%><!-- 1未购买 2已购买 3作废 4自动失效-->
+                                待取药
+                            <%}else if(data.status==2){%>
+                                已取药
+                            <%}else if(data.status==3){%>
+                                作废
+                            <%}else if(data.status==4){%>
+                                失效
+                            <%}%>
+                        </span>
+                    </div>
+                    <div class="prescription-center">
+                        <%=data.diagnose%>
+                    </div>
+                    <div class="prescription-footer">
+                        <span class="time"><%data.create_time%></span>
+                    </div>
+                </div>
+                <div class="drug-list">
+                    <div class="title">
+                        <span class="list-name">药品列表</span>
+                        <p class="drug-count">共<span><%=data.goods_count%></span>件</p>
+                    </div>
+                    <ul class="list">
+                        <%if(data.goods && data.goods.length){%>
+                            <%data.goods.forEach(function(item){%>
+                                <li class="clear">
+                                    <div class="drug-name clear">
+                                        <p class="name"><%=item.goods_name%></p>
+                                        <p class="drug-num">数量:<span class="num"><%=item.good_number%></span></p>
+                                    </div>
+                                    <div class="drug-sm">
+                                        <p><span>规格：</span><%=item.good_spec%></p>
+                                        <p><span>用法用量：</span><%=item.good_explain%></p>
+                                    </div>
+                                </li>
+                            <%})%>
+                        <%}%>
+
+                    </ul>
+                    <div class="autograph">
+                        <span>医生签名</span>
+                        <img src="<%=data.doctor_sign%>">
+                    </div>
+                </div>
+            </div>
+        </script>
+    </div>
+
+    <div class="bug" vm-html="data">
+        <script type="text/html">
+            <%if(data.status==1){%><!-- 1未购买 2已购买 3作废 4自动失效-->
+                <div class="go-buy" vm-on-click="buyPrescription()">
+                    一键购买
+                </div>
+            <%}%>
+        </script>
+    </div>
+
+</div>
+<script src="js/config.js"></script>
+<script>seajs.use('user-prescription-detail')</script>
+</body>
+</html>

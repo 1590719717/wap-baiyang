@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>售后服务</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-help-other">
+    <div class="wrap box">
+        <header class="user-help top-header">
+            <h1 class="title">售后服务</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="help-order-content flex-content">
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q1:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">退换货的流程/规则是什么？</div>
+                        <div class="help-list-text">具有以下情况，可进行退换货:</div>
+                        <div class="help-list-text">A.经由国家药监局检测不合格的商品；</div>
+                        <div class="help-list-text">B.收到的商品与订单商品不符；</div>
+                        <div class="help-list-text">C.因订单缺货造成无法发货的订单；</div>
+                        <div class="help-list-text">D.收货时已超过保质期的商品；</div>
+                        <div class="help-list-text">E.收到商品15天内且不影响二次销售的商品。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q2:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">如何进行退换货？</div>
+                        <div class="help-list-text">在待发货、待收货和待评价的订单中直接申请退款，会有客服联系您；或者拨打客服热线：<a class="text-red" href="tel:4006799859">400-6799-859</a> ；客服会第一时间为您解决处理。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q3:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">退货后，什么时间退款？</div>
+                        <div class="help-list-text">在收到退货后，我们会在1-3个工作日内为您办理退款，款项将原路径退到您支付的银行卡内或支付账号内。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q4:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">退换货注意事项？</div>
+                        <div class="help-list-text">A.由于个人原因的退换货，退换货运费需由买家承担。</div>
+                        <div class="help-list-text">B.由于商品质量等问题退换货，需由您预垫付运费，我们收到退换货后会连同商品金额一起退还给您。</div>
+                        <div class="help-list-text">C.如有发票/赠品等，退货时请把发票/赠品等随同商品一同退回。</div>
+                        <div class="help-list-text">D.请在退货包裹中附带退货说明。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q5:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">退款后，优惠券是否要退回？</div>
+                        <div class="help-list-text">如申请全额退款，优惠券将退回至您的账户；如申请部分退款，只退您支付的金额部分，优惠券是不退的哟！</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

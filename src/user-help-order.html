@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>订单支付</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-help-other">
+    <div class="wrap box">
+        <header class="user-help top-header">
+            <h1 class="title">订单支付</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="help-order-content flex-content">
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q1:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">支持什么付款方式？</div>
+                        <div class="help-list-text">A.商城目前支持在线支付、货到付款两种付款方式</div>
+                        <div class="help-list-text">B.在线支付可选择的支付方式有：余额支付、支付宝支付、微信支付、银联支付</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q2:</div>
+                    <div class="col-11">
+                        <div class="help-list-title color-blue">已支付，订单状态还是“等待付款”怎么办？</div>
+                        <div class="help-list-text">如确定已支付，请联系在线客服为您查询或拨打客服热线：<a class="text-red" href="tel:4006799859" >400-6799-859</a></div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q3:</div>
+                    <div class="col-11">
+                        <div class="help-list-title color-yellow">如何修改商品信息和收货信息？</div>
+                        <div class="help-list-text">A.未支付：直接取消订单重拍即可</div>
+                        <div class="help-list-text">B.已支付：如需更改收货人信息，请及时联系客服为您备注；但商品信息无法更改，如需更改请退款重拍</div>
+                        <div class="help-list-text">C.已发货：无法修改商品信息和收货信息</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

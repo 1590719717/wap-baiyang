@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>百洋商城</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body vm-controller="bonus-index">
+    <div class="wrap box user-bonus-index">
+        <header class="top-header">
+            <h1 class="title">百洋商城</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+
+            <!--登录注册-->
+            <div class="hide" vm-attr-class="step==0?'flex-content bonus-login-con':'hide'">
+                <div class="bonus-login-top"></div>
+                <div class="bonus-login-pic"></div>
+                <!--发红包-->
+                <p class="user-bonus-tips">需要登录或注册才能发红包哦~</p>
+                <a class="bonus-login" href="login.html?redirect=user-bonus-index.html">登录</a>
+                <a class="bonus-register" vm-attr-href="isFromWx?'login.html?redirect=user-bonus-index.html':'register.html'">注册</a>
+            </div>
+
+            <!--发红包-->
+            <div class="hide" vm-attr-class="step==1?'flex-content bonus-send-con':'hide'">
+                <div class="bonus-send-top"></div>
+                <a class="bonus-lucky" href="#type=2&step=2" data-act="guide-bonus">拼手气红包</a>
+                <a class="bonus-normal" href="#type=1&step=2">普通红包</a>
+                <div class="bonus-type clear ">
+                    <div class="pull-left" vm-on-click="toggle_menu()" data-act="guide-my-bonus">我的红包<span><em>&gt;</em></span></div>
+                    <div class="pull-right" vm-on-click="toggle_tips()">红包规则<span><em>&gt;</em></span></div>
+                </div>
+            </div>
+
+            <!--塞钱进红包页面页面-->
+            <div class="hide" vm-attr-class="step==2?'flex-content bonus-money-con':'hide'">
+                <!--提示信息-->
+                <div class="hide" vm-attr-class="bonus_num>3000?'bonus-money-tips':'hide'"><i class="icon icon-money-tip"></i>一次最多发3000个红包哦~</div>
+                <div class="hide" vm-attr-class="money>10000000?'bonus-money-tips':'hide'"><i class="icon icon-money-tip"></i>单次支付总金额最多10000000元~</div>
+
+                <div class="clear bonus-money-item mgtop">
+                    <div class="pull-left">红包个数</div>
+                    <div class="pull-right">
+                        <input type="tel" vm-value="bonus_num" class="bonus_count" placeholder="填写红包个数"/>个
+                    </div>
+                </div>
+                <div class="clear bonus-money-item">
+                    <div class="pull-left" vm-html="type">
+                        <script type="text/html">
+                            <% if(type==1){ %>
+                                单个金额
+                            <% } else { %>
+                                总金额<i class="icon icon-bonus-type"></i>
+                            <% } %>
+                        </script>
+                    </div>
+                    <div class="pull-right">
+                        <input type="tel" vm-value="money" class="bonus_count" placeholder="最大不可超过钱包余额"/>元
+                    </div>
+                </div>
+                <div class="bonus-money-all clear">
+                    <p class="bonus-money-p1"><i class="icon icon-money"></i>余额：<span vm-html="balance">0.00</span>元</p>
+                    <p vm-attr-class="type==2?'bonus-money-p2':'hide'" class="hide">每人抽到的金额随机，<a href="#type=1&step=2">改为普通红包</a></p>
+                    <p vm-attr-class="type==1?'bonus-money-p2':'hide'" class="hide">每人抽到的金额固定，<a href="#type=2&step=2">改为拼手气红包</a></p>
+                </div>
+                <input type="text" vm-value="greetings" class="bonus-text" placeholder="恭喜发财，大吉大利！"/>
+
+                <a href="javascript:;" vm-on-click="create_bonus()" vm-attr-class="'bonus-money-btn '+(bonus_num&&money?'':'disabled')">塞钱进红包</a>
+                <div class="bonus-money-leave">未领取的红包，将于24小时后退款至<a href="user-asset-balance.html">余额</a></div>
+            </div>
+
+            <!--分享红包-->
+            <div class="hide" vm-attr-class="step==3?'flex-content bonus-share-con':'hide'">
+                <div class="bonus-share-top"></div>
+                <div class="bonus-user-header">
+                    <span vm-css-background-image="'url(' + portrait + ')'"></span>
+                </div>
+                <p class="bonus-user-name"><em vm-html="nickname"></em>的红包<br><span vm-html="greetings || '恭喜发财，大吉大利！'"></span></p>
+                <a href="javascript:;" vm-on-click="share_packet()" class="bonus-share-btn" >将红包分享给好友</a>
+                <p class="bonus-share-tips">未领取的红包将于24小时内退款至余额</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!--我的红包-->
+    <div class="hide" vm-attr-class="is_show_menu?'popwin-mybonus':'hide'" vm-on-click="toggle_menu()">
+        <div class="popwin-mybonus-con">
+            <a href="user-bonus-list.html#tab=1">收到的红包</a>
+            <a href="user-bonus-list.html#tab=2">发出的红包</a>
+            <a href="javascript:;">取消</a>
+        </div>
+    </div>
+    <!--红包规则   -->
+    <div class="hide" vm-attr-class="is_show_tips?'popwin-bonus-rule':'hide'">
+        <div class="bonus-rule-content">
+            <!--<a href="javascript:;" vm-on-click="toggle_tips()"></a>-->
+            <div class="img-header"><span></span></div>
+            <div class="bonus-rule-div">
+                <div class="img-footer"></div>
+                <a class="close-rule" href="javascript:;" vm-on-click="toggle_tips()" >&times;</a>
+                <p class="title">红包规则</p>
+                <div class="rule-text">
+                    <p class="red-text p-mt">一. 如何发红包</p>
+                    <p>1.选择红包类型，填写红包信息，完成余额支付，通过分享将红包链接发给好友。</p>
+                    <p>2.对于未领完的红包，可到“<span class="red-text">我的红包 &gt; 我发出的红包</span>”中找到该红包，继续发送红包给好友。</p>
+                    <p>3.未被领取完或包好后未发送的红包，在24小时候后将自动退回余额账户，您可在余额账户中查看记录。</p>
+                    <p class="red-text p-mt">二. 如何领取红包</p>
+                    <p>1.通过好友分享的红包链接，点击进入红包领取页进行领取。</p>
+                    <p>2.红包领取成功后将存入账户余额中，无有效期限制。</p>
+                    <p class="red-text p-mt">三. 使用规则</p>
+                    <p>1.余额仅限在百洋商城内购物使用。</p>
+                    <p>2.余额可以累积，可拆分多笔订单使用。</p>
+                    <p>3.余额可以与优惠券、满减、限时折扣等优惠同时使用。</p>
+                    <p>4.包含余额支付的订单若发生退款，余额支付部分将返还至余额内。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--提示设置支付密码-->
+    <div class="hide" vm-attr-class="popup_set_password&&is_set_pay_password!=1?'popwin-bonus-setpsw':'hide'">
+        <div>
+            <div class="setpsw-header"></div>
+            <p>您还没有设置本商城的支付密码,请设置后再试!</p>
+            <a href="javascript:;" vm-on-click="closePasswordPopup()" class="bonus-setpsw-cancel" >暂不</a>
+            <a href="javascript:;" vm-on-click="setPassword('set_password')"  class="bonus-setpsw-go" >马上去</a>
+        </div>
+    </div>
+
+    <!--支付密码输入弹出框-->
+    <div class="hide" vm-attr-class="popup_set_password&&is_set_pay_password==1?'popup popup-password':'hide'">
+        <div class="popup-content">
+            <h3 class="popup-title">请输入6位支付密码 <i class="icon-close" vm-on-click="closePasswordPopup()">&times;</i></h3>
+            <div class="popup-msg row">
+                <input type="tel" oninput="value=value.replace(/[^\d]/g, '')" class="pay_password" id="pay_password" vm-value="pay_password" vm-on-input="create_red_packet()" maxlength="6"/>
+                <span class="col-2"><em vm-html="pay_password.length>0?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>1?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>2?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>3?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>4?'&bull;':''"></em></span>
+                <span class="col-2"><em vm-html="pay_password.length>5?'&bull;':''"></em></span>
+            </div>
+            <div class="popup-footer clear">
+                <a href="javascript:;" vm-on-click="setPassword('reset-pay-password-select')" class="pull-right">忘记支付密码？</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-bonus-index')</script>
+</body>
+</html>

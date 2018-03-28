@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>申请退款</title>
+    <link rel="stylesheet" href="css/user-order-refund.css" />
+</head>
+<body class="user-order-refund" vm-controller="refund-data" >
+    <header class="top-header">
+        <h1 class="title" vm-html="is_refund_all==1?'申请退款':'申请售后'"></h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':'user-index'})}}
+
+    </header>
+    <!--全部退款-->
+    <div page-router="?refund_all"  class="order-refund-goods" vm-html="is_refund_all + product_data + count " >
+        <script type="text/html">
+            <% if( is_refund_all == 1 ) { %>
+            <div class="refund-tips">
+                <i class="icon icon-laba"></i>如需部分退货，请确定订单后申请售后退货
+            </div>
+            <% if( product_data && product_data.length ){ %>
+            <% product_data.forEach(function(item){ %>
+            <div class="goods-list clear">
+                <div class="goods-img">
+                    <span style="background-image: url(<%= item.goods_image %>)"></span>
+                </div>
+                <div class="goods-con">
+                    <p class="goods-name">
+                        <%if(item.is_global==1){%>
+                        <i class="icon icon-hwg">海外优选</i>
+                        <% } else if( item.medicine_type == 1 ) { %>
+                        <i class="icon icon-rx"></i>
+                        <% } else if( item.medicine_type == 2 ) { %>
+                        <i class="icon icon-frxr"></i>
+                        <% } else if( item.medicine_type == 3 ) { %>
+                        <i class="icon icon-frxg"></i>
+                        <% } %>
+                        <%= item.goods_name %>
+                    </p>
+                    <p class="price clear">
+                        <span class="pull-left market-price">&yen;<%= item.promotion_price %></span>
+                        <span class="pull-right count-num">x<%= item.max_refund_number %></span>
+                    </p>
+                </div>
+            </div>
+            <% }) %>
+            <% } %>
+            <a vm-attr-href="has_refund?'javascript:;':'?refund_reason'" vm-attr-class="has_refund?'btn-next btn-default':'btn-next btn-active'" class="btn-next btn-default" >下一步</a>
+
+            <% } else { %>
+            <div class="refund-tips">
+                <i class="icon icon-laba"></i>选择要退货的商品和数量
+            </div>
+            <% if( product_data && product_data.length ){ %>
+            <% product_data.forEach(function(item,index){ %>
+            <div class="goods-list ">
+                <div class="clear">
+                    <label class="<%= item.is_expire==1 || item.max_refund_number-0<1 ?'un-checked':'label-checked' %>" >
+                        <input type="checkbox" name="goods" value="<%= index %>" <%if(item.is_expire==1 || item.max_refund_number-0<1 ){%> disabled="disabled"  <% } %> vm-value="chosen_goods"  />
+                        <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                            <circle cx="17" cy="17" r="16"/>
+                            <% if( item.is_expire==1 || item.max_refund_number-0 < 1 ){ %>
+                            <path d="M4,28 L29,5 "/>
+                            <% } else { %>
+                            <path d="M8,17 L14,22 L26,11"/>
+                            <% } %>
+                        </svg>
+                    </label>
+                    <div class="goods-img">
+                        <span style="background-image: url(<%= item.goods_image %>)"></span>
+                    </div>
+                    <div class="goods-con section-refund">
+                        <p class="goods-name">
+                            <%if(item.is_global==1){%>
+                            <i class="icon icon-hwg">海外优选</i>
+                            <% } else if( item.medicine_type == 1 ) { %>
+                            <i class="icon icon-rx"></i>
+                            <% } else if( item.medicine_type == 2 ) { %>
+                            <i class="icon icon-frxr"></i>
+                            <% } else if( item.medicine_type == 3 ) { %>
+                            <i class="icon icon-frxg"></i>
+                            <% } %>
+                            <%= item.goods_name %>
+                        </p>
+                        <p class="price clear">
+                            <span class="pull-left market-price">&yen;<%= item.promotion_price %></span>
+                            <span class="size-box pull-right row">
+                                <em class="col-4 <% if(item.is_expire==1 || item.max_refund_number-0<=1 ){ %> disabled  <% } %> " <% if( item.is_expire!=1&&item.max_refund_number-0>1 ){ %> vm-on-click="set_num('<%= index %>', -1)" <% } %> >-</em>
+                                <input type="tel" value="<%= item.max_refund_number %>" class="col-4" <% if(item.is_expire==1){ %> readonly <% } %> vm-value="product_data['<%= index %>'].max_refund_number"  vm-on-change="set_num('<%= index %>', 0)" >
+                                <em class="col-4 <% if(item.is_expire==1 || item.max_refund_number-0>=item.stock-0 ){ %> disabled  <% } %>" <% if( item.is_expire!=1&&item.max_refund_number-0<item.stock-0 ){ %> vm-on-click="set_num('<%= index %>', 1)" <% } %>  >+</em>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <% if( item.is_expire==1 ){ %>
+                <p class="tip-uncheckes"><i class="icon icon-tan"></i>该商品已超过售后期</p>
+                <% } %>
+
+            </div>
+            <% }) %>
+            <% } %>
+            <a vm-attr-href="chosen_goods&&chosen_goods.length?'?refund_reason':'javascript:;'" vm-attr-class="chosen_goods&&chosen_goods.length?'btn-next btn-active':'btn-next btn-default'" class="btn-next btn-default">下一步</a>
+
+            <% } %>
+
+        </script>
+    </div>
+
+    <div page-router="?refund_reason"  class="order-refund-input ">
+        <div class="order-refund-con" >
+            <div class="reason-div">
+                <span class="reason-text" vm-html="is_refund_all==1?'退款原因':'退货原因'" ></span>
+                <span vm-attr-class="reason_finish&&reason_finish.length?'chosen-text chosen-yes':'chosen-text chosen-no'" class="chosen-text chosen-no" vm-html="reason_finish&&reason_finish.length?reason_finish:'请选择'" vm-on-click="show_reason()"></span>
+                <i class="icon icon-arrow"></i>
+            </div>
+            <div class="reason-desc">
+                <p vm-html="is_refund_all==1?'退款说明':'退货说明'"></p>
+                <div class="area-div">
+                    <textarea placeholder="请输入文字说明" vm-attr-maxlength="reason_desc.length>=200?200:''" vm-value="reason_desc" vm-on-blur="blur_substring()" ></textarea>
+                    <span vm-html="reason_desc.length>=200?'200/200':reason_desc.length+'/200'"></span>
+                </div>
+            </div>
+            <div class="reason-img" vm-html=" update_photo.length ">
+                <script type="text/html">
+                    <p>上传照片（最多5张）</p>
+                    <div class="chosen-img">
+                        <% if(update_photo && update_photo.length ){ %>
+                        <% update_photo.forEach(function(item, index) {   %>
+                        <% if( index < 5 ){ %>
+                        <div class="file-img">
+                            <img src="data:image/jpeg;base64,<%= item %>" />
+                            <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34" vm-on-click="deleteImg(<%=index%>)" >
+                                <circle cx="17" cy="17" r="16"/>
+                                <path d="M7,17 L27,17 "/>
+                            </svg>
+                        </div>
+                        <% } %>
+
+                        <% }) %>
+                        <% } %>
+                        <% if(update_photo && update_photo.length < 5){ %>
+                        <div class="take-photo">
+                            <i class="icon icon-phone"></i>
+                            <input type="file" accept="image/*" vm-on-change="getFile(this)" multiple>
+                        </div>
+                        <% } %>
+                    </div>
+                </script>
+            </div>
+        </div>
+        <a href="javascript:;" class="btn-order-refund" vm-on-click="refund_submit()">提交申请</a>
+    </div>
+
+    <div vm-attr-class="is_show_reason?'popup-list-reason':'hide'" class="hide" >
+        <div class="popup-reason-content box">
+            <div class="flex">
+                <div class="flex-content-con">
+                    <div class="title">
+                        <em vm-html="is_refund_all==1?'退款原因':'退货原因'"></em>
+                        <a href="javascript:;" vm-on-click="close_popup()">&times;</a>
+                    </div>
+                    <ul vm-html="reason_data">
+                        <script type="text/html">
+                            <% if(reason_data && reason_data.length){ %>
+                            <% reason_data.forEach(function(item,index){ %>
+                            <li>
+                                <span><%= item.reason_desc %></span>
+                                <label class="check-box">
+                                    <input type="radio" value="<%= item.reason_desc %>" name="reason-list" vm-value="reason_list" />
+                                    <svg preserveaspectratio="xMidYMid" viewbox="0 0 34 34" width="34" height="34">
+                                        <circle cx="17" cy="17" r="16" />
+                                        <path d="M8,17 L14,22 L26,11" />
+                                    </svg>
+                                </label>
+                            </li>
+                            <% }) %>
+                            <% } %>
+                        </script>
+                    </ul>
+                </div>
+            </div>
+            <a href="javascript:;" class="btn-sure" vm-on-click="chosen_reason()" >确定</a>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use("user-order-refund")</script>
+</body>
+</html>

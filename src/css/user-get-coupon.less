@@ -1,0 +1,271 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2017/5/3
+ * @description 分享优惠券
+ */
+
+@import "../skin/{{Config.skin_file}}";
+
+@icon: '../images/icon-get-coupon.png';
+@icon_w: 1000;
+@icon_h: 284;
+
+.user-get-coupon {
+    overflow: visible;
+    background: url(../images/bg-get-coupon.png) no-repeat 0 0 #eee;
+    background-size: 100% 100%;
+
+    // 优惠券信息
+    .coupon-wrap {
+        width: (680 / @rem750);
+        margin: (130 / @rem750) auto 0;
+        overflow: hidden;
+
+        .coupon-top {
+            background-color: #fff;
+            position: relative;
+
+            // 打洞效果
+            &::after, &::before {
+                content: '';
+                display: block;
+                width: (36 / @rem750);
+                height: (36 / @rem750);
+                border-radius: 50%;
+                background-color: #eee;
+                position: absolute;
+                top: (240 / @rem750);
+                z-index: 2;
+            }
+            &::before {
+                left: 0;
+                -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+            &::after {
+                right: 0;
+                -webkit-transform: translate(50%, -50%);
+                transform: translate(50%, -50%);
+            }
+        }
+
+        // 优惠券价格
+        .coupon-info {
+            position: relative;
+            height: (240 / @rem750);
+            background-color: #fec56c;
+            text-align: center;
+            color: #fff;
+
+            .coupon-price,
+            .coupon-dec {
+                display: block;
+            }
+
+            .coupon-price {
+                font-size: (80 / @rem750);
+                font-weight: 700;
+                padding-top: (64 / @rem750);
+                line-height: 1em;
+            }
+
+            .coupon-dec {
+                font-size: (34 / @rem750);
+                margin: 0;
+                line-height: 2em;
+            }
+
+            // 锯齿效果
+            &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                width: 94%;
+                height: 20px;
+                left: 3%;
+                top: 0;
+                background: radial-gradient(#eee 0,#eee 3px,#fec56c 3px,#fec56c);
+                background-size: 10px 10px;
+                background-position: 0 -5px;
+                background-repeat: repeat-x;
+            }
+        }
+
+        // 分享人/领取信息
+        .coupon-state {
+            position: relative;
+            box-sizing: border-box;
+            width: (330 / @rem750);
+            height: (256 / @rem750);
+            padding-top: (20 / @rem750);
+            margin: 0 auto (60 / @rem750);
+            text-align: center;
+            border-bottom: 1px solid #dedede;
+
+            // 底部边框
+            &::after {
+                content: '...';
+                display: block;
+                width: (68 / @rem750);
+                height: (20 / @rem750);
+                position: absolute;
+                left: 50%;
+                bottom: -2px;
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);
+                background-color: #fff;
+                color: #dedede;
+                font-size: 2rem;
+                line-height: 0;
+            }
+
+            // 分享人头像
+            .user-photo {
+                display: block;
+                width: (90 / @rem750);
+                height: (90 / @rem750);
+                margin: 0 auto;
+                border-radius: 50%;
+                background: url(../images/default-header.png) no-repeat 50% 50%;
+                background-size: cover;
+            }
+            // 分享人用户名
+            .user-name {
+                font-size: (26 / @rem750);
+                color: #999;
+                line-height: 2em;
+                margin: 0.5em 0 0;
+
+                em {
+                    font-size: (28 / @rem750);
+                    font-style: normal;
+                }
+            }
+
+            // 图标
+            .icon-state {
+                display: block;
+                width: (150 / @rem750);
+                height: (160 / @rem750);
+                margin: 0 auto;
+                background: url(@icon) no-repeat 0 0;
+                background-size: ((@icon_w / 150) * 100% ) ((@icon_h / 160) * 100% ) ;
+            }
+            .icon-get {
+                background-position: ((674 / (@icon_w - 160) ) * 100% ) 0;
+            }
+            .icon-miss {
+                background-position: ((486 / (@icon_w - 160) ) * 100% ) 0;
+            }
+            .icon-overdue {
+                background-position: ((295 / (@icon_w - 160) ) * 100% ) 0;
+            }
+            .icon-revoke {
+                background-position: ((850 / (@icon_w - 160) ) * 100% ) 0;
+            }
+            // 分享状态信息
+            .state-msg {
+                font-size: (30 / @rem750);
+                color: @base_color ;
+                margin: 0;
+                line-height: 2em;
+                white-space: nowrap;
+            }
+        }
+
+        // 优惠券描述信息
+        .coupon-dec {
+            padding: 0 (40 / @rem750) (90 / @rem750);
+            font-size: (28 / @rem750);
+            line-height: 1.5em;
+
+            dl,dt,dd {
+                margin: 0;
+                padding: 0;
+            }
+
+            dt {
+                color: #333;
+            }
+            dd {
+                color: #666;
+                display: table;
+            }
+
+            em, span {
+                display: table-cell;
+            }
+
+            em {
+                font-style: normal;
+                white-space: nowrap;
+            }
+        }
+
+        // 领取按钮
+        .btn-get {
+            display: block;
+            width: 100%;
+            height: (80  /@rem750);
+            line-height: (80  /@rem750);
+            margin-top: (50  /@rem750);
+            text-align: center;
+            color: #fff;
+            font-size: (34 / @rem750);
+            background-color: @base_color;
+        }
+
+    }
+
+    // 二维码
+    .qrcode-wrap {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #eee;
+
+        .qrcode-content {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: (380 / @rem750);
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+
+            .qrcode {
+                width: 100%;
+                padding: (20 / @rem750);
+                box-sizing: border-box;
+                background-color: #fff;
+
+                img {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+
+            p {
+                text-align: center;
+                color: @base_color;
+                font-size: (30 / @rem750);
+                margin: 0;
+                line-height: 2em;
+            }
+
+            .icon-alpaca {
+                display: block;
+                width: (233 / @rem750);
+                height: (284 / @rem750);
+                position: absolute;
+                left: 0;
+                bottom: 100%;
+                background: url(@icon) no-repeat 0 0;
+                background-size: ((@icon_w / 233) * 100% ) ((@icon_h / 284) * 100% ) ;
+                -webkit-transform: translate(-22%, 4%);
+                transform: translate(-22%, 4%);
+            }
+        }
+    }
+}

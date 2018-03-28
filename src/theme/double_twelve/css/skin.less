@@ -1,0 +1,193 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2016/6/7
+ * @description skin-default
+ */
+
+@rem750: (750 / 320 * 12rem);
+@rem640: (640 / 320 * 12rem);
+
+@icon_index: '../images/icon-index-12.png?v1.0.0';
+@icon_index_w: 575;
+@icon_index_h: 237;
+
+/* 按钮
+*******************************************************************/
+.btn-default {
+    background-color: #ff5a96;
+}
+
+.btn-disabled {
+    background-color: #d2d2d2;
+}
+
+/* 首页中部导航
+ ********************************************************/
+.index-content {
+    .icon-hwg {
+        width: (85 / @rem750);
+        height: (85 / @rem750);
+        background-image: url(@icon_index);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: (@icon_index_w / 85 * 100%) (@icon_index_h / 85 * 100%);
+    }
+    .icon-doc {
+        &:extend(.index-content .icon-hwg);
+        background-position: (94 / (@icon_index_w - 85) * 100%) 0;
+    }
+    .icon-assurance {
+        &:extend(.index-content .icon-hwg);
+        background-position: (186 / (@icon_index_w - 85) * 100%) 0;
+    }
+    .icon-type {
+        &:extend(.index-content .icon-hwg);
+        background-position: (279 / (@icon_index_w - 85) * 100%) 0;
+    }
+}
+
+/* 页脚导航菜单
+*********************************************************/
+.footer {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: (3 / @rem750) (25 / @rem750) (8 / @rem750) (25 / @rem750);
+    background-color: #fff;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+
+    .foot-nav {
+        display: block;
+        text-align: center;
+        line-height: 1em;
+        font-size: (20 / @rem750);
+        color: #999;
+        overflow: visible;
+        float: left;
+        width: (120 / (750 - 25 * 2) * 100%);
+
+        &.main-venue {
+            display: block;
+            position: relative;
+            width: (220 / (750 - 25 * 2) * 100%);
+            height: 1em;
+        }
+
+        .icon-home,
+        .icon-brand,
+        .icon-shop-car,
+        .icon-user {
+            width: (55 / @rem640);
+            height: (55 / @rem640);
+            background-image: url(@icon_index);
+            background-repeat: no-repeat;
+            background-size: (@icon_index_w / 55 * 100%) (@icon_index_h / 55 * 100%);
+        }
+
+        .icon-home {
+            background-position: 0 (109 / (@icon_index_h - 55) * 100%);
+        }
+
+        .icon-brand {
+            background-position: (94 / (@icon_index_w - 55) * 100%) (109 / (@icon_index_h - 55) * 100%);
+        }
+
+        .icon-shop-car {
+            background-position: (186 / (@icon_index_w - 55) * 100%) (109 / (@icon_index_h - 55) * 100%);
+        }
+
+        .icon-user {
+            background-position: (279 / (@icon_index_w - 55) * 100%) (109 / (@icon_index_h - 55) * 100%);
+        }
+        .icon-main-venue {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: (139 / @rem750);
+            height: (119 / @rem750);
+            background: url(@icon_index) no-repeat (378 / (@icon_index_w - 139) * 100%) 0;
+            background-size: (@icon_index_w / 139 * 100%) (@icon_index_h / 119 * 100%);
+            -webkit-transform: translate(-50%, -25%);
+            transform:         translate(-50%, -25%);
+        }
+
+        .icon-shop-car {
+            position: relative;
+
+            // 购物车数量
+            .icon-num {
+                display: inline-block;
+                position: absolute;
+                font-size: 0.5rem;
+                right: -0.5rem;
+                top: -0.2rem;
+                width: 1rem;
+                height: 1rem;
+                text-align: center;
+                font-style: normal;
+
+                svg {
+                    width: 100%;
+                    height: 100%;
+                    overflow: visible;
+
+                    circle {
+                        fill: #ff5a96;
+                        stroke: none;
+                        stroke-width: 0;
+                    }
+                    text {
+                        font-size: 10px;
+                        fill: #fff;
+                        stroke: none;
+                        text-anchor: middle
+                    }
+                }
+
+            }
+        }
+
+        &.active {
+            color: #ef3c79;
+
+            .icon-home {
+                background-position: 0 (109 / (@icon_index_h - 55) * 100%);
+            }
+
+            .icon-brand {
+                background-position: (94 / (@icon_index_w - 55) * 100%) (109 / (@icon_index_h - 55) * 100%);
+            }
+
+            .icon-shop-car {
+                background-position: (186 / (@icon_index_w - 55) * 100%) (109 / (@icon_index_h - 55) * 100%);
+            }
+
+            .icon-user {
+                background-position: (279 / (@icon_index_w - 55) * 100%) (109 / (@icon_index_h - 55) * 100%);
+            }
+        }
+        .icon {
+            margin: 0 auto (4 / @rem750);
+            display: block;
+        }
+    }
+
+}
+
+
+/* 头部app下载引导图标
+ ********************************************************/
+.top-download .icon-download,
+.top-download .mobile-top .icon-download {
+    background: url(../../../images/icon-download.png) no-repeat 0 0;
+    background-size: 100% 100%;
+}
+
+/* 双十一首页横幅
+**********************************************************/
+.index-content .top-scroll .november-11 {
+    display: none;
+}

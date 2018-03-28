@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <meta name="applicable-device" content="mobile">
+    <meta name="Keywords"  content="网上药店,药房网,药店网,网上药房,网上买药, 药房网商城,百洋商城网上药店" />
+    <meta name="description" content="百洋商城，妈妈的网上药店，药监局认证的合法网上药店，100%正品保证，由执业药师在线服务，为您提供全面的营养、保健、药用指导和专业、优质、便捷的网上买药服务。原青岛百洋健康药房网商城官网，买安全放心药就上百洋药房网" />
+    <link rel="canonical" href="https://www.baiyangwang.com">
+    <title>百洋商城-妈妈的网上药店，青岛正规专业药房 送药上门</title>
+    <link rel="stylesheet" href="css/index.css"/>
+</head>
+<body vm-controller="index" >
+
+    <header class="hide" vm-attr-class="is_hide_top||is_scroll_hide?'hide':'guide-placeholder'"></header>
+    <div class="top-download" vm-attr-class="'top-download '+(is_hide_top||is_scroll_hide?' top-download-hide':'')">
+        <!--头部app下载链接-->
+        <div vm-attr-class="is_touch_machine?'hide':'mobile-top'" class="hide">
+            <a href="javascript:;" id="btn-open-app-top" class="downbtn"></a>
+            <a href="javascript:;" class="close-download" vm-on-click="closeGuide()">&times;</a>
+            <i class="col-2 icon-download"></i>
+            <span>百洋商城APP购买 <br>首次下单最高立减40元！</span>
+            <a href="http://a.app.qq.com/o/simple.jsp?pkgname=com.baiyang.store" class="go-download">下载APP</a>
+        </div>
+
+        <div vm-attr-class="is_touch_machine?'touchmachine-top':'hide'" class="hide">
+            <div class="icon icon-scan"></div>
+            <span>手机下单方便快捷 <br>首次下单最高立减40元</span>
+            <a href="javascript:;" class="go-scan" vm-on-click="showCode()" >立即扫码</a>
+        </div>
+
+        <!--头部搜索-->
+        <div class="top-search clear" id="top-search">
+            <h1 class="logo text-hide">百洋商城</h1>
+            <button class="top-search-btn" data-act="search" type="button">
+                <i class="icon icon-search"></i>输入关键词进行搜索
+            </button>
+            <a vm-attr-href="loginState?'user-index.html':'login.html?redirect=index.html'" class="login-state" vm-attr-class="loginState?'user-state':'login-state'">登录</a>
+        </div>
+
+    </div>
+
+    <!--内容区-->
+    <div class="index-content">
+        <!--头部滚动-->
+        <section class="top-scroll" vm-html="scrollImg + handy_entry  ">
+            <script type="text/html">
+                <% if(scrollImg && scrollImg.length){ %>
+                <div class="scroll-wrap" data-act="swipe">
+                    <ul class="scroll-list">
+                        <% scrollImg.forEach(function(item) { %>
+                        <li class="scroll-item">
+                            <a href="<%= item.location %>" data-act="lazy" data-param="style=<%= item.image_url %>"></a>
+                        </li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <% } else { %>
+                <div class="scroll-wrap scroll-bg-img"></div>
+                <% } %>
+
+                <!--活动专题-->
+                <!--一分钱预约-->
+                <a href="https://m.baiyangwang.com/wapspecial/special/2017/05/25/index.html" class="activity-order" style="display: none"></a>
+                <!--斯利安-->
+                <a href="https://m.baiyangwang.com/wapspecial/special/2017/04/53/index.html" class="activity-silian" style="display: none"></a>
+                <!--陈李济-->
+                <a href="https://m.baiyangwang.com/wapspecial/special/2017/04/44/index.html" class="activity-clj" style="display: none"></a>
+                <!--迪巧-->
+                <a href="https://m.baiyangwang.com/wapspecial/special/2016/07/17/index.html" class="activity-dq" style="display: none"></a>
+
+
+                <!--快捷入口-->
+                <% if( handy_entry && handy_entry.length ){
+                    var ary = handy_entry.concat(), group, size = 5;
+                    if(ary.length % 4 === 0){
+                        size = 4;
+                    }
+                %>
+                <table class="index-nav nav-col-<%= size %>" cellspacing="0" cellpadding="0" border="0">
+                    <% while( (group = ary.splice(0, size), group.length) ){ %>
+                    <tr>
+                        <% group.forEach(function(item,index){ %>
+                        <td>
+                            <a <%== item.href %> class="nav-item">
+                                <img data-act="lazy" data-param="src=<%= item.image %>" alt="" />
+                            </a>
+                        </td>
+                        <% }); %>
+                    </tr>
+                    <tr>
+                        <% group.forEach(function(item,index){ %>
+                        <td>
+                            <a <%== item.href %> class="nav-item">
+                                <p><%= item.title %></p>
+                            </a>
+                        </td>
+                        <% }); %>
+                    </tr>
+                    <% } %>
+                </table>
+
+                <% } else  { %>
+                <div class="nav-item-flag row ">
+                    <a href="index-hwg.html" class="nav-item col-3"><i class="icon icon-hwg"></i>海外优选</a>
+                    <a href="javascript:;" data-act="ntkf" class="nav-item col-3"><i class="icon icon-doc"></i>药师咨询</a>
+                    <a href="genuine.html" class="nav-item col-3"><i class="icon icon-assurance"></i>正品保障</a>
+                    <a href="category-list.html" class="nav-item col-3"><i class="icon icon-type"></i>产品分类</a>
+                </div>
+                <% } %>
+
+            </script>
+        </section>
+
+        <!--专题广告-->
+        <section class="special">
+            <div class="special-wrap clear" vm-html="picBanner">
+                <script type="text/html">
+                    <% if(picBanner && picBanner.length){ %>
+                    <table cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                            <td rowspan="2">
+                                <% if(picBanner[0]){ %>
+                                <a href="<%= picBanner[0].location %>" class="nav-item" data-act="lazy" data-param="style=<%= picBanner[0].image_url %>" style="background-size: 100% 100%"></a>
+                                <% } else { %>
+                                <a href="javascript:;" class="nav-item scroll-bg-img">&nbsp;</a>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if(picBanner[1]){ %>
+                                <a href="<%= picBanner[1].location %>" class="nav-item" data-act="lazy" data-param="style=<%= picBanner[1].image_url %>" style="background-size: 100% 100%"></a>
+                                <% } else { %>
+                                <a href="javascript:;" class="nav-item scroll-bg-img">&nbsp;</a>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <% if(picBanner[2]){ %>
+                                <a href="<%= picBanner[2].location %>" class="nav-item" data-act="lazy" data-param="style=<%= picBanner[2].image_url %>" style="background-size: 100% 100%"></a>
+                                <% } else { %>
+                                <a href="javascript:;" class="nav-item scroll-bg-img">&nbsp;</a>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <% if(picBanner[3]){ %>
+                                <a href="<%= picBanner[3].location %>" class="nav-item" data-act="lazy" data-param="style=<%= picBanner[3].image_url %>" style="background-size: 100% 100%"></a>
+                                <% } else { %>
+                                <a href="javascript:;" class="nav-item scroll-bg-img">&nbsp;</a>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if(picBanner[4]){ %>
+                                <a href="<%= picBanner[4].location %>" class="nav-item" data-act="lazy" data-param="style=<%= picBanner[4].image_url %>" style="background-size: 100% 100%"></a>
+                                <% } else { %>
+                                <a href="javascript:;" class="nav-item scroll-bg-img">&nbsp;</a>
+                                <% } %>
+                            </td>
+                        </tr>
+                    </table>
+                    <% } %>
+                </script>
+            </div>
+        </section>
+        <!--新品推荐-->
+        <section class="new" vm-html="newGoods">
+            <script type="text/html">
+                <% if(newGoods && newGoods.length) { %>
+                <p class="block-title"><i class="icon icon-new"></i>新品推荐</p>
+                <div class="scroll-wrap" data-act="swipe">
+                    <ul class="goods-list clear">
+                        <% newGoods.forEach(function(item, i) { %>
+                        <% if(i % 3 == 0){ %>
+                        <li class="goods-item row">
+                            <% } %>
+                            <a href="product/<%= item.product_id %>.html" class="col-4">
+                                                        <span class="goods-pic-commend">
+                                                            <span data-act="lazy" data-param="style=<%= item.image_url %>"></span>
+                                                        </span>
+                            </a>
+                            <% if(i % 3 == 2 || i == newGoods.length + 1){ %>
+                        </li>
+                        <% } %>
+                        <% }); %>
+                    </ul>
+                </div>
+                <% } %>
+            </script>
+        </section>
+        <!--精选活动-->
+        <section class="today" vm-html="special">
+            <script type="text/html">
+                <% if(special && special.length){ %>
+                <p class="block-title"><i class="icon icon-today"></i>精选活动</p>
+                <% special.forEach(function(item) { %>
+                <div class="commend-goods">
+                    <a href="<%= item.location %>" class="goods-pic"><img data-act="lazy" data-param="src=<%= item.image_url %>" alt=""/></a>
+                    <p class="goods-title"><%= item.slogan %></p>
+                </div>
+                <% }); %>
+                <% } %>
+            </script>
+        </section>
+        <!--营养保健-->
+        <section class="goods-block baby" vm-html="baby">
+            <script type="text/html">
+                <% if(baby && baby.keyword || baby.goods){ %>
+                <p class="block-title"><i class="icon icon-baby"></i>营养保健</p>
+                <% if(baby.keyword && baby.keyword.length){ %>
+                <nav class="tag-nav row">
+                    <% baby.keyword.forEach(function(item) { %>
+                    <% if(item){ %>
+                    <a href="product-list.html?keyword=<%= item.slogan %>" class="tag-item col-4"><%= item.slogan %></a>
+                    <% } else { %>
+                    <a href="javascript:;" class="tag-item col-4">&nbsp;</a>
+                    <% } %>
+                    <% }); %>
+                </nav>
+                <% } %>
+                <% if(baby.goods && baby.goods.length){ %>
+                <ul class="goods-list row">
+                    <% baby.goods.forEach(function(item) { %>
+                    <li class="goods-item">
+                        <a href="product/<%= item.product_id %>.html">
+                            <p class="goods-pic"><img data-act="lazy" data-param="src=<%= item.image_url %>" alt=""/></p>
+                            <span class="goods-title"><%= item.product_name %></span>
+                            <span class="goods-dec"><%= item.packing %></span>
+                            <em class="goods-price">&yen;<%= item.price %></em>
+                        </a>
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } %>
+                <% } %>
+            </script>
+        </section>
+        <!--美妆个护-->
+        <section class="goods-block woman" vm-html="woman">
+            <script type="text/html">
+                <% if(woman && woman.keyword || woman.goods){ %>
+                <p class="block-title"><i class="icon icon-woman"></i>美妆个护</p>
+                <% if(woman.keyword && woman.keyword.length){ %>
+                <nav class="tag-nav row">
+                    <% woman.keyword.forEach(function(item) { %>
+                    <% if(item){ %>
+                    <a href="product-list.html?keyword=<%= item.slogan %>" class="tag-item col-4"><%= item.slogan %></a>
+                    <% } else { %>
+                    <a href="javascript:;" class="tag-item col-4">&nbsp;</a>
+                    <% } %>
+                    <% }); %>
+                </nav>
+                <% } %>
+                <% if(woman.goods && woman.goods.length){ %>
+                <ul class="goods-list row">
+                    <% woman.goods.forEach(function(item) { %>
+                    <li class="goods-item">
+                        <a href="product/<%= item.product_id %>.html">
+                            <p class="goods-pic"><img data-act="lazy" data-param="src=<%= item.image_url %>" alt=""/></p>
+                            <span class="goods-title"><%= item.product_name %></span>
+                            <span class="goods-dec"><%= item.packing %></span>
+                            <em class="goods-price">&yen;<%= item.price %></em>
+                        </a>
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } %>
+                <% } %>
+            </script>
+        </section>
+        <!--母婴用品-->
+        <section class="goods-block man" vm-html="man">
+            <script type="text/html">
+                <% if(man && man.keyword || man.goods){ %>
+                <p class="block-title"><i class="icon icon-man"></i>母婴用品</p>
+                <% if(man.keyword && man.keyword.length){ %>
+                <nav class="tag-nav row">
+                    <% man.keyword.forEach(function(item) { %>
+                    <% if(item){ %>
+                    <a href="product-list.html?keyword=<%= item.slogan %>" class="tag-item col-4"><%= item.slogan %></a>
+                    <% } else { %>
+                    <a href="javascript:;" class="tag-item col-4">&nbsp;</a>
+                    <% } %>
+                    <% }); %>
+                </nav>
+                <% } %>
+                <% if(man.goods && man.goods.length){ %>
+                <ul class="goods-list row">
+                    <% man.goods.forEach(function(item) { %>
+                    <li class="goods-item">
+                        <a href="product/<%= item.product_id %>.html">
+                            <p class="goods-pic"><img data-act="lazy" data-param="src=<%= item.image_url %>" alt=""/></p>
+                            <span class="goods-title"><%= item.product_name %></span>
+                            <span class="goods-dec"><%= item.packing %></span>
+                            <em class="goods-price">&yen;<%= item.price %></em>
+                        </a>
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } %>
+                <% } %>
+            </script>
+        </section>
+        <!--中西药品-->
+        <section class="goods-block medicine" vm-html="medicine">
+            <script type="text/html">
+                <% if(medicine && medicine.keyword || medicine.goods){ %>
+                <p class="block-title"><i class="icon icon-medicine"></i>中西药品</p>
+                <% if(medicine.keyword && medicine.keyword.length){ %>
+                <nav class="tag-nav row">
+                    <% medicine.keyword.forEach(function(item) { %>
+                    <% if(item){ %>
+                    <a href="product-list.html?keyword=<%= item.slogan %>" class="tag-item col-4"><%= item.slogan %></a>
+                    <% } else { %>
+                    <a href="javascript:;" class="tag-item col-4">&nbsp;</a>
+                    <% } %>
+                    <% }); %>
+                </nav>
+                <% } %>
+                <% if(medicine.goods && medicine.goods.length){ %>
+                <ul class="goods-list row">
+                    <% medicine.goods.forEach(function(item) { %>
+                    <li class="goods-item">
+                        <a href="product/<%= item.product_id %>.html">
+                            <p class="goods-pic"><img data-act="lazy" data-param="src=<%= item.image_url %>" alt=""/></p>
+                            <span class="goods-title"><%= item.product_name %></span>
+                            <span class="goods-dec"><%= item.packing %></span>
+                            <em class="goods-price">&yen;<%= item.price %></em>
+                        </a>
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } %>
+                <% } %>
+            </script>
+        </section>
+
+        <!--footer 底部导航-->
+        <div class="hide" vm-attr-class="special||newGoods||special||baby||woman||man||medicine||nourishing||apparatus?'footer-wap':'hide'">
+            <div class="footer-list-a">
+                <div class="row">
+                    <a class="col-3" href="user-help-buy.html">购物流程</a>
+                    <a class="col-3" href="user-help-wl.html">配送方式</a>
+                    <a class="col-3" href="user-help-order.html">支付方式</a>
+                    <a class="col-3" href="user-help-back.html">售后服务</a>
+                </div>
+                <div class="row footer-list">
+                    <a class="col-4" data-act="ntkf" data-param="type=2" href="javascript:;">处方药咨询</a>
+                    <a class="col-4" data-act="ntkf" href="javascript:;">投诉咨询</a>
+                    <a class="col-4" href="user-about-advise.html">我要寻药</a>
+                </div>
+            </div>
+            <div class="row web-type">
+                <a class="col-4" href="javascript:;" id="btn-open-app">
+                    <i class="icon icon-app"></i> <br/>
+                    客户端
+                </a>
+                <a class="col-4 active" href="javascript:;">
+                    <i class="icon icon-wap"></i> <br/>
+                    触屏版
+                </a>
+                <a class="col-4" href="https://www.baiyangwang.com/">
+                    <i class="icon icon-pc"></i> <br/>
+                    电脑版
+                </a>
+            </div>
+            <div class="footer-about">
+                <div class="row">
+                    <a class="col-3" href="user-company-profile.html">公司简介</a>
+                    <a class="col-3" href="user-about-website.html">网站资质</a>
+                    <a class="col-3" href="user-about-honor.html">荣誉证书</a>
+                    <a class="col-3" href="contact-us.html">联系我们</a>
+                </div>
+                <p>Copyright&copy;&nbsp;2007-2017&nbsp;百洋商城网上药店</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!--触屏机 二维码 -->
+    <div class="hide" vm-attr-class="is_show_code?'popup':'hide'">
+        <div class="popup-code ">
+            <div class="code-div clear">
+                <div class="pull-left code-app"></div>
+                <div class="pull-right code-wap"></div>
+            </div>
+            <a href="javascript:;" vm-on-click="closeCode()">关闭</a>
+        </div>
+    </div>
+
+    <!--loading-->
+    <div class="popup popup-loading" id="loading"><div class="popup-content"><div class="clock"></div></div></div>
+
+    <!--底部页脚导航-->
+    {{require('template/footer.html', {'page':'index'})}}
+
+
+<script src="js/config.js"></script>
+<script>seajs.use('index')</script>
+</body>
+</html>

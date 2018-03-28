@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>好货拼团</title>
+    <link rel="stylesheet" href="css/group-purchase.css"/>
+</head>
+<body >
+    <div class="wrap box group-pd-all" vm-controller ="group-detail">
+        <header class="user-header top-header">
+            <h1 class="title" vm-html="page" >
+                <script type="text/html">
+                    <% if(page=='group_detail' ){ %>
+                    好货拼团
+                    <% } else if(page=='group_rule'){ %>
+                    拼团规则
+                    <% } %>
+                </script>
+            </h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+			<!--头部右边按钮 导航菜单 -->
+			{{require('template/topnav.html', {'page':''})}}
+
+		</header>
+
+        <div class="flex" >
+        	<!--最新拼团订单消息推送-->
+            <!--<div class="group-report">
+            	<div class="group-report-img">
+            		<img src="pic/user-order-03.jpg" alt="" />
+            	</div>
+            	<p class="group-report-msg">最新拼团订单来自青岛市的最新拼团订单来自青岛市的may</p>
+            	<p class="group-report-time">，1秒前</p>
+            	<div class="group-report-bg"></div>
+            </div>-->
+            <div vm-attr-class="'flex-content group-pd-con '+(page=='group_detail'?'':'hide')" class="hide" vm-html="group_data + more_group_act + group_partner + saveMoney + group_state" >
+                <script type="text/html">
+                <% if( group_data && group_data.gfa_id ) { %>
+                    <!--轮播图-->
+                    <div class="scroll-wrap" data-act="swipe" >
+                        <ul class="scroll-list">
+                            <% if( group_data.goods_slide_images && group_data.goods_slide_images.length ) { %>
+                            <% group_data.goods_slide_images.forEach(function(list) { %>
+                                <li class="scroll-item">
+                                    <a href="javascript:;"><img src="<%= list %>" alt=""/></a>
+                                </li>
+                            <% }) %>
+                            <% } else { %>
+                                <li class="scroll-item"></li>
+                            <% } %>
+                        </ul>
+                    </div>
+                    <!--团购的商品信息-->
+                    <div class="group-msg" >
+                        <div class="group-pd-market">
+                    		<span class="price" data-act="price-part" data-param="price=<%= group_data.gfa_price %>"></span>
+                            <del class="markPrice">&yen;<%= group_data.market_price %></del>
+                            <span class="group-price-tips">立省<%= saveMoney %>元</span>
+                            <span class="group-price-tips">包邮</span>
+                            <span class="num pull-right">已有<i><%= group_data.gfa_join_num %></i>人参团</span>
+                        </div>
+                        <h3 class="group-pd-title">
+                        	<% if(group_state.gfa_type && (group_state.gfa_type - 0) == 1){ %>
+	        					<em class="group-type">抽奖</em>
+	        				<% }else if(group_state.gfa_user_type && (group_state.gfa_user_type - 0) == 1){ %>
+	        					<em class="group-type">老带新</em>
+	        				<% }else{ %>
+	        					<em class="group-type">拼团</em>
+	        				<% } %>
+                        	<%= group_data.goods_name %>
+                        </h3>
+                        <p class="group-pd-desc"><%= group_data.goods_introduction %></p>
+						
+                        <p class="hide" vm-attr-class="(group_state.gfa_type && (group_state.gfa_type + 0) == 1) ?'hide' : 'group-pd-end clear'">
+                            <% if( group_state.act_overtime == 1 ){ %>
+                                <span class="pull-left">活动已结束</span>
+                            <% } else { %>
+                                <span class="pull-left" data-act="count-down" data-param="endtime=<%= group_data.gfa_endtime %>" ></span>
+                            <% } %>
+                            <span class="pull-right">逾期未成团自动退款</span>
+                        </p>
+                    </div>
+                    <!--抽奖活动规则-->
+                    <div class="hide" vm-attr-class="(group_state.gfa_type && (group_state.gfa_type - 0) == 1) ?'group-raffle' : 'hide'">
+                    	<h3>抽奖活动规则：</h3>
+                    	<p vm-html="rule_time"></p>
+                    	<p>1.拼团成功，获得抽奖资格。</p>
+                    	<p>2.活动结束即开奖。</p>
+                    	<p>3.中奖用户将获得该拼团商品；未中奖将全额退款。</p>
+                    	<p>4.拼团抽奖商品不支持无理由退换货申请。</p>
+                    </div>
+                    <% if(group_state.gfa_user_type && (group_state.gfa_user_type - 0) == 1){ %>
+    					<div class="group-old-and-new">
+							<h3 class="title">【老带新拼团】参团者为新用户可成团</h3>
+						</div>
+    				<% } %>
+					<!--邀请参团-->
+					<% if(group_partner && group_partner.length && (group_state.gfa_type -0) == 0) { %>
+					<div class="group-partner">
+						<div class="group-partner-con">
+							<p class="title">以下小伙伴邀你参团，快来看看吧~</p>
+							<% group_partner.forEach(function(item, i) { %>
+								<div class="group-partner-details">
+									<div class="group-partner-img">
+										<% if( item.headimgurl != '' ){ %>
+											<img src="<%= item.headimgurl %>" alt="" />
+										<% } %>
+									</div>
+									<div class="group-partner-con">
+										<div class="left">
+											<h4><%= item.nickname %></h4>
+											<p>剩余<span data-act="group-down" data-param="time=<%= item.remaining_time %>">00:00:00</span></p>
+										</div>
+										<div class="right">
+											<h4>还差<span><%= item.user_sum %></span>人成团</h4>
+										</div>
+									</div>
+									<a href="group-join.html?group_id=<%= item.gf_id %>" class="group-partner-btn">去参团</a>
+								</div>
+							<% }) %>
+						</div>
+					</div>
+					<% } %>
+					
+                    <div class="group-panel-title">
+                    	<% if(group_state.gfa_type && (group_state.gfa_type + 0) == 1){ %>
+        					<span>拼团抽奖玩法</span>
+        				<% }else if(group_state.gfa_user_type && (group_state.gfa_user_type + 0) == 1){ %>
+        					<span>老带新玩法</span>
+        				<% }else{ %>
+        					<span>拼团玩法</span>
+        				<% } %>
+                        
+                        <a href="javascript:;" vm-on-click="pageRouter('group_rule')">查看详情<i class="icon icon-group-arrow"></i></a>
+                    </div>
+					<!--抽奖活动是否开奖-->
+                	<% if(group_state.gfa_is_draw && (group_state.gfa_is_draw - 0) == 1){ %>
+                		<div class="group-rule">
+	                        <div class="rule-mid-line clear">
+	                            <div class="rule-list">
+	                                <span class="line-bg line-active-bg"></span>
+	                                <span class="circle-num"><em class="active-color" >1</em></span>
+	                            </div>
+	                            <div class="rule-list">
+	                                <span class="line-bg line-active-bg"></span>
+	                                <span class="circle-num"><em class="active-color">2</em></span>
+	                            </div>
+	                            <div class="rule-list">
+	                                <span class="line-bg line-active-bg"></span>
+	                                <span class="circle-num"><em class="active-color">3</em></span>
+	                            </div>
+	                            <div class="rule-list2">
+	                                <span class="circle-num"><em class="active-color">4</em></span>
+	                            </div>
+	                        </div>
+                    		<div class="rule-list-text clear">
+	                            <div class="list-red-text">支付开团/</br>参团</div>
+	                            <div class="list-red-text">邀请参团</div>
+	                            <div class="list-red-text">团满抽奖</br>不满退款</div>
+	                            <div class="list-red-text">开奖后</br>发货/退款</div>
+	                      </div>
+	                    </div>
+                	<% }else{ %>
+	                    <div class="group-rule">
+	                        <div class="rule-mid-line clear">
+	                            <div class="rule-list">
+	                                <span class="line-bg"></span>
+	                                <span class="circle-num"><em class="active-color" >1</em></span>
+	                            </div>
+	                            <div class="rule-list">
+	                                <span class="line-bg"></span>
+	                                <span class="circle-num"><em >2</em></span>
+	                            </div>
+	                            <div class="rule-list">
+	                                <span class="line-bg"></span>
+	                                <span class="circle-num"><em >3</em></span>
+	                            </div>
+	                            <div class="rule-list2">
+	                                <span class="circle-num"><em>4</em></span>
+	                            </div>
+	                        </div>
+	                        <% if(group_state.gfa_type && (group_state.gfa_type - 0) == 1){ %>
+	                    		<div class="rule-list-text clear">
+		                            <div class="list-red-text">支付开团/</br>参团</div>
+		                            <div >邀请参团</div>
+		                            <div >团满抽奖</br>不满退款</div>
+		                            <div >开奖后</br>发货/退款</div>
+		                       </div>
+	        				<% }else if(group_state.gfa_user_type && (group_state.gfa_user_type - 0) == 1){ %>
+	        					<div class="rule-list-text clear">
+		                            <div class="list-red-text">选择邀新团商品</div>
+		                            <div >支付开团/</br>参团</div>
+		                            <div >邀请新用户</br>参团</div>
+		                            <div >人满成团</div>
+		                        </div>
+	        				<% }else{ %>
+	        					<div class="rule-list-text clear">
+		                            <div class="list-red-text">选择商品</div>
+		                            <div >支付开团/</br>参团</div>
+		                            <div >邀请参团</div>
+		                            <div >人满成团</div>
+		                        </div>
+	        				<% } %>
+	                    </div>
+					<% } %>
+                    <div class="group-panel-title">
+                        <span>商品详情</span>
+                    </div>
+                    <div class="gorupon-detail ">
+                    	<%== FormatHTML(group_data.body) %>
+                    </div>
+                    <div class="group-panel-title">
+                        <span>其他团购</span>
+                        <a href="group-list.html">更多<i class="icon icon-group-arrow"></i></a>
+                    </div>
+
+                    <% if(more_group_act && more_group_act.length) { %>
+                    <div class="group-more">
+                       <div class="group-wrap" data-act="swipe" >
+                            <ul class="group-list-more" >
+                                <% more_group_act.forEach(function(item, i) { %>
+                                    <% if(i % 3 == 0){ %>
+                                        <li class="group-item">
+                                    <% } %>
+                                        <a href="group-product-detail.html?group_id=<%= item.gfa_id %>">
+                                            <div class="group-item-img"><span style="background-image: url(<%= item.first_image %>)"></span></div>
+                                            <p class="group-item-name"><%= item.goods_name %></p>
+                                            <p class="group-item-price"><span data-act="price-part" data-param="price=<%= item.gfa_price %>"></span><del>&yen;<%= item.market_price %></del></p>
+                                        </a>
+                                    <% if(i % 3 == 2 || i == more_group_act.length + 1){ %>
+                                        </li>
+                                    <% } %>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    </div>
+                    <% } %>
+                <% } %>
+                </script>
+            </div>
+            <div vm-attr-class="'flex-content group-rule-con '+ (page=='group_rule'?'':'hide')" class="hide">
+                <div class="group-rule-top"></div>
+                <div class="group-rule-text">
+                    <h1>规则说明</h1>
+                    <p class="rule-title">1、怎么开团？</p>
+                    <p class="rule-text">选择心仪商品，点击“x人拼团”按钮，付款后即为开团成功。</p>
+                    <p class="rule-title">2、团长</p>
+                    <p class="rule-text">开团且该团第一位支付成功的人。 </p>
+                    <p class="rule-title">3、怎么参与拼团？</p>
+                    <p class="rule-text">进入朋友分享的链接，点击“立即参团”按钮，付款后即为参团成功，若多人同时支付，支付成功时间较早的人获得参团资格。</p>
+                    <p class="rule-title">4、拼团失败</p>
+                    <p class="rule-text">在成团的有效时间内未凑齐成团人数，则拼团失败。此时付款项会原路退回到支付账户。</p>
+                    <p class="rule-title">5、在拼团时间内可以取消订单吗？</p>
+                    <p class="rule-text">拼团在有效时间内，拼购的商品订单不允许取消。</p>
+                    <p class="rule-title">6、怎么就可以成团？</p>
+                    <p class="rule-text">在开团或参团成功后，点击“邀请好友参团”按钮，将页面分享给好友，在有效时间内凑齐人数即为成团。</p>
+                    <p class="rule-title">7、什么是抽奖拼团？</p>
+                    <p class="rule-text">拼团成功的用户才有抽奖资格，达到活动时间系统随机抽奖，同一个用户只能中奖一次。中奖用户获得抽奖奖品，未中奖将全额退款。</p>
+                    <p class="rule-title">8、什么是老带新？</p>
+                    <p class="rule-text">参团用户必须新用户。</p>
+                    <p class="rule-title">9、拼团的商品可以用优惠券吗？</p>
+                    <p class="rule-text">拼团商品不可以使用优惠券，不可以参加满减，但可以使用商城的余额进行支付哦。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 拼团底部 -->
+        <div vm-attr-class="group_data.gfa_id && page=='group_detail'?'group-detail-footer':'hide'" class="hide" vm-html="product_id + group_data + group_state">
+            <script type="text/html">
+	            <div class="group-customer " data-act="ntkf" data-param="itemid=<%= product_id %>&itemparam=4">
+	                <i class="icon-grounpon-customer"></i>
+	                <span>客服</span>
+	            </div>
+	            <div class="group-go-buy ">
+                    <a href="product/<%= product_id %>.html">
+                        <span data-act="price-part" data-param="price=<%= group_data.goods_price %>"></span>
+                        <span>单独购买</span>
+                    </a>
+	            </div>
+	            <!--拼团类型逻辑判断-->
+	            <% if(group_state.gfa_type == 1){ %>
+	            	<!--抽奖-->
+	            	<% if(group_state.gfa_is_draw == 1){ %>
+	            		
+	            		<a href="group-winners.html?act_id=<%=group_data.gfa_id%>" class="check-raffle">查看中奖名单</a>
+	            		
+	            	<% }else{ %>
+	            		
+	            		<% if(group_state.act_overtime == 0){ %>
+            				
+        					<div class="group-go-order" vm-on-click="submit_group(1)">
+			                    <span data-act="price-part" data-param="price=<%= group_data.gfa_price %>"></span>
+			                    <span><%= group_data.gfa_user_count %>人拼团</span>
+				           </div>
+	            			
+	            		<% }else{ %>
+	            			<div class="group-over" >活动已结束</div>
+	            		<% } %>
+	            	<% } %>
+	            	
+	            <% }else{ %>
+	            	<!--不抽奖-->
+	            	<% if(group_state.act_overtime == 0){ %>
+        				
+    					<div class="group-go-order" vm-on-click="submit_group(1)">
+		                    <span data-act="price-part" data-param="price=<%= group_data.gfa_price %>"></span>
+		                    <span><%= group_data.gfa_user_count %>人拼团</span>
+			           	</div>
+            			
+            		<% }else{ %>
+            			<div class="group-over" >活动已结束</div>
+            		<% } %>
+            		
+	            <% } %>
+	            
+            </script>
+        </div>
+
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('group-product-detail')</script>
+
+</body>
+</html>

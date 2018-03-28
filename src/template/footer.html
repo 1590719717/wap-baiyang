@@ -1,0 +1,41 @@
+<footer class="footer row" data-act="footer"  >
+    <script type="text/html">
+
+        <%% if( main_menu && main_menu.length > 0 ) { %%>
+            <%% var size = main_menu.length;  %%>
+            <div class="nav-all nav-col-<%%= size %%> clear">
+                <%% main_menu.forEach(function(item,index){ %%>
+                    <%% if( size == 5 && index == 2  ){ %%>
+                        <a <%%== item.is_current?'href="javascript:;"': item.location %%> class="nav-center">
+                            <i class="icon-venue" style="background-image: url(<%%= item.is_current?item.change_img_url:item.image_url %%>)"></i>
+                        </a>
+                    <%% } else { %%>
+                        <a <%%== item.is_current == 1?'href="javascript:;"': item.location %%> class="<%%= item.is_current == 1?'nav-list active':'nav-list' %%>"  style="background-image: url(<%%= item.is_current?item.change_img_url:item.image_url %%>)" >
+                            <p><%%= item.advertisement %%></p>
+
+                            <%% if( item.totalQty && item.totalQty > 0 ){ %%>
+                                <span class="icon-num">
+                                    <svg width="50" height="50" viewBox="0 0 50 50" preserveAspectRatio="xMidYMid">
+                                        <circle r="25" cx="25" cy="24"></circle>
+                                        <text x="25" y="25" dy="0.3em" text-anchor="middle" font-size="30px"><%%= item.totalQty %%></text>
+                                    </svg>
+                                </span>
+                            <%% } %%>
+
+                        </a>
+                    <%% } %%>
+                <%% }) %%>
+            </div>
+
+        <%% } else { %%>
+
+            <a href="<% if(page != 'index') { %>index.html<% } else { %>javascript:;<% } %>" class="foot-nav <% if(page == 'index') { %>active<% } %>"><i class="icon icon-home"></i>首页</a>
+            <a href="<% if(page != 'brand') { %>brand.html<% } else { %>javascript:;<% } %>" class="foot-nav <% if(page == 'brand') { %>active<% } %>"><i class="icon icon-brand"></i>品牌街</a>
+            <a href="<% if(page != 'shopping-car') { %>shopping-car.html<% } else { %>javascript:;<% } %>" class="foot-nav <% if(page == 'shopping-car') { %>active<% } %>"><i class="icon icon-shop-car"></i>购物车</a>
+            <a href="<% if(page != 'user-index') { %>user-index.html<% } else { %>javascript:;<% } %>" class="foot-nav <% if(page == 'user-index') { %>active<% } %>"><i class="icon icon-user"></i>我的</a>
+
+        <%% } %%>
+
+    </script>
+
+</footer>

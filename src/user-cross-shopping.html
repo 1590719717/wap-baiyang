@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>跨境代购</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body >
+    <div class="wrap box user-cross-shopping" vm-controller="client-list">
+        <header class="user-help top-header">
+            <h1 class="title" vm-html="page=='list'?'跨境代购':'添加委托人'"></h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <ul vm-attr-class="page=='list'?'nav':'hide' " class="hide" >
+            <li vm-attr-class="is_show_date?'active':''" vm-on-click="toggle_popup('date')" vm-html="date_type">
+                <script type="text/html">
+                    <%= date_type==1&&'本周订单' %>
+                    <%= date_type==2&&'本月订单' %>
+                    <%= date_type==3&&'近2个月订单' %>
+                    <%= date_type==4&&'近3个月订单' %>
+                    <%= date_type==5&&'近半年订单' %>
+                    <%= date_type==6&&'近1年订单' %>
+                    <%= date_type==0&&'自定义日期' %>
+                </script>
+            </li>
+            <li vm-attr-class="is_show_brand?'active':''" vm-on-click="toggle_popup('brand')" vm-html="search.brand_id">
+                <script type="text/html">
+                    <% if(!search.brand_id || search.brand_id == 'all'){ %>
+                        全部品牌
+                    <% } else { %>
+                        <% brand_list.forEach(function(brand) { %>
+                            <% if(brand.brand_id == search.brand_id) { %>
+                                <%= brand.brand_name %>
+                            <% } %>
+                        <% }); %>
+                    <% } %>
+                </script>
+            </li>
+            <li class="add-blue"><a href="javascript:;" vm-on-click="pageRoute('add')" >添加委托人+</a></li>
+        </ul>
+
+        <div class="flex">
+            <!--下拉筛选菜单-->
+            <div class="hide" vm-attr-class="(is_show_date||is_show_brand)?'flex-content popup-bg':'hide' ">
+
+                <!--月份下拉菜单-->
+                <div vm-attr-class="is_show_date?'month-search':'hide'">
+                    <ul class="month-list ">
+                        <li vm-on-click="set_search_data(1)" vm-attr-class="date_type==1?'active':''">本周</li>
+                        <li vm-on-click="set_search_data(2)" vm-attr-class="date_type==2?'active':''">本月</li>
+                        <li vm-on-click="set_search_data(3)" vm-attr-class="date_type==3?'active':''">近2个月</li>
+                        <li vm-on-click="set_search_data(4)" vm-attr-class="date_type==4?'active':''">近3个月</li>
+                        <li vm-on-click="set_search_data(5)" vm-attr-class="date_type==5?'active':''">近半年</li>
+                        <li vm-on-click="set_search_data(6)" vm-attr-class="date_type==6?'active':''">近1年</li>
+                    </ul>
+                    <div class="row time-inp">
+                        <label class="col-3">开始时间：</label>
+                        <input type="text" name="start-time" data-act="calendar" data-param="range=1" vm-value="custom_start_time" class="col-9" placeholder="点击选择" readonly />
+                        <i class="icon-time-chose"></i>
+                    </div>
+                    <div class="row time-inp ">
+                        <label class="col-3">结束时间：</label>
+                        <input type="text" name="start-time" data-act="calendar" data-param="range=1" vm-value="custom_end_time" class="col-9" placeholder="点击选择" readonly />
+                        <i class="icon-time-chose"></i>
+                    </div>
+                    <button type="button" vm-on-click="set_search_data(0)">确定</button>
+                </div>
+
+                <!--品牌下拉菜单-->
+                <div vm-attr-class="is_show_brand?'products-search':'hide'">
+                    <ul class="nav-list" vm-html="brand_list">
+                        <script type="text/html">
+                            <li vm-on-click="set_search_brand('all')" vm-attr-class="search.brand_id=='all'?'active':''">全部</li>
+                            <% if(brand_list && brand_list.length){ %>
+                                <% brand_list.forEach(function(brand) { %>
+                                    <li vm-on-click="set_search_brand('<%= brand.brand_id %>')" vm-attr-class="search.brand_id=='<%= brand.brand_id %>'?'active':''"><%= brand.brand_name %></li>
+                                <% }); %>
+                            <% } %>
+                        </script>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!--内容区 滚动区-->
+            <!--委托人列表-->
+            <div vm-attr-class="page=='list'?'user-cs-content flex-content':'hide'" class="hide" vm-html="client_list" id="client-list">
+                <script type="text/html">
+                    <% if(client_list && client_list.length){ %>
+                        <% client_list.forEach(function(client) { %>
+                            <div class="shopping-order">
+                                <div class="shopping-order-header">
+                                    <% if(client.headimgurl){ %>
+                                        <span style="background-image: url(<%= client.headimgurl %>)"></span>
+                                    <% } else { %>
+                                        <span></span>
+                                    <% } %>
+                                </div>
+                                <div class="shopping-order-text">
+                                    <p class="order-text-p1"><span><%= client.real_name %></span><span><%= client.phone %></span></p>
+                                    <p class="order-text-p2">身份证:<span><%= client.id_card %></span></p>
+                                    <p class="order-text-p3"><span>订单数：<em><%= client.order_num %></em></span> <span>商品金额：<em>&yen;<%= (client.order_amount-0).toFixed(2) %></em></span></p>
+                                </div>
+                                <div class="shopping-order-type">
+                                    <% if(client.status == 0){ %>
+                                        <!--审核中-->
+                                        <div class="shopping-order-doing">
+                                            <span></span>
+                                        </div>
+                                    <% } %>
+                                    <% if(client.status == 1){ %>
+                                        <!--审核通过-->
+                                        <div class="shopping-order-pass">
+                                            <% if( client.order_num - 0 > 0){ %>
+                                                <a class="active-a" href="user-cs-order.html?user_id=<%= client.user_id %>&user_name=<%= client.real_name %>">查看详情</a>
+                                            <% } else {  %>
+                                                <a class="disabled-a" href="javascript:;">查看详情</a>
+                                            <% }   %>
+
+                                        </div>
+                                    <% } %>
+                                    <% if(client.status == 2){ %>
+                                        <!--审核不通过，重新提交-->
+                                        <div class="shopping-order-fail">
+                                            <a href="javascript:;" vm-on-click="addClientAgain('<%= client.real_name %>','<%= client.phone %>','<%= client.id_card %>')" >重新提交</a>
+                                            <p>未通过</p>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="client-empty">委托人列表为空！</p>
+                    <% } %>
+                </script>
+            </div>
+            <!--添加委托人-->
+            <div vm-attr-class="page=='add'?'add-client-con flex-content':'hide'" class="hide"  >
+                <form id="form_client" >
+                    <div class="row inp-list">
+                        <label class="col-3">姓名</label>
+                        <input type="text" name="username" class="col-9" data-validate="empty" placeholder="点击输入姓名" vm-value="username" />
+                    </div>
+                    <div class="row inp-list">
+                        <label class="col-3">电话</label>
+                        <input type="tel" name="phone" class="col-9" data-validate="empty,phone" placeholder="点击输入手机号" vm-value="phone" />
+                    </div>
+                    <div class="row inp-list">
+                        <label class="col-3">身份证</label>
+                        <input type="text" name="id_card" class="col-9" data-validate="empty,regexp(^\d{17}[\d\w]$)" vm-value="id_card" placeholder="点击输入身份证" />
+                    </div>
+                    <p class="img-tips">请上传一张委托人手持身份证正面，即有头像一面的合照</p>
+                    <div class="row inp-load" >
+                        <img vm-attr-src="id_card_image?'data:image/jpeg;base64,'+id_card_image:'{{Config.cdn_url}}images/take-photo-append.jpg'" alt=""/>
+                        <span>点击上传</span>
+                        <input type="file" accept="image/*" vm-value="id_card_file" vm-on-change="getFile()">
+                    </div>
+                    <button type="button" vm-on-click="submitForm()" >提交</button>
+                </form>
+            </div>
+
+            <div vm-attr-class="page=='list'?'shopping-order-botm':'hide'" class="hide">
+                <span>订单数：<em vm-html="order_num_total">0</em></span>
+                <span>合计金额：<em vm-html="'&yen;'+order_amount_total">&yen;0</em></span>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-cross-shopping')</script>
+</body>
+</html>

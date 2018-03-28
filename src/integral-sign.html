@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>每日签到</title>
+    <link rel="stylesheet" href="css/integral.css" />
+</head>
+<body vm-controller="signed-data">
+
+    <header  class="top-header">
+        <h1 class="title">每日签到</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':'user-index'})}}
+    </header>
+
+    <!--已登录-->
+    <div vm-attr-class="show_login==1?'integral-signed':'hide'" class="hide"  >
+        <!--内容区域-->
+        <div class="integral-signed-top" >
+            <div vm-attr-class="is_sign==1?'signed-con sign-gray':'signed-con'" vm-on-click="sign()" >
+                <div class="yellow-div1">
+                    <div class="yellow-div2">
+                        <span class="has-signed" vm-html="is_sign==1?'已签':'签到'" ></span>
+                        <br/>
+                        <span class="signed-count">连续签到<em vm-html="time_ing"></em>天</span>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="integral-total">
+                <span><i></i><em vm-html="point"></em></span>
+                <br/>
+                <a href="integral-index.html">前往积分商城</a>
+            </div>
+            <p class="sign-tips" vm-html="prompt" ></p>
+        </div>
+
+        <div class="sign-mid-img"></div>
+
+        <!--日历-->
+        <div class="sign-calendar" vm-html="rule + day_list.flag " >
+
+            <script type="text/html">
+
+                <div class="sign-calendar-title">
+                    <a href="javascript:;" vm-on-click="pre_month_sign()" >&lt;</a>
+                    <span id="current_time" vm-html="cur_day" ></span>
+                    <a href="javascript:;" vm-on-click="next_month_sign()" >&gt;</a>
+                </div>
+
+                <div class="sign-calendar-con">
+                    <table cellspacing='0' class="time-table" >
+                        <tr>
+                            <th>日</th>
+                            <th>一</th>
+                            <th>二</th>
+                            <th>三</th>
+                            <th>四</th>
+                            <th>五</th>
+                            <th>六</th>
+                        </tr>
+                        <% if( day_list.list && day_list.list.length ) { %>
+
+                            <% day_list.list.forEach(function(item, i) { %>
+
+                                <% if(i > 0 && i  % 7 == 0 && i < day_list.length){  %>
+                                    <tr>
+                                <% }  %>
+                                <% if( item ){ %>
+                                    <td valign="top" class="<%= item.is_sign==1?'sign-checked':item.is_reward==1?'gift':'' %>" >
+                                        <span class="<%= item.today == 1?'today':'' %>"><%= item.day %></span>
+                                        <% if( item.is_sign == 0 && item.is_reward == 1 && item.reward_points > 0 ) { %>
+                                            <div>+<%= item.reward_points %>积分</div>
+                                        <% } %>
+                                    </td>
+
+                                <% } else { %>
+
+                                    <td valign="top"></td>
+                                <% } %>
+
+                                <% if(i  % 7 == 6 || i + 1 == day_list.length){  %>
+                                    </tr>
+                                <% }  %>
+
+                            <% }) %>
+                        <% } %>
+
+                    </table>
+                </div>
+
+                <p class="sign-rule">签到规则：</p>
+
+                <% if(rule && rule.length){ %>
+                    <% rule.forEach(function(item,index){ %>
+                        <p class="sign-rule-text"><%= index + 1  %>.<%= item  %></p>
+                    <% }) %>
+                <% } %>
+
+            </script>
+
+        </div>
+
+    </div>
+
+    <!--未登录-->
+    <div vm-attr-class="show_login==2?'integral-logout':'hide'" class="hide"  >
+        <div class="img-logo"></div>
+        <p>啊哦~您还没有登陆呦~</p>
+        <a href="javascript:;" vm-on-click="go_login()">登录</a>
+    </div>
+
+
+    <!--签到成功的弹窗-->
+    <div vm-attr-class=" sign_success?'popup-sign':'hide' " class="hide" >
+          <div class="popup-sign-con">
+              <div class="popup-bg-img"></div>
+              <p class="popup-sign-p1" >签到成功</p>
+              <p class="popup-sign-p2" >恭喜您获得了<span vm-html="sign_point"></span>积分</p>
+              <p class="popup-sign-p3" >可用于积分商城兑换，<a href="integral-index.html">前往积分商城&gt;</a></p>
+              <a href="javascript:;" class="sign-sure-btn" vm-on-click="close_popup()" >确定</a>
+          </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('integral-sign')</script>
+</body>
+</html>

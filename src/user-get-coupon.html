@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>百洋商城</title>
+    <link rel="stylesheet" href="css/user-get-coupon.css"/>
+</head>
+<body class="user-get-coupon" vm-controller="get-coupon">
+
+    <!--优惠券信息-->
+    <div vm-attr-class="page==1?'coupon-wrap':'hide'" class="hide">
+        <section class="coupon-top">
+            <!--优惠券信息-->
+            <div class="coupon-info" vm-html="info">
+                <script type="text/html">
+                    <% if(info){ %>
+                        <strong class="coupon-price">
+                            <% if(info.coupon_type != 2) { %>
+                            &yen;<%= info.coupon_value %>
+                            <% } else { %>
+                            <%= info.coupon_value %>折
+                            <% } %>
+                        </strong>
+                        <p class="coupon-dec">满<%= info.min_cost %><%= info.dis_unit==1?'元':'件' %>可用</p>
+                    <% } %>
+                </script>
+            </div>
+
+            <!--分享人/领取信息-->
+            <div class="coupon-state" vm-html="info">
+                <script type="text/html">
+                    <% if(info) { %>
+                        <% if(info.is_share == 0 && info.is_used == 2){ %>
+                            <!--好友未领取-->
+                            <span class="user-photo" <% if(info.headimgurl){ %>style="background-image: url(<%= info.headimgurl %>)" <% } %>></span>
+                            <p class="user-name"><em><%= info.nick_name %></em><br>给你分享了一张券</p>
+                        <% } else if(info.is_share == 1 && info.is_used == 2){ %>
+                            <!--自己未领取-->
+                            <i class="icon-state icon-get"></i>
+                            <p class="state-msg">优惠券正等待着新的主人！</p>
+                        <% } else if(info.is_used == 3){ %>
+                            <!--被别人领取 -->
+                            <i class="icon-state icon-miss"></i>
+                            <p class="state-msg">优惠券已经被领走啦！</p>
+                        <% } else if(info.is_used == 4){ %>
+                            <!--已过期-->
+                            <i class="icon-state icon-overdue"></i>
+                            <p class="state-msg">我都过期了，你才来！</p>
+                        <% } else if(info.is_used == 5){ %>
+                            <!--已撤回-->
+                            <i class="icon-state icon-revoke"></i>
+                            <p class="state-msg">说好赠送的，居然收回去了！</p>
+                        <% } else if(info.is_used == 6){ %>
+                            <i class="icon-state icon-get"></i>
+                            <% if(info.is_share == 0) {%>
+                                <!--已领取-->
+                                <p class="state-msg">优惠券领取成功！</p>
+                            <% } else { %>
+                                <!--被好友领取 -->
+                                <p class="state-msg">优惠券已经被好友领取！</p>
+                            <% } %>
+                        <% } else { %>
+                            <i class="icon-state icon-overdue"></i>
+                            <p class="state-msg">优惠券不存在！</p>
+                        <% } %>
+                    <% } %>
+                </script>
+            </div>
+
+            <!--优惠券详细介绍-->
+            <div class="coupon-dec">
+                <dl>
+                    <dt>优惠券详情</dt>
+                    <dd><em>使用说明：</em><span vm-html="info?info.description:''"></span></dd>
+                    <dd><em>使用范围：</em><span vm-html="info?info.use_range:''"></span></dd>
+                    <dd><em>使用时间：</em><span vm-html="info?info.userd_time:''"></span></dd>
+                </dl>
+            </div>
+        </section>
+
+        <a class="btn-get" href="javascript:;" vm-html="info" vm-on-click="get_coupon()">
+            <script type="text/html">
+                <% if(info){ %>
+                    <% if(info.is_share == 0 && info.is_used == 2){ %>
+                        立即领取
+                    <% } else if(info.is_share == 1 && info.is_used == 2){ %>
+                        立即分享
+                    <% } else if(info.is_share == 0 && info.is_used == 6){ %>
+                        立即使用
+                    <% } else { %>
+                        随便逛逛
+                    <% } %>
+                <% } %>
+            </script>
+        </a>
+
+    </div>
+
+    <!--非微信打开显示二维码-->
+    <div vm-attr-class="page==2?'qrcode-wrap':'hide'" class="hide">
+        <section class="qrcode-content">
+            <div id="qrcode" class="qrcode"></div>
+            <p>微信扫一扫&nbsp;&nbsp;领取优惠券</p>
+            <i class="icon-alpaca"></i>
+        </section>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-get-coupon')</script>
+</body>
+</html>
+

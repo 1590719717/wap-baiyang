@@ -1,0 +1,482 @@
+@charset "utf-8";
+/*!
+ * @author yuchunfeng
+ * @date 2017/2/9
+ * @version 1.0.0
+ * @description 订单提交成功的样式
+ */
+
+@import "../skin/{{Config.skin_file}}";
+
+/*  订单提交成功
+************************************************************/
+body.order-submit-successfully {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: visible;
+    background-color: #eeeeee;
+
+    //处方药
+    .order-rx-exist {
+        background-color: #ffffff;
+
+        .order-top {
+            width: 100%;
+            padding: (30 / @rem750) 0;
+
+            span {
+                display: block;
+                margin: auto;
+                .successful_img_rx();
+            }
+
+        }
+        //订单的状态
+        .order-type {
+            background-color: #ffffff;
+            box-sizing: border-box;
+            padding-left: ( 70 / @rem750);
+
+            .order-type-item {
+                position: relative;
+                float: left;
+                width: (250 / @rem750);
+                z-index: 1;
+
+                //提交预订
+                .order-type-book {
+                    position: relative;
+                    width: (64 / @rem750);
+                    height: (64 / @rem750);
+                    line-height: (64 / @rem750);
+                    text-align: center;
+                    vertical-align: middle;
+                    border-radius: 50%;
+                    border: @base_color solid 1px;
+                    background-color: #ffffff;
+                    z-index: 9;
+                    .icon {
+                        .icon_active_rx() ;
+                        margin: auto;
+                    }
+                }
+                //药师审核
+                .order-type-reviewed {
+                    position: relative;
+                    width: (64 / @rem750);
+                    height: (64 / @rem750);
+                    border-radius: 50%;
+                    line-height: (64 / @rem750);
+                    text-align: center;
+                    vertical-align: middle;
+                    border: #cccccc solid 1px;
+                    background-color: #ffffff;
+                    z-index: 9;
+
+                    .icon {
+                        width: (28 / @rem750);
+                        height:(35 / @rem750);
+                        background: url(../images/icon-pay-success.png?v1.0.2) no-repeat 0 (100 / (197-35)*100%);
+                        background-size: (29 / 28 *100%) (197 /35  *100%);
+                        margin: auto;
+                    }
+                }
+                //确认预订
+                .order-type-sure {
+                    position: relative;
+                    width: (64 / @rem750);
+                    height: (64 / @rem750);
+                    line-height: (64 / @rem750);
+                    text-align: center;
+                    vertical-align: middle;
+                    border-radius: 50%;
+                    border: #cccccc solid 1px;
+                    background-color: #ffffff;
+                    z-index: 9;
+
+                    .icon {
+                        width: (29 / @rem750);
+                        height:(25 / @rem750);
+                        background: url(../images/icon-pay-success.png?v1.0.2) no-repeat 0 (142 / (197-25)*100%);
+                        background-size: (29 / 29 *100%) (197 /25  *100%);
+                        margin: auto;
+                    }
+                }
+
+                .red-line {
+                    position: absolute;
+                    width: 100%;
+                    height: 1px;
+                    background-color: #cccccc;
+                    left: 0;
+                    top: (34 / @rem750);
+                    z-index: 2;
+                }
+                p {
+                    color: #b5b5b5;
+                    font-size: (26 / @rem750);
+                    margin-left: (-20/@rem750);
+                }
+                &:last-child {
+                    width: (120 / @rem750);
+                }
+
+            }
+            .active {
+                .order-type-reviewed {
+                    border: @base_color solid 1px;
+                    .icon {
+                        background-position: 0 (34 / (197-35)*100%);
+                    }
+                }
+                .order-type-sure {
+                    border: @base_color solid 1px;
+                    .icon {
+                        background-position: 0 (70 / (197-25)*100%);
+                    }
+                }
+                p {
+                    color: @base_color;
+                }
+                .red-line {
+                    background-color: @base_color;
+                }
+
+            }
+        }
+
+        .order-rx-tips {
+            color: #333333;
+            font-size: (34/@rem750);
+            text-align: center;
+            padding: (35/@rem750) 0;
+            border-top: #dddddd dashed 1px;
+            margin: 0 (20/@rem750);
+            background-color: #ffffff;
+            font-weight:bold;
+        }
+        .order-submit-btn {
+            background-color: #ffffff;
+            padding: 0 (100/@rem750)  (30/@rem750) (100/@rem750);
+
+            a {
+                display: inline-block;
+                text-decoration: none;
+                width: (260/@rem750);
+                height: (60/@rem750);
+                line-height: (60/@rem750);
+                text-align: center;
+                border: #cccccc solid 1px;
+                border-radius: 5px;
+                color: #666666;
+                font-size: (30/@rem750);
+            }
+            .look-order {
+                float: left;
+
+            }
+            .go-index {
+                float: right;
+
+            }
+        }
+        .order-rx-tips2 {
+            color: #999999;
+            font-size: (24/@rem750);
+            margin: 0;
+            background-color: #eeeeee;
+            text-align: left;
+            padding: (25/@rem750) (20/@rem750);
+
+            .icon-order-tips {
+                width: (27 / @rem750);
+                height:(24 / @rem750);
+                background: url(../images/icon-pay-success.png?v1.0.2) no-repeat 0 (175 / (197-24)*100%);
+                background-size: (29 / 27 *100%) (197 /24  *100%);
+                vertical-align: middle;
+                margin-left: 0;
+            }
+        }
+
+    }
+
+    //普通订单的支付成功
+    .order-common {
+        background-color: #ffffff;
+
+        .order-common-top {
+            width: 100%;
+            padding: (30 / @rem750) 0;
+
+            span{
+                display: block;
+                margin: auto;
+                .successful_top_img() ;
+            }
+        }
+        //支付金额提示
+        .order-pay-text {
+            text-align: center;
+            font-size: (34/@rem750);
+            color: #333333;
+            padding-bottom: (25 / @rem750);
+            margin: 0;
+
+            .icon-pay-shipping {
+                position: relative;
+                display: inline-block;
+                width: (34 / @rem750);
+                height: (34 / @rem750);
+                background-color: #4cd459;
+                border-radius: 50%;
+                overflow: hidden;
+                .icon_pay_shipping() ;
+
+                &::after {
+                    content: ' ';
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    display: block;
+                    width: (20/@rem750);
+                    height: (10/@rem750);
+                    border: 1px solid #fff;
+                    border-color: transparent transparent #fff #fff;
+                    -webkit-transform: rotate(-45deg);
+                    transform:         rotate(-45deg);
+                    margin-left: (-10/@rem750);
+                    margin-top: (-13/@rem750);
+                }
+            }
+        }
+        //订单信息
+        .order-detail {
+            padding: 0 (30 /@rem750) (40 / @rem750) (30 /@rem750);
+
+            p{
+                color:#333333 ;
+                font-size:(30/@rem750) ;
+                margin: 0;
+                line-height: (48/@rem750);
+
+                span{
+                    color: @base_color;
+                }
+            }
+        }
+        //按钮
+        .order-common-btn {
+            width: 100%;
+            border-top: #cccccc dashed  1px;
+            background-color: #ffffff;
+            padding: (30/@rem750) 0;
+
+            a {
+                display: block;
+                text-decoration: none;
+                width: (240/@rem750);
+                height: (60/@rem750);
+                line-height: (60/@rem750);
+                text-align: center;
+                border: #cccccc solid 1px;
+                border-radius: 5px;
+                color: #666666;
+                font-size: (30/@rem750);
+            }
+            .look-order {
+                float: left;
+                margin-left: (105 / @rem750);
+
+            }
+            .go-index {
+                float: right;
+                margin-right: (105 / @rem750);
+
+            }
+        }
+
+    }
+
+    .order-submit-bottom {
+        display: block;
+        width: 100%;
+
+        img {
+            width: 100%;
+            height: auto;
+            vertical-align: top;
+        }
+    }
+
+    //建议退出登录 弹窗   触屏机
+    .popup-is-logout {
+        background: rgba(0,0,0,0.5);
+
+        .popup-is-logout-content {
+            background-color: #ffffff;
+            position: relative;
+            width: (650 / @rem750);
+            padding: (40 / @rem750);
+            text-align: center;
+            border: #d7d7d7 solid 1px;
+            border-radius: 9px;
+            box-sizing: border-box;
+
+            p {
+                color: #333333;
+                font-size: (28 / @rem750);
+                text-align: center;
+                margin: 0 0 (60 / @rem750) 0;
+                line-height: (44 / @rem750);
+            }
+
+            a {
+                display: inline-block;
+                text-decoration: none;
+                width: (270 / @rem750);
+                height: (86 / @rem750);
+                line-height: (86 / @rem750);
+                box-sizing: border-box;
+                font-size: (32 /@rem750);
+                border-radius: 3px;
+
+                &.go-out {
+                    color: #999999;
+                    border: #d6d7dc solid 1px;
+                    background-color: #ffffff;
+
+                }
+                &.go-shipping {
+                    background-color: @base_color;
+                    border: @base_color solid 1px;
+                    color: #ffffff;
+                }
+            }
+        }
+
+    }
+
+
+    //下单关注百洋公众号弹窗
+    .popup-focus {
+        background: rgba(0,0,0,0.4);
+
+        .popup-focus-content {
+            background-color: #ffffff;
+            position: relative;
+            width: (600 / @rem750);
+            text-align: center;
+            border-radius: (20 / @rem750);
+            box-sizing: border-box;
+            overflow: hidden;
+
+            .focus-top {
+                width: 100%;
+                height: (391 / @rem750);
+                overflow: hidden;
+                border-radius: (20 / @rem750) (20 / @rem750) 0 0;
+
+                span {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    background: url(../images/icon-order-focus.png) no-repeat 0 0;
+                    background-size: 100% 100%;
+
+                }
+            }
+
+            .focus-text {
+                position: relative;
+                width: 100%;
+                text-align: center;
+                display: -webkit-box;
+                display: box;
+                -webkit-box-pack: center;
+                box-pack: center;
+                -webkit-box-align: center;
+                box-align: center;
+                -webkit-box-orient:horizontal;
+                box-orient:horizontal;
+                padding: (50 / @rem750) 0;
+                box-sizing: border-box;
+                overflow: hidden;
+
+                .focus-by-img {
+                    width: (100 / @rem750);
+                    height: (100 / @rem750);
+                    overflow: hidden;
+                    span {
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        background: url(../images/icon-by.png) no-repeat 0 0 ;
+                        background-size: 100% 100%;
+                        border-radius: 50%;
+                    }
+                }
+                .focus-by-text {
+                    width: auto;
+                    text-align: left;
+                    margin-left: (25 / @rem750);
+
+                    span{
+                        font-size: (28 / @rem750);
+                        color: #333;
+                    }
+
+                }
+
+            }
+
+            .wechat-focus-text {
+                padding: (40 / @rem750);
+                width: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
+
+                img {
+                    float: left;
+                    width: (240 / @rem750);
+                }
+
+                div {
+                    float: right;
+                    width: (240 / @rem750);
+                    text-align: center;
+                    span {
+                        display: block;
+                        width: (170 / @rem750);
+                        height: (170 / @rem750);
+                        background: url(../images/icon-finger.png) no-repeat 0 0 ;
+                        background-size: 100% 100%;
+                        margin: (8 / @rem750) auto 0 auto;
+                    }
+                    p {
+                        margin: (20 / @rem750) 0 0 0;
+                        color: #333333;
+                        font-size: (24 / @rem750);
+                        text-align: center;
+                    }
+                }
+            }
+
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

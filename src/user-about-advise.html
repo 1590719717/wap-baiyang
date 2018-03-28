@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>我要寻药</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-copyright-all">
+    <div class="wrap box">
+        <header  class="top-header">
+            <h1 class="title">我要寻药</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="about-advise flex-content">
+                <p class="top-text">尊敬的顾客朋友，如果您没有找到您需要的商品，请将您要寻找的商品告诉我们，我们会运用百洋网专业的医药供销渠道为您采购。找到该商品后，我们会及时跟您联系。</p>
+                <div class="form-wrap" vm-controller="advise">
+                    <form id="form-advise">
+                        <div class="form-item row">
+                            <label class="col-3"><em class="require">*</em>需求商品：</label>
+                            <input vm-value="goods_name" data-validate="empty" class="col-9" type="text" value=""/>
+                        </div>
+                        <div class="form-item row">
+                            <label class="col-3"><em class="require">*</em>规格：</label>
+                            <input vm-value="standard" data-validate="empty" class="col-9" type="text" value=""/>
+                        </div>
+                        <div class="form-item row">
+                            <label class="col-3"><em class="require">*</em>生产厂家：</label>
+                            <input vm-value="supplier" data-validate="empty" class="col-9" type="text" value=""/>
+                        </div>
+                        <div class="form-item row">
+                            <label class="col-3">订购数量：</label>
+                            <input vm-value="goods_number" data-validate="regexp(^\+?[1-9][0-9]*$)" class="col-9" type="text" value=""/>
+                        </div>
+                        <div class="form-item row">
+                            <label class="col-3">需求描述：</label>
+                            <textarea vm-value="description" class="col-9"></textarea>
+                        </div>
+                        <div class="form-item row">
+                            <label class="col-3"><em class="require">*</em>您的姓名：</label>
+                            <input vm-value="user_name" data-validate="empty" class="col-9" type="text" value=""/>
+                        </div>
+                        <div class="form-item row">
+                            <label class="col-3"><em class="require">*</em>联系电话：</label>
+                            <input vm-value="phone" data-validate="empty,phone" class="col-9" type="text" value=""/>
+                        </div>
+                        <div class="form-item row">
+                            <label class="col-3">电子邮箱：</label>
+                            <input vm-value="email" class="col-9" data-validate="email" type="text" value=""/>
+                        </div>
+                        <div class="form-item row">
+                            <label class="col-3">QQ号码：</label>
+                            <input vm-value="qq" class="col-9" data-validate="number" type="text" value=""/>
+                        </div>
+                        <div class="form-item row">
+                            <button type="button" vm-on-click="submit()" class="btn btn-submit active">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-about-advise')</script>
+</body>
+</html>

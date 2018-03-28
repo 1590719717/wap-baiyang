@@ -1,0 +1,47 @@
+{
+    "local": {
+        "debug": 1,
+        "platform": "local",
+        "ajax_url": "http://58.63.114.90:9011/",
+        "auth_url": "",
+        "cdn_url": "",
+        "login_appid": "wx204a7e7dba41a742",
+
+        "skin_config": {
+            "base_color": "#fb6497",
+            "rem750": "(750 / 320 * 12rem)",
+            "rem640": "(640 / 320 * 12rem)"
+        }
+
+    },
+    "stg": {
+        "debug": 1,
+        "platform": "stg",
+        "ajax_url": "https://mstest.baiyangwang.com/",
+        "auth_url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1f628d662cfea925&redirect_uri=",
+        "cdn_url": "https://wapcdnstg.baiyangwang.com/",
+        "login_appid": "wx1f628d662cfea925",
+
+        "skin_config": {
+            "base_color": "#fb6497",
+            "rem750": "(750 / 320 * 12rem)",
+            "rem640": "(640 / 320 * 12rem)"
+        }
+
+    },
+    "prod": {
+        "debug": 0,
+        "platform": "prod",
+        "ajax_url": "https://mservice.baiyjk.com/",
+        "auth_url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx62eaed8770f89f93&redirect_uri=",
+        "cdn_url": "https://wapstatic.baiyangwang.com/wap/",
+        "login_appid": "wxea88f5e6b8956165",
+
+        "skin_config": {
+            "base_color": "#fb6497",
+            "rem750": "(750 / 320 * 12rem)",
+            "rem640": "(640 / 320 * 12rem)"
+        }
+
+    }
+}

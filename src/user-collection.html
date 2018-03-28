@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>商品收藏</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body>
+    <div class="wrap box user-collect-all">
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="user-collect-content flex-content" vm-controller="user-collection">
+                <!--头部-->
+                <header class="user-collect top-header">
+                    <h1 class="title">商品收藏</h1>
+                    <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                    <!--头部右边按钮 导航菜单 -->
+                    {{require('template/topnav.html', {'page':'user-index'})}}
+
+                </header>
+                <!--我的收藏不为空-->
+                <div vm-html="collection_list" >
+                    <script type="text/html">
+                        <%if(collection_list && collection_list.length){%>
+                            <div class="user-collect-con">
+                                <%collection_list.forEach(function(item){%>
+                                    <div class="<%= item.status==0?'collect-list out-stock':'collect-list'%>">
+                                        <div class="collect-product">
+                                            <a href="product/<%=item.product_id%>.html">
+                                                <span style="background-image: url( <%= item.default_image %> )"></span>
+                                                <!--缺货状态-->
+                                                <%if(item.stock_out == 1){%>
+                                                    <div class="icon-collect out-stock"></div>
+                                                <%}%>
+                                                <!--下架状态-->
+                                                <%if(item.status == 0){%>
+                                                    <div class="icon-collect un-shelve"></div>
+                                                <%}%>
+                                            </a>
+                                        </div>
+                                        <div class="collect-list-con">
+                                            <a href="product/<%=item.product_id%>.html">
+                                                <div class="collect-product-name clear"><%=item.product_name%></div>
+                                            </a>
+                                            <div class="collect-price">
+                                                <span>	&yen;<%=item.price%></span>
+                                                <span>&yen;<%=item.market_price%></span>
+                                                <a href="javascript:;" class="icon icon-delete" vm-on-click="cancelCollect('<%= item.collection_id %>')"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <%})%>
+                            </div>
+                        <%}else{ %>
+                            <!--我的收藏为空时-->
+                            <div  class="collect-none" ><span></span></div>
+                        <%}%>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-collection')</script>
+</body>
+</html>
+

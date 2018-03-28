@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>我的积分</title>
+    <link rel="stylesheet" href="css/integral.css"/>
+</head>
+<body>
+
+    <div vm-controller="detail-data" >
+        <!--已登录    -->
+        <div vm-attr-class="show_login==1?'':'hide'" class="hide"  >
+            <header  class="top-header">
+                <h1 class="title" >我的积分</h1>
+                <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                <!--头部右边按钮 导航菜单 -->
+                {{require('template/topnav.html', {'page':'user-index'})}}
+
+            </header>
+
+            <!--积分明细头部-->
+            <div class="detail-user-top">
+                <div class="detail-user-current" class=" hide" >
+                    <span>当前积分</span> <br>
+                    <h1 vm-html="current_point"></h1>
+                    <a href="javascript:;" vm-on-click="pageRouter('show_rule')" class="detail-rules" >
+                        <i></i>
+                        <span>什么是积分</span>
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="detail-button row">
+                <a href="integral-index.html" class="col-6">
+                    <i></i>
+                    <span>积分商城</span>
+                </a>
+                <a href="integral-exchange.html" class="col-6">
+                    <i></i>
+                    <span>兑换记录</span>
+                </a>
+            </div>
+
+            <!-- 积分获得记录-->
+            <div class="detail-write-border" vm-html="detail_list">
+                <script type="text/html">
+
+                    <% if(detail_list && detail_list.length){ %>
+                    <% detail_list.forEach(function(item){ %>
+                    <div class="detail-write">
+                            <span class="detail-write-every">
+                                <% if(item.sent_type == 0 ){ %>
+                                每日签到
+                                <% } else if(item.sent_type ==1){ %>
+                                连续签到 <%=item.inning_num%>天奖励
+                                <% } else if(item.sent_type ==2){ %>
+                                购物返积分
+                                <% } else if(item.sent_type ==3) {%>
+                                积分兑换
+                                <% } else if(item.sent_type ==4) {%>
+                                订单退款
+                                <% } %>
+                            </span>
+
+                        <br>
+                        <span class="detail-write-date"><%= item.add_time%></span>
+
+                        <% if(item.sent_type == 0 || item.sent_type == 1 || item.sent_type == 2 ){ %>
+
+                        <span class="detail-write-plus">+<%=item.points%> </span>
+
+                        <% } else if( item.sent_type == 3 || item.sent_type == 4){ %>
+
+                        <span class="detail-write-plus reduce">-<%=item.points%></span>
+
+                        <%}%>
+
+                    </div>
+                    <% }) %>
+
+                    <% } else if(is_none) {%>
+
+                        <div class="list-none">暂无数据</div>
+
+                    <% }%>
+
+                </script>
+
+            </div>
+
+        </div>
+
+        <!--未登录-->
+        <div vm-attr-class="show_login==2?'integral-logout':'hide'" class="hide"  >
+            <div class="img-logo"></div>
+            <p>啊哦~您还没有登陆呦~</p>
+            <a href="javascript:;" vm-on-click="go_login()">登录</a>
+        </div>
+
+        <!--积分规则-->
+        <div vm-attr-class="show_login==3?'':'hide'" class="hide" >
+
+            <header  class="top-header">
+                <h1 class="title" >积分规则</h1>
+                <a  href="javascript:history.back();" class="btn-back" ><i class="icon icon-arrow"></i></a>
+            </header>
+
+            <!-- 积分规则-->
+            <div class="rule">
+                <h3>1.什么是积分</h3>
+                <p>积分是百洋商城给予用户的奖励，初始积分为0</p>
+
+                <h3>2.积分有什么用</h3>
+                <p>积分可以在百洋商城APP积分商城中兑换优惠券等礼品，更多积分活动即将上线，敬请期待</p>
+
+                <h3>3.如何获得积分</h3>
+                <p>
+                    (1) 购物返积分：用户在百洋商城成功消费，可获得订单实际支付金额*<span vm-html="rule_point" ></span>的积分返还（余额支付部分不计入内，积分精确到个位，小数点后全部舍弃，不进行四舍五入）
+                    <br>
+                    (2) 签到获取积分：用户每日可签到1次并获取积分奖励，连续签到还有额外积分，具体以签到规则为准
+                    <br>
+                    (3) 通过参与百洋商城活动，获得积分奖励，具体以活动通知为准
+                </p>
+
+                <h3>4.积分有效期</h3>
+                <p>积分自获得开始至次年年底有效，逾期自动失效</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('integral-detail')</script>
+
+
+</body>
+</html>

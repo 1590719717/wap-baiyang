@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>品牌街</title>
+    <link rel="stylesheet" href="css/page.css"/>
+</head>
+<body class="brand-list">
+    <!--品牌列表-->
+    <header  class="top-header">
+        <h1 class="title">品牌街</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':''})}}
+
+    </header>
+
+    <!--品牌街首页-->
+    <div vm-controller="brand-index">
+
+        <!--头部滚动-->
+        <section class="top-scroll" vm-html="brand_ad">
+            <script type="text/html">
+                <% if(brand_ad && brand_ad.length){ %>
+                <div class="scroll-wrap" data-act="swipe">
+                    <ul class="scroll-list">
+                        <% brand_ad.forEach(function(item) { %>
+                        <li class="scroll-item">
+                            <a href="/brand/<%= item.brand_id %>.html" data-act="lazy" data-param="style=<%= item.image_url %>"></a>
+                        </li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <% } %>
+            </script>
+        </section>
+
+        <!--热销品牌-->
+        <section class="hot-brand" vm-html="brand_hot">
+            <script type="text/html">
+                <% if(brand_hot && brand_hot.brand_list && brand_hot.brand_list.length){ %>
+                <h2 class="block-title"></h2>
+                <ul class="brand-list">
+                    <% brand_hot.brand_list.forEach(function(item) { %>
+                    <li class="brand-item">
+                        <a href="/brand/<%= item.brand_id %>.html" class="clear">
+                            <span class="brand-logo"><img data-act="lazy" data-param="src=<%= item.brand_logo %>" alt="" /><%= item.brand_name %></span>
+                            <span class="brand-dec"><%= item.summary %></span>
+                            <span class="brand-pic"><img data-act="lazy" data-param="src=<%= item.list_image %>" alt=""/></span>
+                        </a>
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } %>
+            </script>
+        </section>
+
+        <!--全部品牌-->
+        <section class="all-brand" vm-html="brand_all">
+            <script type="text/html">
+                <% if(brand_all && brand_all.brand_list && brand_all.brand_list.length){ %>
+                <h2 class="block-title"></h2>
+                <ul class="brand-list">
+                    <% brand_all.brand_list.forEach(function(item) { %>
+                    <li class="brand-item">
+                        <a href="/brand/<%= item.brand_id %>.html" class="clear">
+                            <span class="brand-logo"><img data-act="lazy" data-param="src=<%= item.brand_logo %>" alt="" /><%= item.brand_name %></span>
+                            <span class="brand-dec"><%= item.summary %></span>
+                            <span class="brand-pic"><img data-act="lazy" data-param="src=<%= item.list_image %>" alt="" /></span>
+                        </a>
+                    </li>
+                    <% }); %>
+                </ul>
+                <% } %>
+            </script>
+        </section>
+
+        <!--底部页脚导航-->
+        {{require('template/footer.html', {'page':'brand'})}}
+
+    </div>
+
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('brand-list')</script>
+</body>
+</html>

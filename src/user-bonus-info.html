@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>百洋红包</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body vm-controller="bonus-info">
+    <div class="wrap box user-bonus-info">
+        <header class="top-header" >
+            <h1 class="title">百洋红包</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+
+            <!--登录注册-->
+            <div class="hide" vm-attr-class="page==1?'flex-content bonus-login-con':'hide'">
+                <div class="bonus-login-top"></div>
+                <div class="bonus-login-pic"></div>
+                <!--领红包-->
+                <p class="user-bonus-tips">需要登录或注册才能领红包哦~</p>
+                <a class="bonus-login" href="javascript:window.location='login.html?redirect='+encodeURIComponent(window.location);">登录</a>
+                <a class="bonus-register" vm-on-click ="go_register()" >注册</a>
+            </div>
+
+            <!--微信抢红包提示-->
+            <div class="hide" vm-attr-class="page==3?'flex-content bonus-get-fail':'hide'">
+                <article class="fail-tips">
+                    <i class="icon icon-bonus-fail"></i>
+                    <span id="qr-code" class="qr-code"></span>
+                    <p>用微信或百洋商城APP扫码领红包</p>
+                </article>
+            </div>
+
+            <!-- 红包详情 -->
+            <div id="bonus-list" class="hide" vm-attr-class="page==2?'bonus-list-con flex-content':'hide'" vm-html="info">
+                <script type="text/html">
+                    <% if(info){ %>
+                        <div class="bonus-list-top">
+                            <div class="bonus-user-header" >
+                                <span style="background-image: url(<%= info.headimgurl %>)"></span>
+                            </div>
+                            <p class="bonus-user-name"><%= info.nickname %>的红包<br><span><%= info.greetings %></span></p>
+                            <% if(act != 'view'){ %>
+                                <p class="bonus-my-get">
+                                    <% if(receive_price - 0 > 0) { %>
+                                        抢到<span><%= receive_price %></span>元<a href="user-bonus-list.html">查看红包&gt;</a>
+                                    <% } else if(info.status == 2 && info.is_self == 0) { %>
+                                        来晚啦，红包已经抢完了，下次快点哦~
+                                    <% } else if(info.status == 5) { %>
+                                        别贪心，同一设备或账号只能抢一次哟~
+                                    <% } %>
+                                </p>
+                            <% } %>
+                        </div>
+                        <div class="bonus-list-tips">
+                            已领取<%= info.receive_num %>/<%= info.red_paket_num %>个，共<%= info.receive_money %>/<%= info.totle_money %>元
+                            <% if(info.is_self == 1 && info.status == 1 && !isFromBYTouchMachine){ %>
+                                <a href="javascript:;" vm-on-click="share_packet()">继续发送该红包</a>
+                            <% } else if(info.status == 2) { %>
+                                ，该红包已领完
+                            <% } else if(info.status == 3) { %>
+                                ，该红包已过期
+                            <% } %>
+                        </div>
+
+                        <% if(info.is_self == 1){ %>
+                            <% if(info.status == 1){ %>
+                                <div class="bonus-out-time">
+                                    <i class="icon icon-warn"></i>未领取的红包，将于24小时后退款至<a href="user-asset-balance.html">余额</a>
+                                </div>
+                            <% } else if(info.status != 2 && info.status != 5) { %>
+                                <div class="bonus-out-time">
+                                    <i class="icon icon-warn"></i>未领取的红包(<%= (info.totle_money - info.receive_money).toFixed(2) %>元)，已退回您的<a href="user-asset-balance.html">余额</a>
+                                </div>
+                            <% } %>
+                        <% } %>
+
+                        <!--红包领取列表-->
+                        <% if(list && list.length){ %>
+                            <div class="bonus-list-panel">
+                                <% list.forEach(function(item) { %>
+                                    <div class="bonus-list-item clear">
+                                        <!--我-->
+                                        <% if(item.is_self == 1) { %>
+                                            <div class="bonus-recive"><i class="icon icon-my"></i></div>
+                                        <% } %>
+                                        <div class="bonus-item-user">
+                                            <span style="background-image: url(<%= item.headimgurl %>);"></span>
+                                        </div>
+                                        <div class="bonus-item-detail clear">
+                                            <p><%= item.nickname %><% if(item.is_first == 1 && info.type == 2){ %><span><i class="icon icon-queen"></i>手气最佳</span><% } %></p>
+                                            <p><%= item.create_time %></p>
+                                        </div>
+                                        <div class="bonus-item-money"><%= item.price %>元</div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } else { %>
+                            <!--  全部过期 -->
+                            <div class="bonus-out-img" >
+                                <div></div>
+                                <% if(info.is_self == 1 && info.status == 3){ %>
+                                    <p>无人领取，红包已退回余额！</p>
+                                <% } else { %>
+                                    <p>还无人领取！</p>
+                                <% } %>
+                            </div>
+
+                        <% } %>
+                    <% } %>
+                </script>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-bonus-info')</script>
+</body>
+</html>

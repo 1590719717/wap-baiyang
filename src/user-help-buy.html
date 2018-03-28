@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>购物流程</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-help-other">
+    <div class="wrap box">
+        <header class="user-help top-header">
+            <h1 class="title">购物流程</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="help-order-content flex-content">
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q1:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">如何挑选商品？</div>
+                        <div class="help-list-text">A.在商城首页“搜索框”输入想要购买的商品进行搜索</div>
+                        <div class="help-list-text">B.也可以在产品分类页面，通过自己需要的商品或品类进行筛选</div>
+                        <div class="help-list-text">C.在首页或品牌街等其他页面，找到喜欢的商品</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q2:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">如何进行下单付款？</div>
+                        <div class="help-list-text">A.非处方药</div>
+                        <div class="help-list-text-next">找到所需商品，选择“加入购物车”后到购物车页面，进行提交订单并付款</div>
+                        <div class="help-list-text">B.处方药</div>
+                        <div class="help-list-text-next">找到所需商品，选择“加入购物车”后到购物车页面，进行提交预定，等待药师审核后付款购买</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q3:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">为什么有的商品转眼就售罄了？</div>
+                        <div class="help-list-text">部分商品以特价/秒杀限时限量形式进行销售，抢购人员较多导致商品快速售罄；如有会员将商品加入购物车后放弃购买，将有机会继续购买，建议您随时刷新页面，一旦库存释放，及时下单购买。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

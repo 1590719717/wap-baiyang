@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>关于百洋</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-about-by-all">
+    <div class="wrap box">
+        <header class="user-header top-header">
+            <h1 class="title">关于百洋</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="about-by-content flex-content">
+                <p class="about-by-con">百洋商城，定位为“妈妈的网上药店”，针对妈妈们及其家人，提供药品、保健品、医疗器械、食品、母婴用品、计生用品等健康生活用品。同时，根据孕前、孕中、产后、1岁前、3岁前等时间段，提供药师在线咨询、健康咨询推送、健康产品推荐等服务。自商城上线8年来，已取得300万妈妈们的信赖和社会好评。</p>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

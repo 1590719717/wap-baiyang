@@ -1,0 +1,22 @@
+{
+  "name": "WAP",
+  "version": "2.0.13",
+  "description": "WAP",
+  "keywords": [
+    "webpack"
+  ],
+  "devDependencies": {
+    "colors": "^1.1.2",
+    "ejs": "^2.5.5",
+    "gulp": "^3.9.1",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-imagemin": "^3.1.1",
+    "gulp-less": "^3.3.0",
+    "gulp-manifest": "^0.1.1",
+    "gulp-newer": "^1.3.0",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.7",
+    "less-plugin-clean-css": "^1.5.1",
+    "through2": "^2.0.3"
+  }
+}

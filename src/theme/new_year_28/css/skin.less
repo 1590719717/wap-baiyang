@@ -1,0 +1,192 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2016/6/7
+ * @description skin-default
+ */
+
+@rem750: (750 / 320 * 12rem);
+
+@icon_new_year: '../images/new-year.png?1.0.1';
+@icon_w: 471;
+@icon_h: 147;
+
+
+/* 首页按钮
+ ***************************************/
+.index-nav {
+    background: url(../images/new_year_bg.png?v1.0.0) no-repeat 0 0;
+    background-size: 100% 100%;
+
+    a {
+
+        .icon-hwg {
+            width: (83 / @rem750);
+            height: (71 / @rem750);
+            background-image: url(@icon_new_year);
+            background-repeat: no-repeat;
+            background-size: ( @icon_w / 83 * 100%) ( @icon_h / 71 * 100%) ;
+            background-position: 0 (63 / (@icon_h - 71) * 100%) ;
+        }
+        .icon-doc {
+            width: (74 / @rem750);
+            height: (79 / @rem750);
+            background-image: url(@icon_new_year);
+            background-repeat: no-repeat;
+            background-size: ( @icon_w / 74 * 100%) ( @icon_h / 79 * 100%) ;
+            background-position: (90 / (@icon_w - 74) * 100%) (63 / (@icon_h - 79) * 100%) ;
+        }
+        .icon-assurance {
+            width: (83 / @rem750);
+            height: (79 / @rem750);
+            background-image: url(@icon_new_year);
+            background-repeat: no-repeat;
+            background-size: ( @icon_w / 83 * 100%) ( @icon_h / 79 * 100%) ;
+            background-position: (168 / (@icon_w - 83) * 100%) (63 / (@icon_h - 79) * 100%) ;
+        }
+        .icon-type {
+            width: (70 / @rem750);
+            height: (84 / @rem750);
+            background-image: url(@icon_new_year);
+            background-repeat: no-repeat;
+            background-size: ( @icon_w / 70 * 100%) ( @icon_h / 84 * 100%) ;
+            background-position: (264 / (@icon_w - 70) * 100%) (63 / (@icon_h - 84) * 100%) ;
+        }
+    }
+}
+
+
+/* 页脚年货节图标
+************************************/
+.footer .foot-nav {
+    width: auto;
+
+    &.main-venue {
+
+        display: table-cell !important;
+        width: (115 / @rem750);
+        position: relative;
+
+        .icon-main-venue {
+            display: block;
+            position: absolute;
+            bottom: 0 ;
+            z-index: 1;
+            width: (115 / @rem750);
+            height: (115 / @rem750);
+            margin: 0;
+            background: url(@icon_new_year) no-repeat (362 / (@icon_w - 115) * 100%) 0;
+            background-size: (@icon_w / 115 * 100%) (@icon_h / 115 * 100%);
+        }
+
+    }
+}
+
+
+/* 页脚导航菜单
+*********************************************************/
+.footer {
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+
+    .foot-nav {
+        color: #666666;
+
+        .icon-home {
+            width: (39 / @rem750);
+            height: (50 / @rem750);
+            background: url(@icon_new_year) no-repeat 0 0;
+            background-size: (@icon_w / 39 * 100%) (@icon_h / 50 * 100%);
+        }
+        .icon-brand {
+            width: (39 / @rem750);
+            height: (50 / @rem750);
+            background: url(@icon_new_year) no-repeat (49 / (@icon_w - 39 ) * 100%) 0;
+            background-size: (@icon_w / 39 * 100%) (@icon_h / 50 * 100%);
+        }
+        .icon-shop-car {
+            position: relative;
+            width: (39 / @rem750);
+            height: (50 / @rem750);
+            background: url(@icon_new_year) no-repeat (96 / (@icon_w - 39 ) * 100%) 0;
+            background-size: (@icon_w / 39 * 100%) (@icon_h / 50 * 100%);
+
+            // 购物车数量
+            .icon-num {
+                display: inline-block;
+                position: absolute;
+                font-size: 0.5rem;
+                right: -1rem;
+                top: -0.5rem;
+                width: 1rem;
+                height: 1rem;
+                text-align: center;
+                font-style: normal;
+                z-index: 11;
+
+                svg {
+                    width: 100%;
+                    height: 100%;
+                    overflow: visible;
+
+                    circle {
+                        fill: #ff5a96;
+                        stroke: none;
+                        stroke-width: 0;
+                    }
+                    text {
+                        font-size: 10px;
+                        fill: #fff;
+                        stroke: none;
+                        text-anchor: middle
+                    }
+                }
+
+            }
+        }
+        .icon-user {
+            position: relative;
+            width: (39 / @rem750);
+            height: (50 / @rem750);
+            background: url(@icon_new_year) no-repeat (143 / (@icon_w - 39 ) * 100%) 0;
+            background-size: (@icon_w / 39 * 100%) (@icon_h / 50 * 100%);
+        }
+
+        &.active {
+            color: #fc2d31;
+
+            .icon-home {
+                width: (39 / @rem750);
+                height: (50 / @rem750);
+                background: url(@icon_new_year) no-repeat 0 0;
+                background-size: (@icon_w / 39 * 100%) (@icon_h / 50 * 100%);
+            }
+            .icon-brand {
+                width: (39 / @rem750);
+                height: (50 / @rem750);
+                background: url(@icon_new_year) no-repeat (49 / (@icon_w - 39 ) * 100%) 0;
+                background-size: (@icon_w / 39 * 100%) (@icon_h / 50 * 100%);
+            }
+            .icon-shop-car {
+                position: relative;
+                width: (39 / @rem750);
+                height: (50 / @rem750);
+                background: url(@icon_new_year) no-repeat (96 / (@icon_w - 39 ) * 100%) 0;
+                background-size: (@icon_w / 39 * 100%) (@icon_h / 50 * 100%);
+            }
+            .icon-user {
+                position: relative;
+                width: (39 / @rem750);
+                height: (50 / @rem750);
+                background: url(@icon_new_year) no-repeat (143 / (@icon_w - 39 ) * 100%) 0;
+                background-size: (@icon_w / 39 * 100%) (@icon_h / 50 * 100%);
+            }
+
+        }
+
+    }
+
+}
+
+
+

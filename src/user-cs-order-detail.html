@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>订单详情</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-order-detail">
+
+    <div vm-controller="user-order-detail">
+        <!--公共头部-->
+        <header class="user-order top-header">
+            <h1 class="title">订单详情</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+
+        <!--内容区 滚动区-->
+        <div class="order-detail-content " vm-html="data" >
+        <script type="text/html">
+            <!--订单状态-->
+            <div class="order-detail-type clear">
+                <p class="order-type-p ">订单状态：
+                    <%if(data.audit_state == 100){%>
+                    <span>等待审核</span>
+                    <%}else if(data.order_status=='paying'){%>
+                    <span>待付款</span>
+                    <%}else if(data.order_status=='shipping'){%>
+                    <span>待发货</span>
+                    <%}else if(data.order_status=='shipped'){%>
+                    <span>待收货</span>
+                    <%}else if(data.order_status=='evaluating'){%>
+                    <span>待评价</span>
+                    <%}else if(data.order_status=='refund'){%>
+                                <span>
+                                    <%if(data.refund_status==10){%>
+                                        拒绝退款
+                                    <%}else if(data.refund_status==20){%>
+                                        退款中
+                                    <%}else if(data.refund_status==30){%>
+                                        退款待审核
+                                    <%}else if(data.refund_status==40){%>
+                                        退款完成
+                                    <%}%>
+                                </span>
+                    <%}else if(data.order_status=='finished'){%>
+                    <span>交易完成</span>
+                    <%}else if(data.order_status=='canceled'){%>
+                    <span>订单取消</span>
+                    <%}%>
+                </p>
+                <p>订单编号：<span><%= data.order_id %></span></p>
+                <p>下单时间：<span><%= data.order_time %></span></p>
+            </div>
+            <!--申请退款的原因-->
+            <%if(data.order_status=='refund'){%>
+            <div class="order-detail-row clear">
+                <p class="back-title">退款原因</p>
+                <p class="return-msg"><%=data.refund_reason%></p>
+            </div>
+            <%}%>
+            <!--用户信息-->
+            <div class="order-detail-user clear">
+                <div class="clear">
+                    <i class="icon icon-order-user"></i><span><%=data.receiver_name%></span>
+                    <i class="icon icon-order-phone"></i><span><%=data.telephone%></span>
+                </div>
+                <div class="order-detail-address"><%=data.addr_detail%></div>
+            </div>
+
+            <!--买家留言-->
+            <% if(data.leave_word){ %>
+            <div class="order-detail-row clear">
+                <p class="back-title">买家留言</p>
+                <p class="return-msg"><%=data.leave_word%></p>
+            </div>
+            <% } %>
+
+            <!--身份证号码-->
+            <% if(data.identity_number){ %>
+            <div class="order-detail-row clear">
+                <p class="back-title">身份证号码</p>
+                <p class="return-msg"><%=data.identity_number%></p>
+            </div>
+            <% } %>
+
+            <!--商品详情-->
+            <div class="order-detail-product clear">
+                <p class="order-product-p ">商品详情</p>
+                <%if(data.product_list && data.product_list.length){%>
+                <div class="order-list-wrap">
+                    <%data.product_list.forEach(function(product){%>
+                    <a href="product/<%=product.product_id%>.html" class="order-detail-list clear">
+                        <div class="order-product pull-left">
+                            <span style="background-image:url(<%= product.default_image %>)"></span>
+                        </div>
+                        <div class="order-product-msg pull-right">
+                            <p class="product-name"><%=product.product_name%></p>
+                            <i class="icon icon-hwg">海外优选</i>
+                            <p class="product-price clear">
+                                <span class="pull-left">&yen;<%=product.price%></span>
+                                <span class="product-num pull-right">&times;<%=product.qty%></span>
+                                <% if(product.tag_name && product.tag_name.length ){  %>
+                                <span class="tag-span"><%= product.tag_name %></span>
+                                <% } %>
+                            </p>
+                        </div>
+                    </a>
+                    <%})%>
+                </div>
+                <%}%>
+                <%if(data.present_product_list && data.present_product_list.length){%>
+                <%data.present_product_list.forEach(function(present){%>
+                    <div class="row present">
+                        <div class="col-10 present-name">
+                            <%=present.product_name%>
+                        </div>
+                        <div class="product-num pull-right">&times;<%=present.present_num%></div>
+                    </div>
+                <%})%>
+                <%}%>
+            </div>
+            <!--支付方式-->
+            <div class="order-pay-list ">
+                <div class="row">
+                    <div class="col-4 text-back">支付方式</div>
+                    <div class="col-8 text-gray text-r"><%= data.payment_name || '在线支付' %></div>
+                </div>
+                <div class="row">
+                    <div class="col-4 text-back">商品总额</div>
+                    <div class="col-8 text-red text-r">&yen;<%=data.goods_amount || '0.00' %></div>
+                </div>
+                <div class="row">
+                    <div class="col-4 text-back">进口税</div>
+                    <div class="col-8 text-red text-r">&yen;<%=data.order_tax_amount || '0.00' %></div>
+                </div>
+                <div class="row">
+                    <div class="col-4 text-back">运费</div>
+                    <div class="col-8 text-red text-r">&yen;<%=data.affix_money || '0.00' %></div>
+                </div>
+                <div class="clear real_pay text-r">
+                    <p class="text-gray">实付款：<span class="text-red">&yen;<%=data.real_pay || '0.00' %></span></p>
+                    <em>下单时间：<%=data.order_time%></em>
+                </div>
+            </div>
+        </script>
+        </div>
+
+    </div>
+
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-cs-order-detail')</script>
+</body>
+</html>
+

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>退货详情</title>
+    <link rel="stylesheet" href="css/user-refund-detail.css"/>
+    <script>
+        //解决IOS 6plus 返回不刷新的问题
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload()
+            }
+        };
+    </script>
+</head>
+<body class="user-refund-detail" vm-controller="refund-detail">
+
+
+    <div class="wrap box" page-router="">
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class=" flex-content">
+                <!--公共头部-->
+                <header class="top-header">
+                    <h1 class="title">退货详情</h1>
+                    <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                    <!--头部右边按钮 导航菜单 -->
+                    {{require('template/topnav.html', {'page':'user-index'})}}
+
+                </header>
+
+                <!--订单详情 -->
+                <div class="order-detail-content" vm-html="order_sn + data_list.order_sn " >
+                    <script type="text/html">
+
+                        <!--订单状态-->
+                        <div class="order-detail-type clear">
+                            <p>服务单号：<span><%= data_list.service_sn %></span></p>
+                            <p>订单编号：<span><%= data_list.order_sn %></span></p>
+                            <p>申请时间：<span><%= data_list.add_time %></span></p>
+                        </div>
+                        <!--商品详情-->
+                        <% if( data_list.goodsList && data_list.goodsList.length ){ %>
+                        <div class="order-detail-product clear">
+                            <p class="order-product-p ">退货商品</p>
+                            <div class="order-list-wrap">
+                                <% data_list.goodsList.forEach(function(product){ %>
+                                <a href="product/<%=product.goods_id%>.html" class="order-detail-list clear">
+                                    <div class="order-product pull-left">
+                                        <span style="background-image: url(<%= product.goods_image %>)"></span>
+                                    </div>
+                                    <div class="order-product-msg pull-right">
+                                        <p class="product-name"><%= product.goods_name %></p>
+
+                                        <p class="product-price clear">
+                                            <span class="pull-left">&yen;<%= product.promotion_price %></span>
+                                            <span class="product-num pull-right">&times;<%= product.now_refund_goods_number %></span>
+                                            <% if(product.tag_name && product.tag_name.length ){  %>
+                                            <span class="tag-span"><%= product.tag_name %></span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </a>
+                                <% }) %>
+                            </div>
+
+                            <div class="row btn-kf">
+                                <a href="javascript:;" class="col-6 order-detail-kf" data-act="ntkf" data-param="orderid=<%= data_list.order_sn %>&orderprice=<%= data_list.refund_amount %>" >
+                                    <i class="icon icon-detail-kf"></i>在线客服
+                                </a>
+                                <a href="tel:4006799859" class="col-6">
+                                    <i class="icon icon-detail-tel"></i>电话客服
+                                </a>
+                            </div>
+
+                        </div>
+                        <% } %>
+                        <!--退货说明-->
+                        <div class="refund-desc">
+                            <p>退货说明</p>
+                            <div class="refund-desc-text"><%= data_list.explain %></div>
+                        </div>
+
+                        <!--照片凭证-->
+                        <% if(data_list.images && data_list.images.length ){ %>
+                        <div class="refund-img">
+                            <p>照片凭证</p>
+                            <div class="refund-list-img clear">
+                                <% data_list.images.forEach(function(item,index){ %>
+                                <a href="javascript:;" vm-on-click="scrollImg(<%= index %>)" class="col-3">
+                                    <img src="<%= item %>" />
+                                </a>
+                                <% }); %>
+                            </div>
+                        </div>
+                        <% } %>
+
+                    </script>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="footer-div" vm-html=" data_list.order_sn" >
+            <script type="text/html">
+                <% if( data_list.status ==0 ) { %>
+                <div class="btn-wap">
+                    <a href="javascript:;" vm-on-click="cancelRefund()" >撤销申请</a>
+                </div>
+                <% } else if( data_list.status == 4 && data_list.is_show == 1 ) { %>
+                <div class="btn-wap">
+                    <a href="user-write-logistics.html?service_sn=<%= data_list.service_sn %>" class="order-kf mr-btn">填写物流</a>
+                    <a href="javascript:;" vm-on-click="cancelRefund()" >撤销申请</a>
+                </div>
+                <% } else if( data_list.status == 5  && data_list.is_show == 1  ) { %>
+                <div class="btn-wap">
+                    <a href="user-write-logistics.html?service_sn=<%= data_list.service_sn %>" class="order-kf mr-btn">修改物流</a>
+                </div>
+                <% } %>
+            </script>
+        </div>
+    </div>
+
+
+    <div page-router="?scroll_img" class="wap box" >
+        <div class="flex">
+            <div class="flex-content dialog"  vm-html="photo_arr + scroll_index ">
+                <script type="text/html">
+                    <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                    <% if(photo_arr && photo_arr.length){ %>
+                    <div class="swipe-wrap" data-act="swipe" data-param="auto=0&index=<%= scroll_index %>">
+                        <ul class="swipe-list clear">
+                            <% photo_arr.forEach(function(src) { %>
+                            <li class="swipe-item pull-left" style="background-image: url(<%= src %>)"></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <% } %>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-refund-detail')</script>
+
+</body>
+</html>
+

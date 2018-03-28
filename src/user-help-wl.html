@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>物流配送</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-help-other">
+    <div class="wrap box">
+        <header class="user-help top-header">
+            <h1 class="title">物流配送</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="help-order-content flex-content">
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q1:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">什么时间发货？发什么快递？</div>
+                        <div class="help-list-text">A.当天15点前下单并支付成功的订单在当天发出，大型促销活动或特殊情况除外</div>
+                        <div class="help-list-text">B.仓库默认韵达、汇通快递，偏远地区发EMS，系统根据您的收货地址自动匹配快递发货，如有特殊要求，请下单时联系客服。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q2:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">为什么已发货，却没有物流信息？</div>
+                        <div class="help-list-text">如有物流单号但没有物流信息，可能是物流公司还没来得及录入系统，或更新物流信息不及时，造成这种情况我们感到抱歉，建议您稍后查询一下。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q3:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">如何查看物流信息？</div>
+                        <div class="help-list-text">A.进入个人中心后，选择“查看所有订单”找到需要查询的订单；</div>
+                        <div class="help-list-text">B.点击订单下方的“查看物流”，即可查看此笔订单的物流信息。</div>
+                    </div>
+                </div>
+                <div class="row help-item">
+                    <div class="col-1 text-red">Q4:</div>
+                    <div class="col-11">
+                        <div class="help-list-title">在运输过程中包裹破损怎么办？</div>
+                        <div class="help-list-text">可直接拒收退回，同时联系客服退款/退货，我们会第一时间为您解决。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

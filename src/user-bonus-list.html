@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>百洋红包</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body >
+    <div class="wrap box user-bonus-list" vm-controller="bonus-list">
+        <header class="top-header">
+            <h1 class="title">百洋红包</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+
+            <!--我收到的红包-->
+            <div class="hide" id="received-packet" vm-attr-class="tab==1?'bonus-my-con flex-content':'hide'">
+                <div class="bonus-my-top">
+                    <div class="bonus-nav clear">
+                        <div class="active">我收到的红包</div>
+                        <div vm-on-click="set_tab(2)">我发出的红包</div>
+                    </div>
+                    <div class="bonus-user-header">
+                        <span vm-css-background-image="'url(' + user_photo + ')'"></span>
+                    </div>
+                    <p class="bonus-my-money">
+                        <span vm-html="get_money">0.00</span>元<br>
+                        共收到<em vm-html="get_total">0</em>个红包
+                    </p>
+                </div>
+                <div class="hide" vm-attr-class="almost_expired_amount-0>0?'bonus-my-tips':'hide'">
+                    您有<em vm-html="almost_expired_amount">0</em>元红包即将过期，立即<a vm-attr-href="get_link('index.html')">去花呗！</a>
+                    <i class="icon icon-close-tips" vm-on-click="close_tips()"></i>
+                </div>
+                <!--我的红包列表-->
+                <div class="hide" vm-attr-class="get_list.length?'bonus-my-list':'hide'" vm-html="get_list">
+                    <script type="text/html">
+                        <% if(get_list && get_list.length){ %>
+                            <% get_list.forEach(function(item) { %>
+                                <div class="bonus-my-item clear">
+                                    <a href="user-bonus-info.html?act=view&packet_id=<%= item.red_packet_id %>">
+                                        <p class="clear">
+                                            <span class="pull-left bonus-name"><%= item.nickname %></span>
+                                            <% if(item.type == 2) { %>
+                                                <i class="icon pull-left icon-mybonus-lucky"></i>
+                                            <% } else if(item.type == 1) { %>
+                                                <i class="icon pull-left icon-mybonus-normal"></i>
+                                            <% } %>
+                                            <span class="pull-right"><%= item.receive_money %>元</span>
+                                        </p>
+                                        <p><%= item.create_time %></p>
+                                    </a>
+                                </div>
+                            <% }); %>
+                        <% } %>
+                    </script>
+                </div>
+                <!--  全部过期     无人领取，红包退回余额-->
+                <div class="hide"  vm-attr-class="!get_list.length?'bonus-out-img':'hide'" >
+                    <div></div>
+                    <p>您还没收到红包</p>
+                </div>
+
+            </div>
+
+            <!--我发出的红包-->
+            <div class="hide" id="send-packet" vm-attr-class="tab==2?'bonus-my-con flex-content':'hide'">
+                <div class="bonus-my-top">
+                    <div class="bonus-nav clear">
+                        <div vm-on-click="set_tab(1)">我收到的红包</div>
+                        <div class="active">我发出的红包</div>
+                    </div>
+                    <div class="bonus-user-header">
+                        <span vm-css-background-image="'url(' + user_photo + ')'"></span>
+                    </div>
+                    <p class="bonus-my-money"><span vm-html="send_money">0.00</span>元<br>共发出<em vm-html="send_total">0</em>个红包</p>
+                </div>
+
+                <!--我的红包列表-->
+                <div class="hide" vm-attr-class="send_list.length?'bonus-my-list':'hide'" vm-html="send_list">
+                    <script type="text/html">
+                        <% if(send_list && send_list.length){ %>
+                            <% send_list.forEach(function(item) { %>
+                                <div class="bonus-my-item clear">
+                                    <a href="user-bonus-info.html?act=view&packet_id=<%= item.red_packet_id %>">
+                                        <p>
+                                            <% if(item.type == 2) { %>
+                                                拼手气红包<i class="icon icon-mybonus-lucky"></i>
+                                            <% } else if(item.type == 1) { %>
+                                                普通红包<i class="icon icon-mybonus-normal"></i>
+                                            <% } %>
+                                            <span class="pull-right"><%= item.totle_money %>元</span>
+                                        </p>
+                                        <p>
+                                            <%= item.create_time %>
+                                            <% if(item.status == 1){ %>
+                                                <span class="pull-right">领取中<%= item.receive_num %>/<%= item.red_paket_num %>个</span>
+                                            <% } else if(item.status == 2) { %>
+                                                <span class="pull-right">已领完<%= item.receive_num %>/<%= item.red_paket_num %>个</span>
+                                            <% } else { %>
+                                                <span class="pull-right">已过期<%= item.receive_num %>/<%= item.red_paket_num %>个</span>
+                                            <% } %>
+                                        </p>
+                                    </a>
+                                </div>
+                            <% }); %>
+                        <% } %>
+                    </script>
+                </div>
+
+                <!--  全部过期     无人领取，红包退回余额-->
+                <div class="hide" vm-attr-class="!send_list.length?'bonus-out-img':'hide'" >
+                    <div></div>
+                    <p>您还没发过红包</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="bonus-my-footer" vm-html="tab + get_money">
+            <script type="text/html">
+                <% if(tab == 1 && get_money > 0 ){ %>
+                    红包已到账，赶紧<a href="<%= get_link('index.html') %>">去花呗 &gt;</a>
+                <% } else if( tab == 2 && !isFromBYTouchMachine) { %>
+                    财散人聚，多舍多得，<a href="<%= get_link('user-bonus-index.html') %>">发红包 &gt;</a>
+                <% } %>
+            </script>
+        </div>
+
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('user-bonus-list')</script>
+</body>
+</html>

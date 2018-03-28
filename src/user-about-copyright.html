@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>版权信息</title>
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body class="user-copyright-all">
+    <div class="wrap box">
+        <header class="user-about-copyright top-header">
+            <h1 class="title">版权信息</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="copyright-content flex-content">
+                <img src="images/icon-copyright.jpg" class="icon-copyright" />
+                <p class="v-copyright">V 1.5</p>
+                <p class="copyright-text">声明</p>
+                <p class="copyright-con">此版本适用于IOS7.0以上固件，如在其他品牌或型号的设备上使用本软件，对于出现的任何问题，百洋公司不承担任何责任。本软件的下载、安装完全免费，使用过程中产生的数据流量费用，由运营商收取。本软件安装使用受
+                <span>《百洋商城服务协议》</span>约束。</p>
+            </div>
+        </div>
+        <div class="copyright-btom">百洋商城 版权所有</div>
+
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('widget')</script>
+</body>
+</html>

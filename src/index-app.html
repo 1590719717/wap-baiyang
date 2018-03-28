@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>百洋商城海外优选</title>
+    <link rel="stylesheet" href="css/index-hwg.css"/>
+</head>
+<body>
+    <div class="wrap box">
+        <!--<header>-->
+            <!--<h1 class="title">百洋海外优选</h1>-->
+            <!--<a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>-->
+            <!--<a href="javascript:;" class="btn-menu"><i class="icon icon-menu"></i></a>-->
+        <!--</header>-->
+        <section class="content scroll-wrap flex">
+            <div class="flex-content content-hwg"  vm-controller="hwg">
+                <!--头部滚动-->
+                <section class="top-scroll" vm-html="scroll">
+                    <script type="text/html">
+                        <% if(scroll && scroll.length){ %>
+                        <div class="scroll-wrap" data-act="swipe">
+                            <ul class="scroll-list">
+                                <% scroll.forEach(function(pic) { %>
+                                <li class="scroll-item">
+                                    <a href="<%= pic.content[0].location %>">
+                                        <img src="<%= pic.content[0].img_path %>" alt=""/>
+                                    </a>
+                                </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                        <% } %>
+                    </script>
+                </section>
+
+                <!--热门推荐-->
+                <section class="hot-commend" vm-html="hot">
+                    <script type="text/html">
+                        <% if(hot && hot.length){ %>
+                        <h2 class="block-title"><span><i class="icon icon-hot"></i>热门推荐</span></h2>
+                        <div class="commend-goods" data-act="swipe" data-param="auto=0">
+                            <ul class="goods-list clear">
+                                <% hot.forEach(function(item, i) { %>
+                                <% if(i % 3 == 0){ %>
+                                <li class="goods-item row">
+                                    <% } %>
+                                    <a href="<%= item.location %>"  class="col-4">
+                                        <em class="icon-flag"><img src="<%= item.flag %>" alt=""/></em>
+                                        <p class="goods-pic" style="background-image: url(<%= item.img_path %>)"></p>
+                                        <span class="goods-title"><%= item.product_name %></span>
+                                        <span class="goods-dec"><%= item.packing %></span>
+                                        <em class="goods-price">￥<%= item.price %></em>
+                                    </a>
+                                    <% if(i % 3 == 2 || i == hot.length + 1){ %>
+                                </li>
+                                <% } %>
+                                <% }); %>
+                            </ul>
+                        </div>
+                        <% } %>
+                    </script>
+                </section>
+
+                <!--全球盛宴-->
+                <section class="whole-world" vm-html="global">
+                    <script type="text/html">
+                        <% if(global && global.length){ %>
+                        <h2 class="block-title"><span><i class="icon icon-world"></i>全球盛宴</span></h2>
+                        <ul class="special-list">
+                            <% if(global["3"]){ %>
+                            <li class="special-line">
+                                <a href="<%= global["3"].location %>"><img src="<%= global["3"].img_path %>" alt=""/></a>
+                            </li>
+                            <% }
+                            if(global["4"]){ %>
+                            <li class="special-line">
+                                <a href="<%= global["4"].location %>"><img src="<%= global["4"].img_path %>" alt=""/></a>
+                                <% if(global["4"]){ %>
+                                <a href="<%= global["5"].location %>"><img src="<%= global["5"].img_path %>" alt=""/></a>
+                                <% } %>
+                            </li>
+                            <% } %>
+                        </ul>
+                        <% } %>
+                    </script>
+                </section>
+
+                <!--海外名牌-->
+                <section class="overseas-brand" vm-html="brand">
+                    <script type="text/html">
+                        <% if(brand && brand.length){ %>
+                        <h2 class="block-title"><span><i class="icon icon-brand"></i>海外名牌</span></h2>
+                        <div class="brand-wrap">
+                            <% brand.forEach(function(item) { %>
+                            <% if(item.type == 'img' && item.content && item.content.img_path){ %>
+                            <h2 class="brand-banner"><a href="<%= item.content.location %>"><img src="<%= item.content.img_path %>" alt=""/></a></h2>
+                            <% } else if(item.type == 'list' && item.content && item.content.length){ %>
+                            <ul class="brand-list clear">
+                                <% item.content.forEach(function(product) { %>
+                                <li>
+                                    <a href="<%= product.location %>">
+                                        <em class="icon-flag"><img src="<%= product.flag %>" alt=""/></em>
+                                        <p class="goods-pic" style="background-image: url(<%= product.img_path %>)"></p>
+                                        <span class="goods-title"><%= product.product_name %></span>
+                                        <span class="goods-dec"><%= product.packing %></span>
+                                        <em class="goods-price">￥<%= product.price %></em>
+                                    </a>
+                                </li>
+                                <% }); %>
+                            </ul>
+                            <% }
+                            }); %>
+                        </div>
+                        <% } %>
+                    </script>
+                </section>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('index-app')</script>
+</body>
+</html>

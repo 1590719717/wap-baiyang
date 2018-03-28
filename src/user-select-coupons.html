@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>领取优惠券</title>
+    <!--<link rel="stylesheet" href="css/index.css"/>-->
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body>
+<div class="wrap user-select-coupons box">
+    <!--公共头部菜单-->
+    <div class="flex">
+        <div class="flex-content">
+            <header class="search-box top-header">
+                <h1 class="title">领取优惠券</h1>
+                <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+                <!--头部右边按钮 导航菜单 -->
+                {{require('template/topnav.html', {'page':'user-index'})}}
+
+            </header>
+            <div class="input-coupon-num">
+                <input type="text" placeholder="如有优惠券码 可输入兑换" class="coupon-num">
+                <span class="activation-btn">激活</span>
+            </div>
+            <ul class="select-coupons-list">
+                <!--折扣优惠券-->
+                <li>
+                    <label class="check-box">
+                        <input type="checkbox" class="js-shop">
+                        <span class="icon-check"></span>
+                    </label>
+                    <!--折扣/现金-->
+                    <div class="yuq-bg">
+                        <div class="discount">
+                            4.5<span class="zk">折</span>
+                        </div>
+                        <!--说明-->
+                        <div class="explain">
+                            <div class="explain-xx">
+                                <p class="name">新人优惠券</p>
+                                <p class="sm">全场4.5折</p>
+                                <p class="time-limited">有效日期至2015-11-29</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <label class="check-box">
+                        <input type="checkbox" class="js-shop">
+                        <span class="icon-check"></span>
+                    </label>
+                    <!--折扣/现金-->
+                    <div class="yuq-bg">
+                        <div class="discount">
+                            <span class="xj">&yen;</span>4.5
+                        </div>
+                        <!--说明-->
+                        <div class="explain">
+                            <div class="explain-xx">
+                                <p class="name">新人优惠券</p>
+                                <p class="sm">全场4.5折</p>
+                                <p class="time-limited">有效日期至2015-11-29</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="btn-warp">
+        <a href="user-coupon.html"><div class="tj-btn">确认</div></a>
+    </div>
+</div>
+<script src="js/config.js"></script>
+<script>seajs.use('widget')</script>
+</body>
+</html>

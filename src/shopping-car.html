@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>百洋商城</title>
+    <link rel="stylesheet" href="css/shopping-car.css"/>
+</head>
+<body class="shopping-car" vm-controller="cart-list">
+
+    <!--购物车列表-->
+    <div class="wrap cart" page-router="">
+
+        <!--公共头部菜单-->
+        <header class="search-box top-header">
+            <h1 class="title">购物车</h1>
+            <a href="javascript:;" vm-attr-class="cart&&cart.totalQty>0?'btn-edit':'hide'" vm-on-click="edit()" vm-html="is_edit?'保存':'编辑'" class="hide">编辑</a>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'shopping-car'})}}
+
+        </header>
+
+        <div vm-html="cart ">
+            <script type="text/html">
+                <% if(cart){ %>
+
+                <%
+                 // 根据优惠返回对应文字
+                 var get_icon_text = function(type) {
+                     if(type == 5) {
+                         return '满减';
+                     } else if(type == 10) {
+                         return '满折';
+                     } else if(type == 15) {
+                         return '满赠';
+                     } else if(type == 20) {
+                         return '包邮';
+                     } else if(type == 30) {
+                         return '限购';
+                     } else if(type == 40) {
+                         return '加价购';
+                     }
+                 };
+
+                %>
+
+                <!--登录提示-->
+                <% if(cart.isLogin!=1){ %>
+                <p class="login-tips">
+                    <a href="login.html?redirect=shopping-car.html" class="btn-login">登录</a>
+                    <span>登录后查看电脑与手机购物车总的商品</span>
+                </p>
+                <% } %>
+
+                <!--海外购商品列表-->
+                <% if(cart.globalCart && cart.globalCart.totalQty > 0){ %>
+                <section class="goods-type overseas">
+
+                    <!--分类标题-->
+                    <div class="type-title row">
+                        <!--复选框-->
+                        <label class="checkbox col-1" vm-on-click="set_select('all',1,<%=cart.globalCart.allSelected%>)">
+                            <input type="checkbox" class="hide" vm-attr-class="is_edit?'':'hide'" value="1" vm-value="goods_list.del_global" vm-on-click="set_delete_state(1)"/>
+                            <svg <%if(cart.globalCart.allSelected==1){%>class="active"<%}%> vm-attr-class="goods_list.global_selected?'active':''" preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                <circle cx="17" cy="17" r="16"/>
+                                <path d="M8,17 L14,22 L26,11"/>
+                            </svg>
+                        </label>
+                        <h3 class="title pull-left"><%= cart.globalCart.cartName || '海外优选' %></h3>
+                        <span class="pull-right"><%= cart.globalCart.freeFreightText || '' %></span>
+                    </div>
+
+                    <ul class="goods-list">
+                        <% if(cart.globalCart.goodsList && cart.globalCart.goodsList.length){ %>
+                        <%
+                            cart.globalCart.goodsList.forEach(function(item) {
+                                var class_name = '', // 有效/失效class类名
+                                        valid = item.goods_status == 0;  // 商品是否有效
+                                if(item.goods_status==1){
+                                    class_name = 'invalid';                            // 下架
+                                } else if(!valid){
+                                    class_name = 'sold-out';                           // 售罄
+                                }
+                        %>
+                        <li class="goods-item" vm-attr-class="'goods-item <%= class_name %> '+(is_edit?'edit':'')" data-act="delete">
+                            <div class="goods-info row">
+                                <label class="checkbox col-1 <% if(!valid){ %>disabled<% } %>" <% if(valid){ %>vm-on-click="set_select('goods','<%= item.goods_id %>',<%=item.selected%>)"<% } %>>
+                                    <input type="checkbox" class="hide" vm-attr-class="is_edit?'':'hide'" value="<%= item.goods_id %>" vm-value="goods_list.del_global_list" vm-on-click="set_delete_state(3)" name="global-delete"/>
+                                    <svg <%if(item.selected==1){%>class="active"<%}%> <% if(valid){ %>vm-attr-class="goods_list.global_goods['<%= item.goods_id %>'].selected?'active':''"<% } %> preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                        <circle cx="17" cy="17" r="16"/>
+                                        <path d="M8,17 L14,22 L26,11"/>
+                                    </svg>
+                                </label>
+
+                                <div class="goods-wrap col-11">
+                                    <div class="goods">
+                                        <a href="/product/<%= item.goods_id %>.html">
+                                            <span class="goods-img <%= class_name %>" style="background-image: url(<%= item.goods_image %>)">
+                                                <% if(item.stock-0 < 10 && item.stock-0 > 0){ %>
+                                                <em class="surplus">仅剩<%= item.stock %>件</em>
+                                                <% } %>
+                                            </span>
+                                        </a>
+                                        <p class="goods-title">
+                                            <%if(item.drug_type==1){%><i class="icon icon-rx"></i><%}%>
+                                            <%if(item.drug_type==2){%><i class="icon icon-otc1"></i><%}%>
+                                            <%if(item.drug_type==3){%><i class="icon icon-otc2"></i><%}%>
+                                            <%if(item.is_global==1){%><i class="icon icon-hwg">海外优选</i><%}%>
+                                            <%= item.goods_name %>
+                                        </p>
+                                        <p class="goods-spu clear">
+                                            <span <%if(item.spu_id!=0){%>vm-attr-class="is_edit?'spu edit':'spu'" vm-on-click="switch_spu('<%= item.goods_id %>', '<%= item.spu_id %>')"<%}%> class="spu"><%= item.rule_name %></span>
+                                        </p>
+                                        <p class="goods-label"></p>
+                                        <p class="goods-price clear">
+                                            <span class="price pull-left">&yen;<%= item.discount_price %></span>
+                                            <span class="size-box row">
+                                                <em class="col-4 <%if(!valid||item.goods_number-0<=1){%>disabled<%}%>" <%if(valid){%>vm-on-click="set_num('<%= item.goods_id %>', -1)"<%}%>>-</em>
+                                                <input type="tel" value="<%= item.goods_number %>" <%if(!valid){%>readonly<%}%> class="col-4" <%if(valid){%>vm-value="goods_list.global_goods['<%= item.goods_id %>'].goods_number" vm-on-change="set_num('<%= item.goods_id %>', 0)"<%}%>>
+                                                <em class="col-4 <%if(!valid||item.goods_number-0>=item.stock-0){%>disabled<%}%>" <%if(valid){%>vm-on-click="set_num('<%= item.goods_id %>', 1)"<%}%>>+</em>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="javascript:;" class="btn-delete" vm-on-click="delete_goods(0,'<%= item.goods_id %>')"><span>删除</span></a>
+                        </li>
+                        <% }); %>
+                        <% } %>
+                    </ul>
+
+                </section>
+                <% } %>
+
+                <!--百洋商城商品列表-->
+                <% if(cart.shoppingCart && cart.shoppingCart.totalQty > 0) { %>
+                <section class="goods-type self-support">
+
+
+                    <div class="type-title row">
+                        <!--复选框-->
+                        <label class="checkbox col-1" vm-on-click="set_select('all',0,<%= cart.shoppingCart.allSelected %>)">
+                            <input type="checkbox" class="hide" vm-attr-class="is_edit?'':'hide'" value="1" vm-value="goods_list.del_shop"  vm-on-click="set_delete_state(2)" />
+                            <svg <%if(cart.shoppingCart.allSelected==1){%>class="active"<%}%> vm-attr-class="goods_list.shop_selected?'active':''" preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                <circle cx="17" cy="17" r="16"/>
+                                <path d="M8,17 L14,22 L26,11"/>
+                            </svg>
+                        </label>
+                        <h3 class="title pull-left"><%= cart.shoppingCart.cartName || '百洋自营' %></h3>
+                        <span class="pull-right"><%= cart.shoppingCart.freeFreightText || '' %></span>
+                    </div>
+
+                    <!--全场优惠-->
+                    <% if(cart.shoppingCart.allPromotionInfo&&cart.shoppingCart.allPromotionInfo.fixed_promotion&&cart.shoppingCart.allPromotionInfo.fixed_promotion.length){ %>
+                    <ul class="global-discount">
+                        <% cart.shoppingCart.allPromotionInfo.fixed_promotion.forEach(function(item, i) { %>
+                            <li class="discount row">
+                                <i class="icon-text"><%= get_icon_text(item.promotion_type) %></i>
+                                <span class="copyright"><%= item.resultInfo?item.resultInfo.copywriter:item.promotion_title %></span>
+                                <% if(i == 0 && cart.shoppingCart.allPromotionInfo.switch_promotion && cart.shoppingCart.allPromotionInfo.switch_promotion.length){ %>
+                                <span class="switch" vm-on-click="switch_promotion(cart.shoppingCart.allPromotionInfo.switch_promotion)">切换优惠</span>
+                                <% } %>
+                            </li>
+                        <% }); %>
+                    </ul>
+                    <% } %>
+
+                    <% cart.shoppingCart.moduleList.forEach(function(item, i) { %>
+
+                    <!--优惠信息-->
+                    <% if(item.default_promotion){ %>
+                    <div class="discount row goods-promotion">
+                        <i class="icon-text"><%= get_icon_text(item.default_promotion.promotion_type) %></i>
+                        <span class="copyright"><%= item.default_promotion.resultInfo?item.default_promotion.resultInfo.copywriter:item.promotion_title %></span>
+                        <% if(item.default_promotion.resultInfo&&item.default_promotion.resultInfo.message&&item.default_promotion.promotion_type!=30){ %>
+                        <a href="javascript:;" vm-on-click="promotion.get_list('<%= item.default_promotion.promotion_id %>')" class="text"><%= item.default_promotion.resultInfo.message %><i class="icon-arrow">&gt;</i></a>
+                        <% } %>
+                    </div>
+                    <% } %>
+
+                    <ul class="goods-list">
+                        <% item.goodsList.forEach(function(goods, k) {
+
+                            // 是否是团购
+                            var is_group = goods.groupGoodsList && goods.groupGoodsList.length;
+
+                            // 商品/套餐是否有效
+                            var valid = (!is_group && goods.goods_status == 0) || (is_group && goods.group_status == 1);
+
+                        %>
+                        <!--商品信息-->
+                        <li class="goods-item" vm-attr-class="'goods-item <%= is_group?'package':'' %> '+(is_edit?'edit':'')" data-act="delete">
+
+                            <div class="goods-info row">
+                                <!--商品复选框-->
+                                <label class="checkbox col-1  <% if(!valid){ %>disabled<% } %>"
+                                       <% if(valid){ %>
+                                       <% if(is_group){ %>
+                                       vm-on-click="set_select('group','<%= goods.group_id %>',<%=goods.selected%>)"
+                                        <% } else { %>
+                                       vm-on-click="set_select('goods','<%= goods.goods_id %>',<%=goods.selected%>)"
+                                        <% } %>
+                                        <% } %>>
+                                    <input type="checkbox" class="hide" vm-attr-class="is_edit?'':'hide'" value="<%= is_group?goods.group_id:goods.goods_id %>" vm-value="goods_list.del_shop_list" vm-on-click="set_delete_state(4)" name="shop-delete"/>
+                                    <svg <%if(goods.selected==1){%>class="active"<%}%> <% if(valid){ %>vm-attr-class="goods_list.shop_goods['<%= is_group?goods.group_id:goods.goods_id %>'].selected?'active':''"<%}%> preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                        <circle cx="17" cy="17" r="16"/>
+                                        <path d="M8,17 L14,22 L26,11"/>
+                                    </svg>
+                                </label>
+
+                                <!--商品信息-->
+                                <div class="goods-wrap col-11">
+
+                                    <% if(is_group && goods.group_name){ %>
+                                    <div class="discount clear"><i class="icon-text">套餐</i><%= goods.group_name %></div>
+                                    <% } %>
+
+                                    <%
+                                        // 统一普通商品和套餐商品列表
+                                        var goodsList;
+                                        if(is_group){
+                                            goodsList = goods.groupGoodsList;
+                                        } else {
+                                            goodsList = [goods];
+                                        }
+                                    %>
+
+                                    <%
+                                    goodsList.forEach(function(goodsItem) {
+                                        // 有效/失效class类名
+                                        var class_name = '';
+
+                                        if(goodsItem.goods_status == 1){
+                                            class_name = 'invalid';  // 下架
+                                        } else if(goodsItem.goods_status != 0){
+                                            class_name = 'sold-out';  // 缺货/售罄
+                                        }
+                                    %>
+                                    <div class="goods <%= class_name %>">
+                                        <a href="/product/<%= goodsItem.goods_id %>.html">
+                                            <span class="goods-img <%= class_name %>" style="background-image: url(<%= goodsItem.goods_image %>)">
+                                                <% if(goodsItem.stock-0 < 10 && goodsItem.stock-0 > 0){ %>
+                                                <em class="surplus">仅剩<%= goodsItem.stock %>件</em>
+                                                <% } %>
+                                            </span>
+                                        </a>
+                                        <p class="goods-title">
+                                            <%if(goodsItem.drug_type==1){%><i class="icon icon-rx"></i><%}%>
+                                            <%if(goodsItem.drug_type==2){%><i class="icon icon-otc1"></i><%}%>
+                                            <%if(goodsItem.drug_type==3){%><i class="icon icon-otc2"></i><%}%>
+                                            <%if(goodsItem.is_global==1){%><i class="icon icon-hwg">海外优选</i><%}%>
+                                            <%= goodsItem.goods_name %>
+                                        </p>
+                                        <p class="goods-spu clear">
+                                            <span <%if(!is_group&&goodsItem.spu_id!=0){%>vm-attr-class="is_edit?'spu edit':'spu'" vm-on-click="switch_spu('<%= goodsItem.goods_id %>', '<%= goodsItem.spu_id %>')"<%}%> class="spu"><%= goodsItem.rule_name %></span>
+                                            <% if(goodsItem.promotionInfo && goodsItem.promotionInfo.switch_promotion && goodsItem.promotionInfo.switch_promotion.length){ %>
+                                            <em class="switch" vm-on-click="switch_promotion(cart.shoppingCart.moduleList[<%=i%>].goodsList[<%=k%>].promotionInfo.switch_promotion, '<%= goodsItem.goods_id %>')">切换优惠</em>
+                                            <% } %>
+                                        </p>
+                                        <p class="goods-label">
+                                            <% if(goodsItem.discountPromotion && goodsItem.discountPromotion.promotion_type){ %>
+                                            <% if(goodsItem.discountPromotion.promotion_type==35){ %>
+                                            <i class="icon-text">限时优惠</i>
+                                            <% }%>
+                                            <% if(goodsItem.discountPromotion.promotion_type==45){ %>
+                                            <i class="icon-text">疗程优惠</i>
+                                            <% }%>
+                                            <% } %>
+                                            <% if(goodsItem.promotionInfo&&goodsItem.promotionInfo.single_limitbuy&&goodsItem.promotionInfo.single_limitbuy.promotion_id) { %>
+                                            <i class="icon-text">限购</i>
+                                            <% } %>
+                                        </p>
+                                        <p class="goods-price clear">
+                                            <span class="price pull-left">&yen;<%= goodsItem.discount_price %></span>
+                                            <% if(goodsItem.discountPromotion && goodsItem.discountPromotion.tag_name){ %>
+                                            <i class="icon-tag pull-left"><%= goodsItem.discountPromotion.tag_name %></i>
+                                            <% } %>
+                                            <% if(is_group){ %>
+                                            <em class="size pull-right">&times;<%= goodsItem.goods_number %></em>
+                                            <% } else { %>
+                                            <span class="size-box row">
+                                                <em class="col-4 <%if(!valid||goods.goods_number-0<=1){%>disabled<%}%>" <%if(valid){%>vm-on-click="set_num('<%= goods.goods_id %>', -1)"<%}%>>-</em>
+                                                <input type="tel" value="<%= goods.goods_number %>" <%if(!valid){%>readonly<%}%> <%if(valid){%>vm-value="goods_list.shop_goods['<%= goods.goods_id %>'].goods_number" vm-on-change="set_num('<%= goods.goods_id %>', 0)"<%}%> class="col-4">
+                                                <em class="col-4 <%if(!valid||goods.goods_number-0>=goods.stock-0){%>disabled<%}%>" <%if(valid){%>vm-on-click="set_num('<%= goods.goods_id %>', 1)"<%}%>>+</em>
+                                            </span>
+                                            <% } %>
+                                        </p>
+                                    </div>
+
+                                    <!--套餐赠品-->
+                                    <% if(is_group && goodsItem.bind_gift && goodsItem.bind_gift.length){ %>
+                                    <ul class="goods-gifts group-gifts">
+                                        <% goodsItem.bind_gift && goodsItem.bind_gift.length && goodsItem.bind_gift.forEach(function(gift) { %>
+                                        <li class="row">
+                                            <span class="gift-name col-11">[赠品]<%= gift.goods_name %></span>
+                                            <em class="gift-size col-1">&times;<%= gift.goods_number %></em>
+                                        </li>
+                                        <% }) %>
+                                    </ul>
+                                    <% } %>
+
+                                    <% }); %>
+
+                                    <!--套餐价-->
+                                    <% if(is_group){ %>
+                                    <div class="package-price clear">
+                                        <span class="price pull-left">套餐价：<em>&yen;<%= goods.discount_total %></em></span>
+                                        <span class="size-box pull-right row">
+                                            <em class="col-4 <%if(!valid||goods.group_number-0<=1){%>disabled<%}%>" <%if(valid){%>vm-on-click="set_num('<%= goods.group_id %>', -1)"<%}%>>-</em>
+                                            <input type="tel" value="<%= goods.group_number %>" <%if(!valid){%>readonly<%}%> <%if(valid){%>vm-value="goods_list.shop_goods['<%= goods.group_id %>'].group_number" vm-on-change="set_num('<%= goods.group_id %>', 0)"<%}%> class="col-4">
+                                            <em class="col-4 <%if(!valid||goods.group_number-0>=goods.group_stock-0){%>disabled<%}%>" <%if(valid){%>vm-on-click="set_num('<%= goods.group_id %>', 1)"<%}%>>+</em>
+                                        </span>
+                                    </div>
+                                    <% } %>
+
+                                    <!--赠品-->
+                                    <% if((goods.giftList && goods.giftList.length) || (goods.bind_gift && goods.bind_gift.length)){ %>
+                                    <ul class="goods-gifts">
+                                        <% goods.bind_gift && goods.bind_gift.length && goods.bind_gift.forEach(function(gift) { %>
+                                        <li class="row">
+                                            <span class="gift-name col-11">[赠品]<%= gift.goods_name %></span>
+                                            <em class="gift-size col-1">&times;<%= gift.goods_number %></em>
+                                        </li>
+                                        <% }) %>
+                                        <% goods.giftList && goods.giftList.length && goods.giftList.forEach(function(gift) { %>
+                                        <li class="row">
+                                            <span class="gift-name col-11">[赠品]<%= gift.goods_name %></span>
+                                            <em class="gift-size col-1">&times;<%= gift.goods_number %></em>
+                                        </li>
+                                        <% }) %>
+                                    </ul>
+                                    <% } %>
+
+                                    <!--换购-->
+                                    <% if(goods.increaseBuyList && goods.increaseBuyList.length){ %>
+                                    <ul class="switch-goods">
+                                        <% goods.increaseBuyList.forEach(function(increase) { %>
+                                        <li class="switch-item">
+                                            <a href="/product/<%= increase.goods_id %>.html">
+                                                <span class="goods-img" style="background-image: url(<%= increase.goods_image %>)">
+                                                    <% if(increase.stock < 10 && increase.stock > 0){ %>
+                                                    <em class="surplus">仅剩<%= increase.stock %>件</em>
+                                                    <% } %>
+                                                </span>
+                                            </a>
+                                            <p class="goods-title">
+                                                <i class="icon-text">换购</i><%= increase.goods_name %>
+                                            </p>
+                                            <p class="goods-price clear">
+                                                <span class="price pull-left">&yen;<%= increase.discount_price %></span>
+                                                <em class="size pull-right">&times;<%= increase.goods_number %></em>
+                                            </p>
+                                        </li>
+                                        <% }) %>
+                                    </ul>
+                                    <% } %>
+
+                                    <!--优惠信息-->
+                                    <% if(goods.promotionInfo && goods.promotionInfo.fixed_promotion && goods.promotionInfo.fixed_promotion.length){ %>
+                                    <div class="goods-discount">
+                                        <p>还可参与以下优惠</p>
+                                        <% goods.promotionInfo.fixed_promotion.forEach(function(promo) { %>
+                                        <div class="discount row">
+                                            <i class="icon-text"><%= get_icon_text(promo.promotion_type) %></i>
+                                            <span class="copyright"><%= promo.resultInfo ? promo.resultInfo.copywriter: promo.promotion_title %></span>
+                                            <% if(promo.promotion_type!=30){ %>
+                                            <a href="javascript:;" vm-on-click="promotion.get_list('<%= promo.promotion_id %>')" class="more">
+                                                <%= promo.resultInfo ? promo.resultInfo.message: '' %>
+                                                <i class="icon-arrow">&gt;</i>
+                                            </a>
+                                            <% } %>
+                                        </div>
+                                        <% }) %>
+                                    </div>
+                                    <% } %>
+
+                                    <% if(goods.promotionInfo && goods.promotionInfo.not_join_promotionList && goods.promotionInfo.not_join_promotionList.length){ %>
+                                    <div class="goods-discount">
+                                        <p>不参与以下优惠</p>
+                                        <% goods.promotionInfo.not_join_promotionList.forEach(function(promo) { %>
+                                        <div class="discount row">
+                                            <i class="icon-text"><%= get_icon_text(promo.promotion_type) %></i>
+                                            <span class="copyright"><%= promo.promotion_title %></span>
+                                        </div>
+                                        <% }) %>
+                                    </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <a href="javascript:;" class="btn-delete" vm-on-click="delete_goods(<%= is_group?1:0 %>, '<%= is_group?goods.group_id:goods.goods_id %>')"><span>删除</span></a>
+                        </li>
+                        <% }); %>
+
+                    </ul>
+                    <% }); %>
+
+                    <!--全场赠品-->
+                    <% if(cart.shoppingCart.allGiftList && cart.shoppingCart.allGiftList.length){ %>
+                    <ul class="goods-gifts">
+                        <% cart.shoppingCart.allGiftList.forEach(function(item) { %>
+                        <li class="row">
+                            <span class="gift-name col-11">[赠品]<%= item.goods_name %></span>
+                            <em class="gift-size col-1">&times;<%= item.goods_number %></em></li>
+                        <% }); %>
+                    </ul>
+                    <% } %>
+                </section>
+                <% } %>
+
+                <!--处方药提示-->
+                <% if(cart.rxExist == 1){ %>
+                <article class="rx-tip row">
+                    <i class="icon icon-warn col-1"></i>
+                    <span class="col-11">购买处方药需凭医生有效处方，服用请遵循医嘱。有关用药信息请咨询药师。</span>
+                </article>
+                <% } %>
+
+                <!--加入购物车按钮-->
+                <% if(cart.totalQty > 0){ %>
+                <footer class="row cart-info">
+                    <label class="checkbox col-1" vm-on-click="set_select('all',2,<%=cart.allSelected%>)">
+                        <input type="checkbox" class="hide" vm-attr-class="is_edit?'':'hide'" value="1" vm-value="goods_list.del_all" vm-on-click="set_delete_state(0)"/>
+                        <svg <%if(cart.allSelected==1){%>class="active"<%}%> vm-attr-class="goods_list.all_selected?'active':''" preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                            <circle cx="17" cy="17" r="16"/>
+                            <path d="M8,17 L14,22 L26,11"/>
+                        </svg>
+                    </label>
+                    <div class="cart-price col-7" vm-html="is_edit" >
+                        <%== '<' + 'script type="text/html"' + '>' %>
+                        <%==     '<' + '% if( is_edit ){ %' + '>' %>
+                                    <span class="chosen-all-delete">全选</span>
+                        <%==     '<' + '% } else { %' + '>' %>
+                                     <p class="total-price">合计:<span>&yen;<%= (cart.totalPrice-0).toFixed(2) %></span></p>
+                                     <p class="express-fee"><small>(不含运费)</small><span>已优惠：<em>&yen;<%= (cart.freePrice-0).toFixed(2) %></em></span></p>
+                        <%==     '<' + '% } %' + '>' %>
+                        <%== '<' + '/script' + '>' %>
+
+                    </div>
+                    <button type="button" vm-attr-class="'btn btn-submit col-4'+((!is_edit&&cart.selectQty==0)||(is_edit&&goods_list.del_global_list.length==0&&goods_list.del_shop_list.length==0)?' btn-disabled':'')" vm-on-click="submit()" vm-html="is_edit?'删除':cart.rxExist==1?'提交预定':'结算'" class="hide">结算</button>
+                </footer>
+                <% } %>
+                <!--购物车空提示-->
+                <section class="cart-empty">
+                    <% if(cart.totalQty == 0){ %>
+                    <p class="empty-text">
+                        购物车是空的，您可以 <a href="index.html">去逛逛</a>
+                    </p>
+                    <% } %>
+                    <article vm-attr-class="commend.commend_list.length?'commend':'hide'" class="hide">
+                        <h3 class="commend-title"><span>为您推荐</span></h3>
+                        <ul class="commend-list clear" vm-html="commend.commend_list">
+                            <%== '<' + 'script type="text/html"' + '>' %>
+                            <%== '<'+'% if(commend.commend_list.length){ %'+'>' %>
+                            <%== '<'+'% commend.commend_list.forEach(function(item) { %'+'>' %>
+                            <%== '<'+'%'  %>
+                            <%==  "var class_name = '';" %>
+                            <%==  "if(item.sale==0){" %>
+                            <%==        "class_name = 'invalid';" %>
+                            <%==  "} else if(item.stock == 0){" %>
+                            <%==        "class_name = 'sold-out';" %>
+                            <%==  "}" %>
+                            <%== '%'+'>' %>
+                            <li class="goods-item <%== '<'+'%= class_name %'+'>' %>">
+                                <a href="/product/<%== '<'+'%= item.id %'+'>' %>.html">
+                                    <span class="goods-img <%== '<'+'%= class_name %'+'>' %>" style="background-image: url(<%== '<'+'%= item.goods_image %'+'>' %>)">
+                                        <%== '<'+'% if(item.stock-0 < 10 && item.stock-0 > 0){ %'+'>' %>
+                                        <em class="surplus">仅剩<%== '<'+'%= item.stock %'+'>' %>件</em>
+                                        <%== '<'+'% } %'+'>' %>
+                                    </span>
+                                </a>
+                                <p class="goods-title"><%== '<'+'%= item.name %'+'>' %></p>
+                                <p class="price clear">
+                                    <span class="pull-left">&yen;<%== '<'+'%= item.sku_price %'+'>' %></span>
+                                    <i class="icon icon-cart pull-right" vm-on-click="commend.add_to_cart('<%== '<'+'%= item.id %'+'>' %>')"></i>
+                                </p>
+                            </li>
+                            <%== '<'+'% }); %'+'>' %>
+                            <%== '<'+'% } %'+'>' %>
+                            <%== '<' + '/script' + '>' %>
+                        </ul>
+                    </article>
+                </section>
+                <% } %>
+            </script>
+        </div>
+    </div>
+
+    <!--促销列表-->
+    <div class="wrap promotion" page-router="?promotion">
+
+        <!--公共头部菜单-->
+        <header class="search-box top-header">
+            <h1 class="title">促销列表</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':'shopping-car'})}}
+
+        </header>
+
+        <!--筛选菜单-->
+        <div class="nav-wrap" id="sort-nav">
+            <!--排序菜单-->
+            <nav class="sort-nav row">
+                <a href="javascript:;" vm-on-click="promotion.filter('all')" class="col-3" vm-attr-class="'col-3 '+(promotion.param.type=='all'?'active '+(promotion.param.type_status?'asc':'desc'):'')">综合</a>
+                <a href="javascript:;" vm-on-click="promotion.filter('sales')" class="col-3" vm-attr-class="'col-3 '+(promotion.param.type=='sales'?'active '+(promotion.param.type_status?'asc':'desc'):'')">销量</a>
+                <a href="javascript:;" vm-on-click="promotion.filter('price')" class="col-3" vm-attr-class="'col-3 '+(promotion.param.type=='price'?'active '+(promotion.param.type_status?'asc':'desc'):'')">价格</a>
+                <a href="javascript:;" vm-on-click="toggle_filter(1)" class="col-3">筛选</a>
+            </nav>
+        </div>
+
+        <!--头部提示-->
+        <p class="top-tips" vm-html="promotion.promotion_info?promotion.promotion_info.copywriter:''"></p>
+
+        <!--商品列表-->
+        <ul class="goods-list" vm-html="promotion.list_data">
+            <script type="text/html">
+                <% if(promotion.list_data && promotion.list_data.length){ %>
+                <% promotion.list_data.forEach(function(goods, i) {
+                    var class_name = ''; // 有效/失效class类名
+                    if(goods.isOnSale != 1){
+                        class_name = 'invalid';                            // 下架
+                    } else if(goods.stock-0 <= 0){
+                        class_name = 'sold-out';                           // 售罄
+                    }
+                %>
+                <li class="goods-item <%= class_name %>">
+                    <a href="/product/<%= goods.goodsId %>.html">
+                        <span class="goods-pic <%= class_name %>" style="background-image: url(<%= goods.goodsImage %>)">
+                            <% if(goods.stock-0 < 10 && goods.stock-0 > 0){ %>
+                            <em class="surplus">仅剩<%= goods.stock %>件</em>
+                            <% } %>
+                        </span>
+                    </a>
+                    <p class="goods-name">
+                        <%if(goods.drugType==1){%><i class="icon icon-rx"></i><%}%>
+                        <%if(goods.drugType==2){%><i class="icon icon-otc1"></i><%}%>
+                        <%if(goods.drugType==3){%><i class="icon icon-otc2"></i><%}%>
+                        <%if(goods.is_global==1){%><i class="icon icon-hwg">海外优选</i><%}%>
+                        <%= goods.goodsName %>
+                    </p>
+                    <p class="goods-price">
+                        <span>&yen;<%= goods.price %></span>
+                        <% if(goods.tag_name){ %><i class="icon-tag"><%= goods.tag_name %></i><% } %>
+                        <% if(goods.promotionData){ %>
+                            <% if(goods.promotionData.fullMinus) {  %><i class="icon-text">满减</i><% } %>
+                            <% if(goods.promotionData.fullDiscount) {  %><i class="icon-text">满折</i><% } %>
+                            <% if(goods.promotionData.fullGift) {  %><i class="icon-text">满赠</i><% } %>
+                            <% if(goods.promotionData.expressFree) {  %><i class="icon-text">包邮</i><% } %>
+                            <% if(goods.promotionData.farePurchase) { %><i class="icon-text">加价购</i><% } %>
+                            <% if(goods.promotionData.limited) {  %><i class="icon-text">限购</i><% } %>
+                        <% } %>
+                    </p>
+                    <p class="comment">
+                        <% if(goods.drugType!=1) { %>
+                        <em><%= goods.commentNumber %></em>条评价 好评<%= goods.praise %>%
+                        <% } %>
+                    </p>
+                    <a href="javascript:;" class="btn-add-cart" vm-on-click="promotion.add_to_cart('<%= goods.goodsId %>')"><i class="icon icon-cart"></i></a>
+                </li>
+                <% }) %>
+                <% } else if(promotion.list_data && !promotion.list_data.length) { %>
+                <p class="empty">没有找到相关商品～</p>
+                <% } %>
+            </script>
+        </ul>
+
+        <!--换购按钮-->
+        <div vm-attr-class="promotion.list_data && promotion.list_data.length?'btn-promotion':'hide'" class="hide">
+            <div class="promotion-price" vm-html="promotion.promotion_info">
+                <script type="text/html">
+                    <%
+                        var lack_number, bought_number;
+                        if(promotion.unit == 'item'){
+                            bought_number = promotion.bought_number + '件';
+                            lack_number = promotion.lack_number + '件';
+                        } else {
+                            bought_number = '&yen;' + (promotion.bought_number-0).toFixed(2);
+                            lack_number = '&yen;' + (promotion.lack_number-0).toFixed(2);
+                        }
+                    %>
+                    <p class="buy-price"><strong>已买：</strong><em><%= bought_number %></em></p>
+                    <% if(promotion.lack_number && promotion.lack_number > 0){ %>
+                    <p class="disparity-price"><span>还差：</span><em><%= lack_number %></em></p>
+                    <% } else if(promotion.promotion_info && promotion.promotion_info.pro_message){ %>
+                    <p class="disparity-price"><span><%= promotion.promotion_info.pro_message %></span></p>
+                    <% } else if(promotion.change_group && promotion.change_group.length){ %>
+                    <p class="disparity-price"><span>可换购商品</span></p>
+                    <% } %>
+                </script>
+            </div>
+            <a href="javascript:;" class="hide" vm-attr-class="promotion.change_group && promotion.change_group.length?'btn-return':'hide'" vm-html="promotion.change_goods?'重新换购':promotion.isCanUse?'换购商品':'查看换购'" vm-on-click="toggle_switch(1)">重新换购</a>
+            <a href="shopping-car.html" class="btn-cart">去购物车</a>
+        </div>
+
+    </div>
+
+    <!--遮罩弹窗-->
+    <aside vm-attr-class="show_type||show_discount||show_switch||show_checkout||show_filter?'dialog':'hide'">
+
+        <!--多品规选择-->
+        <div vm-attr-class="show_type?'dialog-content type box':'hide'" class="hide">
+            <div class="type-title">
+                <span class="pic" vm-css-background-image="spu.sku_info?'url('+spu.sku_info.small_path+')':''"></span>
+                <p class="price" vm-html="spu.sku_info?'&yen;'+spu.sku_info.goods_price:'0.00'">0.00</p>
+                <p class="selected" vm-html="spu.sku_info">
+                    <script type="text/html">
+                        <% if(spu.sku_info){ %>
+                        已选：<% spu.sku_info.rules.forEach(function(item) { %>
+                        <%= item.value || '' %>
+                        <% }); %>
+                        <% } %>
+                    </script>
+                </p>
+                <i class="icon-close" vm-on-click="toggle_type()">&times;</i>
+            </div>
+            <div class="type-list flex">
+                <div class="flex-content">
+                    <div vm-html="spu.spu_select_option">
+                        <script type="text/html">
+                            <% if(spu.spu_select_option){ %>
+                            <% for( var name in spu.spu_select_option){ %>
+                            <% if(spu.spu_select_option.hasOwnProperty(name)){ %>
+                            <dl class="type-item clear">
+                                <dt><%= name %></dt>
+                                <% spu.spu_select_option[name].forEach(function(item) { %>
+                                <dd vm-attr-class="(spu.spu_list['<%= item.id %>'].hide?'hide ':'')+(spu.spu_list['<%= item.id %>'].selectable?'':'disabled')">
+                                    <span vm-on-click="spu.set_spu('<%= name %>','<%= item.id %>')" vm-attr-class="'label '+(spu.spu_list['<%= item.id %>'].selected?'active ':'')"><%= item.value %></span>
+                                </dd>
+                                <% }); %>
+                            </dl>
+                            <% } %>
+                            <% } %>
+                            <% } %>
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="type-act row">
+                <a href="javascript:;" class="col-12 btn-shopping" vm-on-click="spu.modify_spu()">确定</a>
+            </div>
+        </div>
+
+        <!--切换优惠-->
+        <div vm-attr-class="show_discount?'dialog-content discount box':'hide'" class="hide">
+            <h3 class="title">切换优惠<i class="icon-close" vm-on-click="toggle_discount(0)">&times;</i></h3>
+            <div class="flex body">
+                <form>
+                    <ul class="flex-content" vm-html="discount_info.promotion">
+                        <script type="text/html">
+                            <% if(discount_info.promotion && discount_info.promotion.length){
+                                discount_info.promotion.forEach(function(group, i) {
+                                    group.forEach(function(item) {
+                                        if(item && item.resultInfo){
+                            %>
+                                <li class="promotion-item row">
+                                    <label class="checkbox col-1">
+                                        <input type="radio" name="discount-<%= i %>" <% if(item.selected==1){ selected_discount[i] = item.promotion_id; %>checked<% } %> value="<%= item.promotion_id %>" vm-value="selected_discount[<%= i %>]"/>
+                                        <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34">
+                                            <circle cx="17" cy="17" r="16"/>
+                                            <path d="M8,17 L14,22 L26,11"/>
+                                        </svg>
+                                    </label>
+                                    <p class="col-11"><%= item.resultInfo.copywriter %></p>
+                                </li>
+                                    <% }
+                                    });
+                                });
+                            } %>
+                        </script>
+                    </ul>
+                </form>
+            </div>
+            <div class="discount-act row">
+                <a href="javascript:;" class="col-12 btn-shopping" vm-on-click="switch_discount()">确定</a>
+            </div>
+        </div>
+
+        <!--重新换购-->
+        <div vm-attr-class="show_switch?'dialog-content switch-buy box':'hide'" class="hide" vm-html="promotion.change_group">
+            <script type="text/html">
+                <% if(promotion.change_group && promotion.change_group.length) { %>
+                <h3 class="title"><%= promotion.change_goods?'重新换购':promotion.isCanUse?'换购商品':'查看换购' %><i class="icon-close" vm-on-click="toggle_switch(0)">&times;</i></h3>
+                <div class="switch-wrap" data-act="change-swipe">
+                    <ul class="switch-list">
+                        <% promotion.change_group.forEach(function(item) {
+                            var class_name = ''; // 有效/失效class类名
+
+                            if(item.goods_status == 1){
+                                class_name = 'invalid';                            // 下架
+                            } else if(item.goods_status != 0){
+                                class_name = 'sold-out';                           // 售罄
+                            } else if(item.can_select == 0){
+                                class_name = 'disabled';                           // 不可选
+                            }
+
+                            var validity = !class_name;
+                        %>
+                        <li class="goods-item <%= class_name %>">
+                            <label class="checkbox">
+                                <input type="radio" <%if(validity){%> vm-on-click="promotion.set_change_goods(this, '<%= item.goods_id %>')" <%}else{%>disabled<%}%> <%if(item.selected==1){promotion.change_goods = promotion.old_change_goods = item.goods_id; %>checked<%}%> name="switch"/>
+                                <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34"><circle cx="17" cy="17" r="16"/><path d="M8,17 L14,22 L26,11"/></svg>
+                            </label>
+                            <span class="goods-img <%= class_name %>" style="background-image: url(<%= item.goods_image %>)">
+                                <% if(item.stock-0 < 10 && item.stock-0 > 0){ %>
+                                <em class="surplus">仅剩<%= item.stock %>件</em>
+                                <% } %>
+                            </span>
+                            <p class="goods-title"><%= item.goods_name %></p>
+                            <p class="goods-price">&yen;<%= item.discount_price-0 > 0 ? item.discount_price: item.sku_price %></p>
+                        </li>
+                        <% }) %>
+                    </ul>
+                </div>
+                <div class="switch-act clear">
+                    <span class="selected-num" vm-html="promotion.change_goods?'已选择1/1件':'已选择0/1件'">已选择1/1件</span>
+                    <a href="javascript:;" class="btn-switch" vm-attr-class="'btn-switch'+(promotion.old_change_goods==promotion.change_goods?' disabled':'')" vm-on-click="promotion.switch_buy()">确定</a>
+                </div>
+                <% }%>
+            </script>
+        </div>
+
+        <!--分开结算-->
+        <div vm-attr-class="show_checkout?'cart-checkout':'hide'" class="hide">
+            <h3 class="popup-title">请分开结算以下商品</h3>
+            <div class="popup-msg">
+                <div class="cart-submit-type row">
+                    <label class="checkbox col-2">
+                        <input type="radio" name="submit" value="1" vm-value="is_global"/>
+                        <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34"><circle cx="17" cy="17" r="16"/><path d="M8,17 L14,22 L26,11"/></svg>
+                    </label>
+                    <label class="type-info col-10">
+                        <span>海外优选商品 (含<i class="icon icon-hwg">海外优选</i>的商品)</span>
+                        <em vm-html="(cart?cart.globalCart.selectQty:0)+'件'">0件</em>
+                    </label>
+                </div>
+                <div class="cart-submit-type row">
+                    <label class="checkbox col-2">
+                        <input type="radio" name="submit" value="0" vm-value="is_global"/>
+                        <svg preserveAspectRatio="xMidYMid"  viewBox="0 0 34 34" width="34" height="34"><circle cx="17" cy="17" r="16"/><path d="M8,17 L14,22 L26,11"/></svg>
+                    </label>
+                    <label class="type-info col-10">
+                        <span>普通商品</span>
+                        <em vm-html="(cart?cart.shoppingCart.selectQty:0)+'件'">0件</em>
+                    </label>
+                </div>
+            </div>
+            <div class="popup-footer row">
+                <a href="javascript:;" class="col-6" vm-on-click="toggle_checkout(0)">返回购物车</a>
+                <a href="javascript:;" class="col-6" vm-on-click="create_order()">去结算</a>
+            </div>
+        </div>
+
+        <!--搜索弹窗-->
+        <div vm-attr-class="show_filter?'filter':'hide'" class="hide">
+            <div class="filter-param box">
+                <div class="flex">
+                    <ul class="flex-content" vm-html="promotion.attr_name">
+                        <script type="text/html">
+                            <li class="param price">
+                                <p class="title clear">
+                                    <span>价格区间</span>
+                                </p>
+                                <div class="value clear">
+                                    <input type="tel" class="min-price pull-left" vm-value="promotion.param.down_price" maxlength="10" placeholder="最低价"/>
+                                    <i class="pull-left"></i>
+                                    <input type="tel" class="max-price pull-right" vm-value="promotion.param.up_price" maxlength="10" placeholder="最高价"/>
+                                </div>
+                            </li>
+                            <%
+                            if(promotion.attr_name && promotion.attr_name.length){
+                                promotion.attr_name.forEach(function(item, i) {
+                            %>
+                            <%
+                            if(item.attrValue && item.attrValue.length){
+                            var isOverflow = item.attrValue.length > 3;
+                            %>
+                            <li class="param" <%if(isOverflow){%>data-act="toggle" data-param="class=open&target=.toggle"<%}%>>
+                                <p class="title clear">
+                                    <span><%= item.attrNames %></span>
+                                    <% if(isOverflow){ %>
+                                    <a href="javascript:;" class="toggle"></a>
+                                    <% } %>
+                                </p>
+                                <div class="value clear">
+                                    <% item.attrValue.forEach(function(attr, j) { %>
+                                    <label>
+                                        <input type="checkbox" name="search-param-<%=i%>" value="<%= attr.id %>" vm-value="promotion.param.search_attr[<%=i%>]" />
+                                        <span><%= attr.name %></span>
+                                    </label>
+                                    <% }) %>
+                                </div>
+                            </li>
+                            <% } %>
+                            <% }) %>
+                            <% } %>
+                        </script>
+                    </ul>
+                </div>
+                <div class="button-wrap row">
+                    <button class="btn reset col-6" type="button" vm-on-click="promotion.reset()">重置</button>
+                    <button class="btn submit col-6" type="button" vm-on-click="promotion.filter()">确定</button>
+                </div>
+            </div>
+        </div>
+
+        <i class="layout" vm-on-click="close_popup()"></i>
+
+    </aside>
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('shopping-car')</script>
+</body>
+</html>

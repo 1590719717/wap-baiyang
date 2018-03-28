@@ -1,0 +1,568 @@
+@charset "utf-8";
+/*!
+ * @author yuchunfeng
+ * @date 2017/2/7
+ * @version 1.0.0
+ * @description 用户地址列表样式
+ */
+
+@import "../skin/{{Config.skin_file}}";
+
+
+/*  收货地址
+************************************************************/
+body.user-address-all {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: visible;
+    background-color: #f0f0f0;
+
+    header.user-account{
+        background-color: #efeff4;
+    }
+
+    //收货地址管理
+    .user-address-list {
+        position: relative;
+        width: 100%;
+        height: auto;
+
+        .address-list{
+            list-style: none;
+            width: 100%;
+            margin: 0;
+            padding-bottom: (140 / @rem750);
+            overflow: hidden;
+
+            .div-box {
+                display: -webkit-box;
+                display: box;
+                -webkit-box-pack: center;
+                box-pack: center;
+                -webkit-box-align: center;
+                box-align: center;
+            }
+
+            li{
+                position: relative;
+                width: 100%;
+                height: (150 / @rem750);
+                background-color: #ffffff;
+                overflow: hidden;
+                border-bottom: 1px solid #dedede;
+
+                .check-box {
+                    position: relative;
+                    display: inline-block;
+                    height: 100%;
+                    width: (70 / 24rem);
+                    vertical-align: top;
+                    float: left;
+                    .icon-check {
+                        box-sizing: border-box;
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        display: block;
+                        width: (38 / 24rem);
+                        height: (38 / 24rem);
+                        margin: (-38 / 2 /24rem) 0 0  (-38 / 2 /24rem);
+                        border: 1px solid #ccc;
+                        border-radius: 50%;
+                        z-index: 1;
+                    }
+
+                    input[type="radio"],
+                    input[type="checkbox"] {
+                        position: absolute;
+                        z-index: 2;
+                        left: 0;
+                        top: 0;
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        -webkit-appearance: none !important;
+                        margin: 0;
+
+                        &:checked + .icon-check {
+                            border: 0 none;
+                            background-color: @base_color;
+
+                            &::after {
+                                content: ' ';
+                                position: absolute;
+                                left: (8 / 38 * 100%);
+                                top: (8 / 38 * 100%);
+                                display: block;
+                                width: (18 / 38 * 100%);
+                                height: (10 / 38 * 100%);
+                                border: 1px solid #fff;
+                                border-color: transparent transparent #fff #fff;
+                                -webkit-transform: rotate(-45deg);
+                                transform:         rotate(-45deg);
+                            }
+                        }
+                    }
+                }
+
+                .li-div {
+                    position: absolute;
+                    width: auto;
+                    height: 100%;
+                    left: 0;
+                    top: 0;
+                    display: -webkit-box;
+                    display: box;
+                    overflow: visible;
+                    -webkit-transition: all .3s ease;
+                    transition: all .3s ease;
+                }
+
+                .list-content{
+                    width: (750 / @rem750);
+                    height: auto;
+                    padding: (30 / @rem750) (20 / @rem750);
+                    box-sizing: border-box;
+
+                    .list-text {
+                        width: (640 / @rem750);
+                    }
+                    .address-user {
+
+                        .name {
+                            float: left;
+                            display: block;
+                            color: #333333;
+                            font-size: (28 / @rem750);
+                            max-width: (200 / @rem750);
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+                        }
+                        .phone {
+                            float: left;
+                            display: block;
+                            color: #333333;
+                            font-size: (28 / @rem750);
+                            margin-left: (80 / @rem750);
+                        }
+
+                        //标签
+                        .address-tag {
+                            float: left;
+                            display: block;
+                            width: (60 / @rem750);
+                            height: (28 / @rem750);
+                            line-height: (28 / @rem750);
+                            padding: 2px 0 0 0;
+                            color: #ffffff;
+                            font-size: (20 / @rem750);
+                            border-radius: 3px;
+                            text-align: center;
+                            margin: (5 / @rem750) 0 0 (15 / @rem750);
+                        }
+                        .wo {
+                            background-color: #ef3c79;
+                        }
+                        .friend {
+                            background-color: #fb9d0a;
+                        }
+                        .family {
+                            background-color: #f11a2a;
+                        }
+                        .company {
+                            background-color: #28a0ef;
+                        }
+                        .other {
+                            background-color: #65c70e;
+                        }
+
+                    }
+
+                    .address-text {
+                        width: 100%;
+                        margin: (15 / @rem750) 0 0 0;
+                        font-size: (26 / @rem750);
+                        color: #999999;
+                        box-sizing: border-box;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+
+                        .moren {
+                            color: @base_color;
+                        }
+                    }
+                    .list-edit {
+                        position: relative;
+                        width: (60 / @rem750);
+                        display:block;
+
+                        .list-address-edit {
+                            display: block;
+                            position: absolute;
+                            right: 0;
+                            top: 50%;
+                            width: (26 / @rem750);
+                            height: (26 / @rem750);
+                            background: url(../images/icon-shop.png) no-repeat 0 0;
+                            background-size: (150 / 26 * 100%) (150 / 26 * 100%);
+                            -webkit-transform: translateY(-50%);;
+                            transform:         translateY(-50%);
+                        }
+                    }
+                }
+
+                //设为默认地址
+                .list-default {
+                    position: relative;
+                    height: 100%;
+                    width: (140 / @rem750);
+                    background-color: #eeeeee;
+                    color: #666666;
+                    font-size: (26 / @rem750);
+                    display:block;
+
+                    span {
+                        display: block;
+                        position: absolute;
+                        left: 0;
+                        top: 50%;
+                        width: 100%;
+                        text-align: center;
+                        -webkit-transform: translateY(-50%);
+                        transform:         translateY(-50%);
+                    }
+
+                }
+                //删除地址
+                .list-delete {
+                    position: relative;
+                    height: 100%;
+                    width: (140 / @rem750);
+                    background-color: @deep_red_color;
+                    color: #ffffff;
+                    font-size: (26 / @rem750);
+                    display:block;
+
+                    span {
+                        display: block;
+                        position: absolute;
+                        left: 0;
+                        top: 50%;
+                        width: 100%;
+                        text-align: center;
+                        -webkit-transform: translateY(-50%);
+                        transform:         translateY(-50%);
+                    }
+                }
+
+                //编辑地址
+                .edit-btn{
+                    position: absolute;
+                    right: (24/24rem);
+                    top:50%;
+                    -webkit-transform: translateY(-50%);
+                    transform: translateY(-50%);
+                    width: (52/24rem);
+                    height: (53/24rem);
+                    background: url(../images/icon-address.png?v1.0.2) no-repeat;
+                    background-position: (136 / (639 - 52) * 100%) (212 / (377 - 53) * 100%);
+                    background-size: (639/52*100%) (377/53*100%);
+                }
+            }
+
+        }
+
+        .empty {
+            text-align: center;
+            line-height: 3em;
+            color: #999;
+        }
+
+        .add-btn{
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #f0f0f0;
+            opacity: 1;
+            z-index: 2;
+
+            div {
+                margin: (20 / @rem750) auto;
+                border-radius: (3 / @rem750);
+                width: (710 / @rem750);
+                height: (88 / @rem750);
+                text-align: center;
+                line-height:(88 / @rem750);
+                background: @base_color;
+                color: #ffffff;
+                font-size: (32 / @rem750);
+
+            }
+        }
+    }
+
+    // 添加/编辑收货地址
+    .add-address {
+
+        /* 获取当前位置提示信息 */
+        .get-position {
+            width: 100%;
+            height: (88 / @rem750);
+            line-height: (88 / @rem750);
+            text-align: center;
+            font-size: (28 / @rem750);
+            color: #333;
+            background-color: #fff;
+            margin-bottom: 1px;
+            margin-top: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            .icon-position {
+                display: inline-block;
+                vertical-align: middle;
+                width: (26 / @rem750);
+                height: (38 / @rem750);
+                margin-right: 0.5em;
+                background: url(../images/icon-touch-machine.png?v1.0.2) no-repeat 0 (247 / (344 - 38) * 100%);
+                background-size: (251 / 26 * 100%) (344 / 38 * 100%);
+            }
+        }
+
+        form{
+            width: 100%;
+            overflow: hidden;
+
+            .lxr,.lxdh,.region,.xxdz,.postcode,.add-tages{
+                position: relative;
+                float: left;
+                height: (75/24rem);
+                width: 100%;
+                background-color: #ffffff;
+                padding-left: (20/24rem);
+                line-height: (75/24rem);
+                margin-bottom: 1px;
+                box-sizing: border-box;
+
+                span{
+                    width: (144/24rem);
+                    font-size: (28 / @rem750);
+                    color: #333333;
+                    float: left;
+                }
+                input{
+                    padding: 0;
+                    width: (400/24rem);
+                    height: 100%;
+                    border: 0;
+                    font-size: (28 / @rem750);
+                    color: #333333;
+                    float: left;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+                .icon-arrow{
+                    position: absolute;
+                    top:50%;
+                    right: (40/24rem);
+                    width: 1rem;
+                    height: 1rem;
+                    border: 1px solid #999999;
+                    border-width: 0 1px 1px 0;
+                    -webkit-transform: translateY(-50%) rotate(-45deg);
+                    transform: translateY(-50%) rotate(-45deg);
+                }
+                .tag{
+                    width: (131/24rem);
+                    height: (55/24rem);
+                    display: block;
+                    float: left;
+                    margin-top: (10/24rem);
+                }
+                .show-tag{
+                    float: right;
+                    margin-right: (30/24rem);
+                    margin-top: (18.5/24rem);
+                    .show_tag_add();
+
+                    /*展开按钮样式*/
+                    &.on{
+                        .show_tag_on();
+                    }
+                }
+            }
+            .area{
+                height: 100%;
+
+                input {
+                    padding: 0;
+                    width: (400/24rem);
+                    height: 100%;
+                    border: 0;
+                    font-size: (28 / @rem750);
+                    color: #333333;
+                    float: left;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+            }
+            .tags{
+                width: 100%;
+                height: (105/24rem);
+                background-color: #ffffff;
+                float: left;
+                border-bottom: 1px solid #dfdfdf;
+                div{
+                    width: 20%;
+                    height: 100%;
+                    float: left;
+                    span{
+                        width: (80/24rem);
+                        height: (40/24rem);
+                        display: block;
+                        margin:0 auto;
+                        margin-top: (32.5/24rem);
+                        box-sizing: border-box;
+                        border: 1px solid @base_color;
+                        text-align: center;
+                        line-height: (38/24rem);
+                        font-size: (24/24rem);
+                        color: @base_color;
+                        border-radius: (20/24rem);
+                        //span 添加样式.on 改变状态
+                        &.on{
+                            color: #ffffff;
+                            background-color: @base_color;
+                        }
+                    }
+                }
+            }
+            .tag-list{
+                list-style: none;
+                width: (131/24rem);
+                margin-left: (150/24rem);
+                margin-bottom: (20/24rem);
+                img{
+                    width: (131/24rem);
+                    height: (55/24rem);
+                }
+            }
+
+            .set-default {
+                position: relative;
+                float: left;
+                height: (75/24rem);
+                width: 100%;
+                background-color: #ffffff;
+                padding-left: (20/24rem);
+                line-height: (75/24rem);
+                margin-bottom: 1px;
+                box-sizing: border-box;
+
+                .check-box {
+                    position: relative;
+                    display: inline-block;
+                    height: 100%;
+                    width: (50 / 24rem);
+                    vertical-align: top;
+
+
+
+                    input[type="checkbox"] {
+                        position: absolute;
+                        z-index: 2;
+                        left: 0;
+                        top: 0;
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        -webkit-appearance: none !important;
+                        margin: 0;
+                    }
+
+                    svg {
+                        display: block;
+                        position: absolute;
+                        z-index: 0;
+                        left: 0;
+                        top: 50%;
+                        width: 1em;
+                        height: 1em;
+                        -webkit-transform: translate(0, -50%);
+                        transform:         translate(0, -50%);
+                        overflow: visible;
+                        font-size: (34/ @rem750);
+
+                        circle {
+                            stroke: #cccccc;
+                            stroke-width: 2px;
+                            fill: none;
+                        }
+                        path {
+                            stroke: none;
+                            fill: none;
+                        }
+                    }
+                    input[type="checkbox"]:checked + svg {
+                        circle {
+                            stroke: none;
+                            fill: @base_color;
+                            stroke-width: 0px;
+                        }
+                        path {
+                            stroke: #fff;
+                            stroke-width: 2px;
+                        }
+                    }
+                }
+
+                > span {
+                    font-size: (28 / @rem750);
+                    color: #333333;
+                }
+            }
+
+        }
+
+        .save-btn {
+
+            width: 100%;
+            background-color: #f0f0f0;
+
+            div {
+                margin: (60 / @rem750) (20 / @rem750) (20 / @rem750) (20 / @rem750);
+                border-radius: (3 / @rem750);
+                width: (710 / @rem750);
+                height: (88 / @rem750);
+                text-align: center;
+                line-height:(88 / @rem750);
+                background: @base_color;
+                color: #ffffff;
+                font-size: (32 / @rem750);
+
+            }
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

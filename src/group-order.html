@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>我的拼团订单</title>
+    <link rel="stylesheet" href="css/group-order.css"/>
+</head>
+<body class="user-order-all" vm-controller="group-order">
+    <div class="wrap box">
+
+        <!--公共头部菜单-->
+        <header  class="top-header">
+            <h1 class="title">拼团订单列表</h1>
+            <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+			<!--头部右边按钮 导航菜单 -->
+			{{require('template/topnav.html', {'page':'user-index'})}}
+
+        </header>
+
+        <div class="flex">
+
+            <!--内容区 滚动区-->
+            <div class="user-order-content flex-content"  data-act="order-scroll">
+
+                <!--头部tab-->
+                <div class="order-nav group-order-nav clear">
+                    <a href="#all" id="all" class="active"><p >全部</p></a>
+                    <a href="#paying" id="paying"><p>待付款</p></a>
+                    <a href="#await" id="await"><p>待成团</p></a>
+                    <a href="#shipping" id="shipping"><p>待发货</p></a>
+                    <a href="#shipped" id="shipped"><p>待收货</p></a>
+                    <a href="#evaluating" id="evaluating"><p>待评价</p></a> 
+
+                </div>
+
+                <!--订单不为空-->
+	            <div class="order-not-none" vm-html="list">
+	                <script type="text/html">
+	
+	                    <% if( list && list.length ){ %>
+	                    <% list.forEach(function(item){ %>
+	
+	                        <%if( item.status=='paying' && item.goodsList && item.goodsList.length ){ %>
+	                        <!--待付款 paying-->
+	                        <div class="order-item clear">
+	                            <a href="group-order-detail.html?id=<%= item.order_sn %>">
+	                                <div class="order-type clear">
+	                                    <p class="order-number pull-left">订单编号：<%=item.order_sn%></p>
+	                                    <p class="order-status pull-right">
+	                                        <% if(item.audit_state== 0){ %>
+	                                        等待审核
+	                                        <% }else{ %>
+	                                        待付款
+	                                        <% } %>
+	                                    </p>
+	                                </div>
+	                                <!--商品列表-->
+	                                <div class="order-list-wrap">
+	                                    <%item.goodsList.forEach(function(product){%>
+	                                    <div class="order-list clear">
+	                                        <div class="order-product pull-left">
+	                                            <span style="background-image: url(<%= product.goods_image %>)"></span>
+	                                        </div>
+	                                        <div class="order-product-msg pull-right">
+	                                            <p class="product-name">
+	                                            	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+							        					<em class="group-type">抽奖</em>
+							        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+							        					<em class="group-type">老带新</em>
+							        				<% }else{ %>
+							        					<em class="group-type">拼团</em>
+							        				<% } %>
+	                                            	<%=product.goods_name%>
+	                                            </p>
+	                                            <p class="product-price clear">
+	                                                <span class="pull-left">&yen;<%=product.unit_price%></span>
+	                                                <em class="group-tag pull-right"><%= item.fight.gfa_user_count %>人团</em>
+	                                                <% if(product.memberTagName && product.memberTagName.length ){  %>
+	                                                <span class="tag-span"><%=product.memberTagName%></span>
+	                                                <% } %>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                    <%})%>
+	                                </div>
+	
+	                                <%if(item.giftsList && item.giftsList.length){%>
+	                                <%item.giftsList.forEach(function(present){%>
+	                                <div class="row present">
+	                                    <div class="col-10 present-name">
+	                                        [赠品]<%=present.goods_name%>
+	                                    </div>
+	                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+	                                </div>
+	                                <%})%>
+	                                <%}%>
+	                            </a>
+	
+	                            <!--订单商品总计-->
+	                            <div class="order-count clear">
+	                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+	                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+	                            </div>
+	                            <div class="btn-wrap clear">
+	                                <% if(item.audit_state== 0){ %>
+	                                <a href="javascript:;" class="order-pay-btn-disabled">马上付款</a>
+	                                <% }else{ %>
+	                                <a href="group-order-pay.html?order_id=<%=item.order_sn%>" class="order-pay-btn">付款<span data-act="count-down" data-param="time=<%= item.cancel_time %>">00:00</span></a>
+	                                <% } %>
+	                                <a href="javascript:;" class="order-cancel-btn mr-btn" vm-on-click="cancelOrder('<%=item.order_sn%>')">取消订单</a>
+	                            </div>
+	                        </div>
+	                        <%}%>
+							<%if(item.status=='await' && item.goodsList && item.goodsList.length){%>
+                                <!--待成团 await-->
+                                <div class="order-item clear">
+                                    <a href="group-order-detail.html?id=<%=item.order_sn%>">
+                                        <div class="order-type clear">
+                                            <p class="order-number pull-left">订单编号：<%=item.order_sn%></p>
+                                            <p class="order-status pull-right">
+                                                <% if(item.audit_state== 100){ %>
+                                                    等待审核
+                                                <% }else{ %>
+                                                    待成团
+                                                <% } %>
+                                            </p>
+                                        </div>
+                                        <!--商品列表-->
+                                        <div class="order-list-wrap">
+                                            <%item.goodsList.forEach(function(product){%>
+                                                <div class="order-list clear">
+                                                    <div class="order-product pull-left">
+                                                        <span style="background-image: url(<%= product.goods_image %>)"></span>
+                                                    </div>
+                                                    <div class="order-product-msg pull-right">
+                                                        <p class="product-name">
+                                                        	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+									        					<em class="group-type">抽奖</em>
+									        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+									        					<em class="group-type">老带新</em>
+									        				<% }else{ %>
+									        					<em class="group-type">拼团</em>
+									        				<% } %>
+                                                        	<%=product.goods_name%>
+                                                        </p>                                                        
+                                                        <p class="product-price clear">
+                                                            <span class="pull-left">&yen;<%=product.unit_price%></span>
+                                                            <% if(item.fight){ %>
+					                                        	<em class="group-tag pull-left"><%= item.fight.gfa_user_count %>人团</em>
+                                                            	<span class="group_num pull-right">还差<%=(item.fight.gfa_user_count - item.fight.gf_join_num)%>人成团</span>
+                                                            <%}%>
+                                                            <% if(product.memberTagName && product.memberTagName.length ){  %>
+			                                                <span class="tag-span"><%=product.memberTagName%></span>
+			                                                <% } %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            <%})%>
+                                        </div>
+
+                                        <%if(item.giftsList && item.giftsList.length){%>
+		                                <%item.giftsList.forEach(function(present){%>
+		                                <div class="row present">
+		                                    <div class="col-10 present-name">
+		                                        [赠品]<%=present.goods_name%>
+		                                    </div>
+		                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+		                                </div>
+		                                <%})%>
+		                                <%}%>
+                                    </a>
+
+                                    <!--订单商品总计-->
+                                    <div class="order-count clear">
+		                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+		                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+		                            </div>
+                                    <div class="btn-wrap clear">
+                                    	<%if(item.fight && (item.fight.gf_end_time - item.fight.gf_start_time) > 0){%>
+                                			<a href="group-join.html?group_id=<%= item.fight.gf_id %>&&is_show=1" class="order-pay-btn">邀人参团</a>
+                                    		<p class="group-down"><span data-act="group-down" data-param="time=<%= item.fight.gf_end_time %>">00:00:00</span>后结束</p>
+                                    	<%}%>
+                                    </div>
+                                </div>
+                            <%}%>
+	                        <%if(item.status=='shipping'  && item.goodsList && item.goodsList.length){%>
+	                        <!--待发货 shipping-->
+	                        <div class="order-item clear" >
+	                            <a href="group-order-detail.html?id=<%= item.order_sn %>">
+	                                <div class="order-type clear">
+	                                    <p class="order-number pull-left">订单编号：<%=item.order_sn%></p>
+	                                    <p class="order-status pull-right">
+	                                        <% if(item.audit_state== 0){ %>
+	                                        等待审核
+	                                        <% }else{ %>
+	                                        待发货
+	                                        <% } %>
+	                                    </p>
+	                                </div>
+	
+	                                <div class="order-list-wrap">
+	                                    <%item.goodsList.forEach(function(product){%>
+	                                    <div class="order-list clear">
+	                                        <div class="order-product pull-left">
+	                                            <span style="background-image: url(<%= product.goods_image %>)"></span>
+	                                        </div>
+	                                        <div class="order-product-msg pull-right">
+	                                            <p class="product-name">
+	                                            	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+							        					<em class="group-type">抽奖</em>
+							        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+							        					<em class="group-type">老带新</em>
+							        				<% }else{ %>
+							        					<em class="group-type">拼团</em>
+							        				<% } %>
+	                                            	<%=product.goods_name%>
+	                                            </p>
+	                                            <p class="product-price clear">
+	                                                <span class="pull-left">&yen;<%=product.unit_price%></span>
+	                                                <em class="group-tag pull-right"><%= item.fight.gfa_user_count %>人团</em>
+	                                                <% if(product.memberTagName && product.memberTagName.length ){  %>
+	                                                <span class="tag-span"><%=product.memberTagName%></span>
+	                                                <% } %>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                    <%})%>
+	                                </div>
+	
+	                                <%if(item.giftsList && item.giftsList.length){%>
+	                                <%item.giftsList.forEach(function(present){%>
+	                                <div class="row present">
+	                                    <div class="col-10 present-name">
+	                                        [赠品]<%=present.goods_name%>
+	                                    </div>
+	                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+	                                </div>
+	                                <%})%>
+	                                <%}%>
+	                            </a>
+	
+	                            <!--订单商品总计-->
+	                            <div class="order-count clear">
+	                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+	                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+	                            </div>
+	                            
+	                        </div>
+	                        <%}%>
+	
+	                        <%if(item.status=='shipped'  && item.goodsList && item.goodsList.length){%>
+	                        <!--待收货 shipped-->
+	                        <div class="order-item clear">
+	                            <a href="group-order-detail.html?id=<%= item.order_sn %>">
+	                                <div class="order-type clear">
+	                                    <p class="order-number pull-left">订单编号：<%=item.order_sn%></p>
+	                                    <p class="order-status pull-right">待收货</p>
+	                                </div>
+	                                <!--商品列表-->
+	                                <div class="order-list-wrap">
+	                                    <%item.goodsList.forEach(function(product){%>
+	                                    <div class="order-list clear">
+	                                        <div class="order-product pull-left">
+	                                            <span style="background-image: url(<%= product.goods_image %>)"></span>
+	                                        </div>
+	                                        <div class="order-product-msg pull-right">
+	                                            <p class="product-name">
+	                                            	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+							        					<em class="group-type">抽奖</em>
+							        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+							        					<em class="group-type">老带新</em>
+							        				<% }else{ %>
+							        					<em class="group-type">拼团</em>
+							        				<% } %>
+	                                            	<%=product.goods_name%>
+	                                            </p>
+	                                            
+	                                            <p class="product-price clear">
+	                                                <span class="pull-left">&yen;<%=product.unit_price%></span>
+	                                                <em class="group-tag pull-right"><%= item.fight.gfa_user_count %>人团</em>
+	                                                <% if(product.memberTagName && product.memberTagName.length ){  %>
+	                                                <span class="tag-span"><%=product.memberTagName%></span>
+	                                                <% } %>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                    <%})%>
+	                                </div>
+	
+	                                <%if(item.giftsList && item.giftsList.length){%>
+	                                <%item.giftsList.forEach(function(present){%>
+	                                <div class="row present">
+	                                    <div class="col-10 present-name">
+	                                        [赠品]<%=present.goods_name%>
+	                                    </div>
+	                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+	                                </div>
+	                                <%})%>
+	                                <%}%>
+	                            </a>
+	
+	                            <!--订单商品总计-->
+	                            <div class="order-count clear">
+	                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+	                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+	                            </div>
+	                            <div class="btn-wrap clear">
+                                    <a href="javascript:;" class="order-take-btn" vm-on-click="confirmOrder('<%=item.order_sn%>')">确认收货</a>
+                                    <a href="user-order-lookwl.html?id=<%=item.order_sn%>&payment_id=<%= item.payment_id %>" class="order-lookwl-btn mr-btn">查看物流</a>
+                                </div>
+	                        </div>
+	                        <%}%>
+	
+	                        <%if(item.status=='canceled'  && item.goodsList && item.goodsList.length){%>
+	                        <!--订单列表 订单取消 canceled-->
+	                        <div class="order-item clear">
+	                            <div class="order-type clear">
+	                                <p class="order-number pull-left"><a href="user-order-detail.html?id=<%= item.order_sn %>">订单编号：<%=item.order_sn%></a></p>
+	                                <span class="order-delete-btn pull-right" data-act="delect-order" vm-on-click="delectOrder('<%=item.order_sn%>')">删除订单</span>
+	                                <p class="order-status pull-right">订单取消</p>
+	                            </div>
+	
+	                            <a href="group-order-detail.html?id=<%= item.order_sn %>">
+	                                <!--商品列表-->
+	                                <div class="order-list-wrap">
+	                                    <%item.goodsList.forEach(function(product){%>
+	                                    <div class="order-list clear">
+	                                        <div class="order-product pull-left">
+	                                            <span style="background-image: url(<%= product.goods_image %>)"></span>
+	                                        </div>
+	                                        <div class="order-product-msg pull-right">
+	                                            <p class="product-name">
+	                                            	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+							        					<em class="group-type">抽奖</em>
+							        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+							        					<em class="group-type">老带新</em>
+							        				<% }else{ %>
+							        					<em class="group-type">拼团</em>
+							        				<% } %>
+	                                            	<%=product.goods_name%>
+	                                            </p>
+	                                            <p class="product-price clear">
+	                                                <span class="pull-left">&yen;<%=product.unit_price%></span>
+	                                                <em class="group-tag pull-right"><%= item.fight.gfa_user_count %>人团</em>
+	                                                <% if(product.memberTagName && product.memberTagName.length ){  %>
+	                                                <span class="tag-span"><%=product.memberTagName%></span>
+	                                                <% } %>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                    <%})%>
+	                                </div>
+	
+	                                <%if(item.giftsList && item.giftsList.length){%>
+	                                <%item.giftsList.forEach(function(present){%>
+	                                <div class="row present">
+	                                    <div class="col-10 present-name">
+	                                        [赠品]<%=present.goods_name%>
+	                                    </div>
+	                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+	                                </div>
+	                                <%})%>
+	                                <%}%>
+	                            </a>
+	
+	                            <!--订单商品总计-->
+	                            <div class="order-count clear">
+	                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+	                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+	                            </div>
+	                        </div>
+	                        <%}%>
+	
+	                        <%if(item.status=='finished'  && item.goodsList && item.goodsList.length){%>
+	                        <!--交易完成 finished-->
+	                        <div class="order-item clear">
+	                            <div class="order-type clear">
+	                                <p class="order-number pull-left"><a href="user-order-detail.html?id=<%= item.order_sn %>">订单编号：<%=item.order_sn%></a></p>
+	                                <span class="order-delete-btn pull-right" vm-on-click="delectOrder('<%=item.order_sn%>')">删除订单</span>
+	                                <p class="order-status pull-right">交易完成</p>
+	                            </div>
+	                            <a href="group-order-detail.html?id=<%= item.order_sn %>">
+	                                <!--商品列表-->
+	                                <div class="order-list-wrap">
+	                                    <%item.goodsList.forEach(function(product){%>
+	                                    <div class="order-list clear">
+	                                        <div class="order-product pull-left">
+	                                            <span style="background-image: url(<%= product.goods_image %>)"></span>
+	                                        </div>
+	                                        <div class="order-product-msg pull-right">
+	                                            <p class="product-name">
+	                                            	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+							        					<em class="group-type">抽奖</em>
+							        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+							        					<em class="group-type">老带新</em>
+							        				<% }else{ %>
+							        					<em class="group-type">拼团</em>
+							        				<% } %>
+	                                            	<%=product.goods_name%>
+	                                            </p>
+	                                            
+	                                            <p class="product-price clear">
+	                                                <span class="pull-left">&yen;<%=product.unit_price%></span>
+	                                                <em class="group-tag pull-right"><%= item.fight.gfa_user_count %>人团</em>
+	                                                <% if(product.memberTagName && product.memberTagName.length ){  %>
+	                                                <span class="tag-span"><%=product.memberTagName%></span>
+	                                                <% } %>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                    <%})%>
+	                                </div>
+	
+	                                <%if(item.giftsList && item.giftsList.length){%>
+	                                <%item.giftsList.forEach(function(present){%>
+	                                <div class="row present">
+	                                    <div class="col-10 present-name">
+	                                        [赠品]<%=present.goods_name%>
+	                                    </div>
+	                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+	                                </div>
+	                                <%})%>
+	                                <%}%>
+	                            </a>
+	
+	                            <!--订单商品总计-->
+	                            <div class="order-count clear">
+	                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+	                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+	                            </div>
+	                            <div class="btn-wrap clear">
+	                                <%if(item.allow_comment==1){%>
+	                                <a href="user-order-share.html?order_id=<%=item.order_sn%>" class="order-look-eluate-btn">查看评价</a>
+	                                <%}%>
+	                            </div>
+	                        </div>
+	                        <%}%>
+	
+	                        <%if(item.status=='evaluating'  && item.goodsList && item.goodsList.length){%>
+	                        <!--待评价 evaluating-->
+	                        <div class="order-item clear">
+	                            <div class="order-type clear">
+	                                <p class="order-number pull-left"><a href="user-order-detail.html?id=<%= item.order_sn %>">订单编号：<%=item.order_sn%></a></p>
+	                                <span class="order-delete-btn pull-right" vm-on-click="delectOrder('<%=item.order_sn%>')">删除订单</span>
+	                                <p class="order-status pull-right">待评价</p>
+	                            </div>
+	                            <a href="group-order-detail.html?id=<%= item.order_sn %>">
+	                                <!--商品列表-->
+	                                <div class="order-list-wrap">
+	                                    <%item.goodsList.forEach(function(product){%>
+	                                    <div class="order-list clear">
+	                                        <div class="order-product pull-left">
+	                                            <span style="background-image: url(<%= product.goods_image %>)"></span>
+	                                        </div>
+	                                        <div class="order-product-msg pull-right">
+	                                            <p class="product-name">
+	                                            	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+							        					<em class="group-type">抽奖</em>
+							        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+							        					<em class="group-type">老带新</em>
+							        				<% }else{ %>
+							        					<em class="group-type">拼团</em>
+							        				<% } %>
+	                                            	<%=product.goods_name%>
+	                                            </p>
+	                                            
+	                                            <p class="product-price clear">
+	                                                <span class="pull-left">&yen;<%=product.unit_price%></span>
+	                                                <em class="group-tag pull-right"><%= item.fight.gfa_user_count %>人团</em>
+	                                                <% if(product.memberTagName && product.memberTagName.length ){  %>
+	                                                <span class="tag-span"><%=product.memberTagName%></span>
+	                                                <% } %>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                    <%})%>
+	                                </div>
+	
+	                                <%if(item.giftsList && item.giftsList.length){%>
+	                                <%item.giftsList.forEach(function(present){%>
+	                                <div class="row present">
+	                                    <div class="col-10 present-name">
+	                                        [赠品]<%=present.goods_name%>
+	                                    </div>
+	                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+	                                </div>
+	                                <%})%>
+	                                <%}%>
+	                            </a>
+	
+	                            <!--订单商品总计-->
+	                            <div class="order-count clear">
+	                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+	                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+	                            </div>
+	                            <div class="btn-wrap clear">
+	                                <%if(item.allow_comment==1){%>
+	                                <a href="user-order-share.html?order_id=<%=item.order_sn%>" class="order-look-eluate-btn">评价</a>
+	                                <%}else{%>
+	
+	                                <%}%>
+	                            </div>
+	                        </div>
+	                        <%}%>
+	
+	                        <%if(item.status=='refund'  && item.goodsList && item.goodsList.length){%>
+	                        <!--售后 refund-->
+	                        <div class="order-item clear" >
+	                            <a href="group-order-detail.html?id=<%= item.order_sn %>">
+	                                <div class="order-type clear">
+	                                    <p class="order-number pull-left">订单编号：<%=item.order_sn%></p>
+	                                    <p class="order-status pull-right">
+	                                        <%if(item.refund_status==1){%>
+	                                        	退款关闭
+	                                        <%}else if(item.refund_status==2){%>
+	                                        	<% if(item.fight.gfu_state == 3){ %>
+	                                        		团未成，退款中
+	                                        	<% }else{ %>
+	                                        		<% if(item.fight.gfa_is_draw == 1 && item.fight.is_win){ %>
+	                                        			未中奖，退款中
+	                                        		<% }else{ %>
+	                                        			退款中
+	                                        		<% } %>
+	                                        	<% } %>
+	                                        <%}else if(item.refund_status==0){%>
+	                                        	<% if(item.fight.gfu_state == 3){ %>
+	                                        		团未成，退款中
+	                                        	<% }else{ %>
+	                                        		<% if(item.fight.gfa_is_draw == 1 && item.fight.is_win){ %>
+	                                        			未中奖，退款中
+	                                        		<% }else{ %>
+	                                        			退款中
+	                                        		<% } %>
+	                                        	<% } %>
+	                                        <%}else if(item.refund_status==3){%>
+	                                        	<% if(item.fight.gfu_state == 3){ %>
+	                                        		团未成，已退款
+	                                        	<% }else{ %>
+	                                        		<% if(item.fight.gfa_is_draw == 1 && item.fight.is_win){ %>
+	                                        			未中奖，已退款
+	                                        		<% }else{ %>
+	                                        			已退款
+	                                        		<% } %>
+	                                        	<% } %>
+	                                        <%}else if(item.refund_status==4){%>
+	                                        	等待退货
+	                                        <%}%>
+	                                    </p>
+	                                </div>
+	                                <!--商品列表-->
+	                                <div class="order-list-wrap">
+	                                    <% item.goodsList.forEach(function(product){ %>
+	                                    <div class="order-list clear">
+	                                        <div class="order-product pull-left">
+	                                            <span style="background-image: url(<%= product.goods_image %>)"></span>
+	                                        </div>
+	                                        <div class="order-product-msg pull-right">
+	                                            <p class="product-name">
+	                                            	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+							        					<em class="group-type">抽奖</em>
+							        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+							        					<em class="group-type">老带新</em>
+							        				<% }else{ %>
+							        					<em class="group-type">拼团</em>
+							        				<% } %>
+	                                            	<%=product.goods_name%>
+	                                            </p>
+	                                            
+	                                            <p class="product-price clear">
+	                                                <span class="pull-left">&yen;<%=product.unit_price%></span>
+	                                                <em class="group-tag pull-right"><%= item.fight.gfa_user_count %>人团</em>
+	                                                <% if(product.memberTagName && product.memberTagName.length ){  %>
+	                                                <span class="tag-span"><%=product.memberTagName%></span>
+	                                                <% } %>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                    <% }) %>
+	                                </div>
+	
+	                                <%if(item.giftsList && item.giftsList.length){%>
+	                                <%item.giftsList.forEach(function(present){%>
+	                                <div class="row present">
+	                                    <div class="col-10 present-name">
+	                                        [赠品]<%=present.goods_name%>
+	                                    </div>
+	                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+	                                </div>
+	                                <%})%>
+	                                <%}%>
+	                            </a>
+	
+	                            <!--订单商品总计-->
+	                            <div class="order-count clear">
+	                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+	                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+	                            </div>
+	                            
+	                        </div>
+	                        <%}%>
+							<%if(item.status=='draw'  && item.goodsList && item.goodsList.length){%>
+	                        <!--待开奖 draw-->
+	                        <div class="order-item clear" >
+	                            <a href="group-order-detail.html?id=<%= item.order_sn %>">
+	                                <div class="order-type clear">
+	                                    <p class="order-number pull-left">订单编号：<%=item.order_sn%></p>
+	                                    <p class="order-status pull-right">已成团，待抽奖</p>
+	                                </div>
+	                                <!--商品列表-->
+	                                <div class="order-list-wrap">
+	                                    <% item.goodsList.forEach(function(product){ %>
+	                                    <div class="order-list clear">
+	                                        <div class="order-product pull-left">
+	                                            <span style="background-image: url(<%= product.goods_image %>)"></span>
+	                                        </div>
+	                                        <div class="order-product-msg pull-right">
+	                                            <p class="product-name">
+	                                            	<% if(item.fight.gfa_type && (item.fight.gfa_type - 0) == 1){ %>
+							        					<em class="group-type">抽奖</em>
+							        				<% }else if(item.fight.gfa_user_type && (item.fight.gfa_user_type - 0) == 1){ %>
+							        					<em class="group-type">老带新</em>
+							        				<% }else{ %>
+							        					<em class="group-type">拼团</em>
+							        				<% } %>
+	                                            	<%=product.goods_name%>
+	                                            </p>
+	                                            
+	                                            <p class="product-price clear">
+	                                                <span class="pull-left">&yen;<%=product.unit_price%></span>
+	                                                <em class="group-tag pull-right"><%= item.fight.gfa_user_count %>人团</em>
+	                                                <% if(product.memberTagName && product.memberTagName.length ){  %>
+	                                                <span class="tag-span"><%=product.memberTagName%></span>
+	                                                <% } %>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                    <% }) %>
+	                                </div>
+	
+	                                <%if(item.giftsList && item.giftsList.length){%>
+	                                <%item.giftsList.forEach(function(present){%>
+	                                <div class="row present">
+	                                    <div class="col-10 present-name">
+	                                        [赠品]<%=present.goods_name%>
+	                                    </div>
+	                                    <div class="product-num pull-right">&times;<%=present.goods_number%></div>
+	                                </div>
+	                                <%})%>
+	                                <%}%>
+	                            </a>
+	
+	                            <!--订单商品总计-->
+	                            <div class="order-count clear">
+	                                <span class="pull-left">共<em><%=item.goods_total%></em>件</span>
+	                                <span class="pull-right">合计：<em>&yen;<%=item.order_total%></em>（含运费：&yen;<%=item.carriage%>）</span>
+	                            </div>
+	                            
+	                        </div>
+	                        <%}%>
+	                    <% }); %>
+	                    <% } %>
+	
+	                </script>
+	
+	            </div>
+				<!--订单为空时-->
+                <div class="order-none group-order-none hide">
+					<div class="none-img"><span></span></div>
+					<p>没有拼团商品哦</p>
+					<a href="group-list.html" class="group-index-link">逛逛今日热团</a>
+                </div>
+	            
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/config.js"></script>
+    <script>seajs.use('group-order')</script>
+</body>
+</html>
+

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>百洋商城</title>
+</head>
+<body>
+<p style="text-align: center"><a href="index.html">返回首页</a></p>
+<script>
+    (function(ls, ss, dom) {
+        ls.clear();
+        ss.clear();
+
+        var keys = dom.cookie.match(/[^ =;]+(?=\=)/g);
+        var date = new Date('1970/1/1');
+
+        var clearAllCookie = function(name, date) {
+
+            var domain = '', path = '; path=/', expires = '; expires=' + date.toGMTString();
+
+            var hosts = /^(\w+\.)?(\w+)\.(\w+)$/.exec(location.host);
+
+            if(hosts){
+                domain = '; domain=' + hosts[2] + '.' + hosts[3];
+            }
+
+            dom.cookie = name + '=' + expires + path + domain;
+        };
+
+        if (keys && keys.length) {
+            keys.forEach(function(name) {
+                clearAllCookie(name, date);
+            });
+        }
+
+    })(localStorage, sessionStorage, document);
+
+</script>
+</body>
+</html>

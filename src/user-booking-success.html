@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>预订成功</title>
+    <!--<link rel="stylesheet" href="css/index.css"/>-->
+    <link rel="stylesheet" href="css/user.css"/>
+</head>
+<body>
+<div class="wrap user-booking-success">
+    <!--公共头部菜单-->
+    <header class="search-box top-header">
+        <h1 class="title">预订成功</h1>
+        <a href="javascript:history.back();" class="btn-back"><i class="icon icon-arrow"></i></a>
+        <!--头部右边按钮 导航菜单 -->
+        {{require('template/topnav.html', {'page':'user-index'})}}
+
+    </header>
+    <div class="top">
+        <div class="left">
+            <p class="ts"><i class="icon-ts"></i>提交预订成功</p>
+            <p class="xx">工作时间药师将会在一小时内联系您,审核您的订单</p>
+        </div>
+        <div class="right"></div>
+    </div>
+    <div class="ts-wd">
+        温馨提醒：预订成功后，您可以到我的订单内查看订单状态
+    </div>
+    <div class="cz-btn">
+        <span class="back-sy">返回首页</span>
+        <span class="ck-order">查看订单</span>
+    </div>
+    <div class="bottom">
+        <P class="fx-btn">我要分享</P>
+    </div>
+</div>
+<script src="js/config.js"></script>
+<script>seajs.use('widget')</script>
+</body>
+</html>

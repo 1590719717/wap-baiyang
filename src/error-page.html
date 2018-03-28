@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>页面不存在</title>
+    <link rel="stylesheet" href="/css/user.css"/>
+</head>
+<body>
+    <div class="wrap box">
+        <div class="flex">
+            <!--内容区 滚动区-->
+            <div class="error-page-content flex-content">
+                <header class="error-title top-header">
+                    <h1 class="title">页面不存在</h1>
+                    <!--头部右边按钮 导航菜单 -->
+                    {{require('template/topnav.html', {'page':''})}}
+
+                </header>
+                <div class="error-con">
+                    <div class="error-img"><span></span></div>
+                    <p>抱歉，页面没有找到!<br>页面将会在<span id="time-count">5</span>秒内跳转回首页</p>
+                    <a href="/index.html">返回首页</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="/js/config.js"></script>
+    <script>seajs.use('error-page')</script>
+</body>
+</html>

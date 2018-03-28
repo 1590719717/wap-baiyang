@@ -1,0 +1,150 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2016/6/7
+ * @description skin-default
+ */
+
+@rem750: (750 / 320 * 12rem);
+@rem640: (640 / 320 * 12rem);
+
+@icon_lantern: '../images/icon-lantern-festival.png?v1.0.4';
+@icon_lantern_w: 370;
+@icon_lantern_h: 102;
+
+
+
+/* 元宵节图标
+************************************/
+.footer .foot-nav {
+    width: auto;
+
+    &.main-venue {
+
+        display: table-cell !important;
+        width: (115 / @rem750);
+        position: relative;
+
+        .icon-main-venue {
+            display: block;
+            position: absolute;
+            bottom: 0 ;
+            z-index: 1;
+            width: (113 / @rem750);
+            height: (102 / @rem750);
+            margin: 0;
+            background: url(@icon_lantern) no-repeat (264 / (@icon_lantern_w - 113) * 100%) 0;
+            background-size: (@icon_lantern_w / 113 * 100%) (@icon_lantern_h / 102 * 100%);
+        }
+
+    }
+}
+
+/* 页脚导航菜单
+*********************************************************/
+.footer {
+
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    height: (87 / @rem750);
+    padding: 0 0 (8 / @rem750) 0;
+    box-sizing: border-box;
+
+    .foot-nav {
+        color: #666666;
+
+        .icon-home {
+            width: (56 / @rem750);
+            height: (44 / @rem750);
+            background: url(@icon_lantern) no-repeat 0 0;
+            background-size: (@icon_lantern_w / 56 * 100%) (@icon_lantern_h / 44 * 100%);
+        }
+        .icon-brand {
+            width: (63 / @rem750);
+            height: (42 / @rem750);
+            background: url(@icon_lantern) no-repeat (63 / (@icon_lantern_w - 63 ) * 100%) 0;
+            background-size: (@icon_lantern_w / 63 * 100%) (@icon_lantern_h / 42 * 100%);
+        }
+        .icon-shop-car {
+            position: relative;
+            width: (61 / @rem750);
+            height: (44 / @rem750);
+            background: url(@icon_lantern) no-repeat (134 / (@icon_lantern_w - 61 ) * 100%) 0;
+            background-size: (@icon_lantern_w / 61 * 100%) (@icon_lantern_h / 44 * 100%);
+
+            // 购物车数量
+            .icon-num {
+                display: inline-block;
+                position: absolute;
+                font-size: 0.5rem;
+                right: -1rem;
+                top: -0.5rem;
+                width: 1rem;
+                height: 1rem;
+                text-align: center;
+                font-style: normal;
+                z-index: 11;
+
+                svg {
+                    width: 100%;
+                    height: 100%;
+                    overflow: visible;
+
+                    circle {
+                        fill: #ff5a96;
+                        stroke: none;
+                        stroke-width: 0;
+                    }
+                    text {
+                        font-size: 10px;
+                        fill: #fff;
+                        stroke: none;
+                        text-anchor: middle
+                    }
+                }
+
+            }
+        }
+        .icon-user {
+            position: relative;
+            width: (48 / @rem750);
+            height: (55 / @rem750);
+            background: url(@icon_lantern) no-repeat (205 / (@icon_lantern_w - 48 ) * 100%) 0;
+            background-size: (@icon_lantern_w / 48 * 100%) (@icon_lantern_h / 55 * 100%);
+        }
+
+        &.active {
+            color: #ee2926;
+
+            .icon-home {
+                width: (56 / @rem750);
+                height: (44 / @rem750);
+                background: url(@icon_lantern) no-repeat 0 0;
+                background-size: (@icon_lantern_w / 56 * 100%) (@icon_lantern_h / 44 * 100%);
+            }
+            .icon-brand {
+                width: (63 / @rem750);
+                height: (42 / @rem750);
+                background: url(@icon_lantern) no-repeat (63 / (@icon_lantern_w - 63 ) * 100%) 0;
+                background-size: (@icon_lantern_w / 63 * 100%) (@icon_lantern_h / 42 * 100%);
+            }
+            .icon-shop-car {
+                position: relative;
+                width: (61 / @rem750);
+                height: (44 / @rem750);
+                background: url(@icon_lantern) no-repeat (134 / (@icon_lantern_w - 61 ) * 100%) 0;
+                background-size: (@icon_lantern_w / 61 * 100%) (@icon_lantern_h / 44 * 100%);
+            }
+            .icon-user {
+                position: relative;
+                width: (48 / @rem750);
+                height: (55 / @rem750);
+                background: url(@icon_lantern) no-repeat (205 / (@icon_lantern_w - 48 ) * 100%) 0;
+                background-size: (@icon_lantern_w / 48 * 100%) (@icon_lantern_h / 55 * 100%);
+            }
+
+        }
+
+    }
+
+}
+

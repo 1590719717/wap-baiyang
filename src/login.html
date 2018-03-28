@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    {{require('template/head.html')}}
+    <title>登录</title>
+    <link rel="stylesheet" href="css/page.css"/>
+</head>
+<body>
+    <div class="wrap box" vm-controller="login">
+        <header  class="top-header">
+            <h1 class="title">百洋商城登录</h1>
+            <a href="javascript:;" vm-on-click="back()" class="btn-back"><i class="icon icon-arrow"></i></a>
+            <!--头部右边按钮 导航菜单 -->
+            {{require('template/topnav.html', {'page':''})}}
+
+        </header>
+        <section class="content scroll-wrap flex" >
+            <!--手机号登录-->
+            <div vm-attr-class="is_touch_machine&&touch_step==1?'flex-content':is_touch_machine||is_wechat?'hide':'flex-content'" class="hide" >
+                <form class="login-form" id="form-login">
+                    <div class="form-control row">
+                        <label class="col-2">账户</label>
+                        <input class="col-10" type="text" vm-value="account" id="account" data-validate="empty,phone|email" placeholder="已验证手机号"/>
+                    </div>
+                    <div class="form-control row">
+                        <label class="col-2">密码</label>
+                        <input class="col-7" type="password" vm-attr-type="password_view?'text':'password'" id="password" vm-value="password" data-validate="empty" placeholder="请输入密码"/>
+                        <label class="toggle-psw col-2">
+                            <input type="checkbox" value="1" vm-value="password_view"/>
+                            <i class="icon-eye"></i>
+                        </label>
+                    </div>
+                    <div class="form-control row offset-control" vm-html="validate">
+                        <script type="text/html">
+                            <% if(code_img){ %>
+                                <input type="text" class="verify col-10" vm-value="code" data-validate="empty" placeholder="请输入验证码"/>
+                                <img vm-attr-src="code_img" vm-on-click="getCaptcha()" class="verify-img col-2" alt=""/>
+                            <% } %>
+                        </script>
+                    </div>
+                    <div class="btn-wrap">
+                        <button type="submit" vm-attr-class="account&&password?'btn btn-default':'btn btn-disabled'" class="btn btn-disabled">登 录</button>
+                    </div>
+                    <div class="bottom-tips clear">
+                        <a href="find-password.html" class="pull-left">
+                            <i class="icon icon-password"></i>找回密码
+                        </a>
+                        <a href="javascript:;" vm-on-click="go_register()" class="pull-right">
+                            <i class="icon icon-register"></i>快速注册
+                        </a>
+                    </div>
+                </form>
+                <div class="third-party hide">
+                    <p class="line-title"><span>其他登录方式</span></p>
+                    <article class="row">
+                        <div class="col-6 login-type">
+                            <a href="javascript:;"><i class="icon icon-qq"></i>QQ</a>
+                        </div>
+                        <div class="col-6 login-type">
+                            <a href="javascript:;"><i class="icon icon-wx"></i>微信</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!--触屏机 选择登录方式-->
+            <div vm-attr-class="is_touch_machine&&touch_step==0?'flex-content login-way':'hide'" class="hide" >
+                <div class="login-way-con">
+                    <p>请选择登录方式</p>
+                    <a class="chose-way pull-left" href="javascript:;" vm-on-click="chose_login_way(1)" >
+                        <i class="icon icon-mobile-way"></i>
+                        <p>手机号登录</p>
+                    </a>
+                    <a class="chose-way pull-right" href="javascript:;" vm-on-click="chose_login_way(2)" >
+                        <i class="icon icon-scan-way"></i>
+                        <p>微信扫码登录</p>
+                    </a>
+                </div>
+            </div>
+
+            <!--触屏机 微信扫码登录-->
+            <div class="hide" vm-attr-class="is_touch_machine&&touch_step==2?'flex-content login-scan-wechat':'hide'" >
+                <div class="wechat-code-login" id="login_wechat"></div>
+            </div>
+
+            <!--微信内-->
+            <div vm-attr-class="is_wechat||touch_step==3?'login-wechat-content':'hide'" class="hide" >
+                <!-- 登录注册-->
+                <div vm-attr-class="step==0?'login-wechat-type': 'hide'" class="hide">
+                    <p class="login-tips">您的账号信息尚未完善，请输入手机号码进行绑定</p>
+                    <div class="login-inp">
+                        <input type="text" vm-value="mobile" name="user-account" placeholder="请输入手机号码" />
+                    </div>
+                    <!--按钮红色背景  .active-bg-->
+                    <a vm-attr-class="mobile?'btn-next btn-active':'btn-next btn-default'" vm-on-click="check_mobile()" class="btn-next btn-default" href="javascript:;">下一步</a>
+                </div>
+
+                <!--注册  设置密码-->
+                <div vm-attr-class="step==1?'login-wechat-type': 'hide'" class="hide">
+                    <p class="login-tips">请设置百洋商城账号登录密码，完成注册绑定</p>
+                    <div class="input-panel">
+                        <div class="login-inp">
+                            <input  vm-value="wechat_password" type="password" name="password" placeholder="请设置登录密码" />
+                        </div>
+                        <div class="row input-list">
+                            <input class="col-8" type="text" vm-value="code" name="user-verify" placeholder="请输入图形验证码" />
+                            <div class="col-4 bd-left">
+                                <img vm-attr-src="code_img" vm-on-click="getCaptcha()" class="verify-img " alt=""/>
+                            </div>
+                        </div>
+                        <div class="row input-list">
+                            <input class="col-8" type="text" vm-value="mobile_code" name="user-verify" placeholder="请输入短信验证码" />
+                            <div class="col-4 bd-left">
+                                <a href="javascript:;" data-act="mobile_code" class="verify-code" vm-attr-class="'col-4 verify-code '+(mobile?'active-text':'default-text')">获取验证码</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <a vm-attr-class="wechat_password&&code&&mobile_code?'btn-next btn-active':'btn-next btn-default'" class="btn-next btn-default" href="javascript:;" vm-on-click="register()">下一步</a>
+                </div>
+
+                <!--已有账号 输入密码完成绑定-->
+                <div vm-attr-class="step==2?'login-wechat-type': 'hide'" class="hide">
+                    <p class="login-tips">请输入商城账户<span vm-html="mobile.replace(/(\d{3})(\d{4})(.*)/, '$1****$3')"></span>的密码，完成绑定</p>
+                    <div class="login-inp">
+                        <input class="col-10" vm-value="wechat_password" type="password" name="password" placeholder="请输入密码" />
+                    </div>
+                    <div vm-attr-class="validate?'row input-list bd-top':'hide'" class="hide">
+                        <input class="col-8" type="text" vm-value="code" name="user-verify" placeholder="请输入图形验证码" />
+                        <div class="col-4 bd-left">
+                            <img vm-attr-src="code_img" vm-on-click="getCaptcha()" class="verify-img " alt=""/>
+                        </div>
+                    </div>
+                    <a class="forget-psw" href="find-password.html">忘记密码</a>
+
+                    <a vm-attr-class="wechat_password?'btn-next btn-active':'btn-next btn-default'" class="btn-next btn-default" href="javascript:;" vm-on-click="login()">登录绑定</a>
+                </div>
+
+                <!--账号已绑定其他微信 重新登录-->
+                <div vm-attr-class="step==3?'login-wechat-type': 'hide'" class="hide">
+                    <div class="icon-warn"><span>!</span></div>
+                    <p class="login-tips-center">账户<span vm-html="mobile.replace(/(\d{3})(\d{4})(.*)/, '$1****$3')"></span>已绑定另外的微信账号<br>
+                        继续绑定将解绑原微信账号</p>
+                    <a class="btn-unbind btn-unbind-go" href="javascript:;" vm-on-click="go_on_bind()">继续绑定</a>
+                    <a class="btn-unbind btn-unbind-back" href="javascript:;" vm-on-click="back_unbind()">返回</a>
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+    <script src="js/config.js"></script>
+    <script>seajs.use('login')</script>
+</body>
+</html>

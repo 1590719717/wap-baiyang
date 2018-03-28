@@ -1,0 +1,145 @@
+@charset "utf-8";
+/*!
+ * @author liyuelong1020@gmail.com
+ * @date 2016/6/7
+ * @description skin-default
+ */
+
+/* 按钮
+*******************************************************************/
+.btn-default {
+  background-color: #ff5a96;
+}
+.btn-disabled {
+  background-color: #d2d2d2;
+}
+
+
+/* 页脚导航菜单
+*********************************************************/
+.icon-home {
+    width: (41 / 24rem);
+    height: (41 / 24rem);
+    background: url("../../../images/icon-index.png?v1.0.0") no-repeat 0 (65 / (493 - 41) * 100%);
+    background-size: (338 / 41 * 100%) (493 / 41 * 100%);
+}
+.icon-brand {
+    width: (39 / 24rem);
+    height: (39 / 24rem);
+    background: url("../../../images/icon-index.png?v1.0.0") no-repeat (71 / (338 - 39) * 100%) (65 / (493 - 39) * 100%);
+    background-size: (338 / 39 * 100%) (493 / 39 * 100%);
+}
+.icon-shop-car {
+    width: (42 / 24rem);
+    height: (44 / 24rem);
+    background: url("../../../images/icon-index.png?v1.0.0") no-repeat (139 / (338 - 42) * 100%) (58 / (493 - 44) * 100%);
+    background-size: (338 / 42 * 100%) (493 / 44 * 100%);
+}
+.icon-user {
+    width: (44 / 24rem);
+    height: (40 / 24rem);
+    background: url("../../../images/icon-index.png?v1.0.0") no-repeat (208 / (338 - 44) * 100%) (61 / (493 - 40) * 100%);
+    background-size: (338 / 44 * 100%) (493 / 40 * 100%);
+}
+.footer {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: (14 / 24rem) 0 (11 / 24rem) 0;
+    border-top: 1px solid #e6e6e8;
+    background-color: #fff;
+
+    .foot-nav {
+        display: block;
+        float: left;
+        width: 25%;
+        font-size: (16 / 24rem);
+        text-align: center;
+        line-height: 1em;
+        color: #999;
+        overflow: visible;
+
+        &.main-venue {
+            display: none;
+        }
+
+        .icon-shop-car {
+            position: relative;
+
+            // 购物车数量
+            .icon-num {
+                display: inline-block;
+                position: absolute;
+                font-size: 0.5rem;
+                right: -1rem;
+                top: -0.5rem;
+                width: 1rem;
+                height: 1rem;
+                text-align: center;
+                font-style: normal;
+
+                svg {
+                    width:  100%;
+                    height: 100%;
+                    overflow: visible;
+
+                    circle {
+                        fill: #ff5a96;
+                        stroke: none;
+                        stroke-width: 0;
+                    }
+                    text {
+                        font-size: 10px;
+                        fill: #fff;
+                        stroke: none;
+                        text-anchor:middle
+                    }
+                }
+
+            }
+        }
+
+        &.active {
+            color: #ff5a96;
+
+            .icon-home {
+                background-position: 0 (128 / (493 - 41) * 100%);
+            }
+            .icon-brand {
+                background-position: (71 / (338 - 39) * 100%) (128 / (493 - 39) * 100%);
+            }
+            .icon-shop-car {
+                background-position: (139 / (338 - 42) * 100%) (126 / (493 - 44) * 100%);
+            }
+            .icon-user {
+                background-position: (208 / (338 - 44) * 100%) (126 / (493 - 40) * 100%);
+            }
+        }
+        .icon {
+            margin: 0 auto (6 / 24rem);
+            display: block;
+        }
+    }
+}
+
+/* 头部app下载引导图标
+ ********************************************************/
+.top-download .icon-download,
+.top-download .mobile-top .icon-download {
+    background: url(../../../images/icon-download.png) no-repeat 0 0;
+    background-size: 100% 100%;
+}
+
+/* 双十一首页横幅
+**********************************************************/
+.index-content .top-scroll .november-11 {
+    display: none;
+}
+
+/* 隐藏银联支付
+ ********************************************************/
+.order-pay .order-pay-content .order-pay-method a.unionpay {
+    display: none;
+}
+
+
