@@ -1,23 +1,23 @@
-/**
- * @author liyuelong1020@gmail.com
- * @date 2016-03-29
- * @version 1.0.0
- * @description Ajax
+/*
+ * @Author: lixiaoxiao@huobi.com 
+ * @Date: 2018-05-09 17:19:52 
+ * @Last Modified by:   lixiaoxiao@huobi.com 
+ * @Last Modified time: 2018-05-09 17:19:52 
  */
 
-define('ajax', [], function(require, exports) {
+define('ajax', [], function (require, exports) {
 
     // 调试模式参数
     var debugInterface = decodeURI((location.search.substr(1).match(/(^|&)debug_ajax=([^&]*)(&|$)/) || [])[2] || '');
 
-    var printLog = (function() {
+    var printLog = (function () {
         var print;
 
-        var initLog = function(callback) {
-            if(print) {
+        var initLog = function (callback) {
+            if (print) {
                 callback(print);
             } else {
-                seajs.use('log', function(log) {
+                seajs.use('log', function (log) {
                     print = log;
                     callback(print);
                 });
@@ -25,10 +25,10 @@ define('ajax', [], function(require, exports) {
         };
 
         // url传递调试参数
-        return function() {
+        return function () {
             var args = [].slice.call(arguments);
 
-            initLog(function(print) {
+            initLog(function (print) {
                 print.apply(null, args);
             })
         }
@@ -41,9 +41,9 @@ define('ajax', [], function(require, exports) {
      * @return {undefined}
      * @description 遍历对象
      */
-    var forEachIn = function(object, callback) {
-        for(var key in object) {
-            if(object.hasOwnProperty(key)){
+    var forEachIn = function (object, callback) {
+        for (var key in object) {
+            if (object.hasOwnProperty(key)) {
                 callback(key, object[key]);
             }
         }
@@ -54,14 +54,14 @@ define('ajax', [], function(require, exports) {
      * @return {String}
      * @description 转换查询字段
      */
-    var getQueryStr = function(data) {
+    var getQueryStr = function (data) {
         var str = [];
         data = data || {};
 
-        var eachArrParam = function(i, item) {
+        var eachArrParam = function (i, item) {
             i += '[]';
-            item.forEach(function(subItem) {
-                if(Array.isArray(subItem)) {
+            item.forEach(function (subItem) {
+                if (Array.isArray(subItem)) {
                     eachArrParam(i, subItem);
                 } else {
                     str.push(encodeURIComponent(i) + '=' + encodeURIComponent(subItem));
@@ -69,8 +69,8 @@ define('ajax', [], function(require, exports) {
             });
         };
 
-        forEachIn(data, function(i, item) {
-            if(Array.isArray(item)) {
+        forEachIn(data, function (i, item) {
+            if (Array.isArray(item)) {
                 eachArrParam(i, item);
             } else {
                 str.push(encodeURIComponent(i) + '=' + encodeURIComponent(item));
@@ -85,11 +85,11 @@ define('ajax', [], function(require, exports) {
      * @return {String}
      * @description 拼接 get 请求 url
      */
-    var getQueryUrl = function(url, data) {
+    var getQueryUrl = function (url, data) {
         var queryStr = getQueryStr(data);
-        if(queryStr) {
+        if (queryStr) {
             url = url.split('#')[0];
-            if(/\?/ig.test(url)){
+            if (/\?/ig.test(url)) {
                 return url + '&' + queryStr;
             } else {
                 return url + '?' + queryStr;
@@ -100,25 +100,30 @@ define('ajax', [], function(require, exports) {
     };
 
     // 根据格式返回数据
-    var getDataByType = function(data, type) {
-        try{
-            switch(String(type).toLowerCase()) {
-                case 'script': return new Function(data)(); break;
-                case 'json': return JSON.parse(data); break;
-                default: return data;
+    var getDataByType = function (data, type) {
+        try {
+            switch (String(type).toLowerCase()) {
+                case 'script':
+                    return new Function(data)();
+                    break;
+                case 'json':
+                    return JSON.parse(data);
+                    break;
+                default:
+                    return data;
             }
-        } catch(e) {
+        } catch (e) {
             return data;
         }
     };
 
     // 根据参数和请求地址生成缓存key
-    var getCacheKey = function(param) {
+    var getCacheKey = function (param) {
         var name = String(param.url);
         var key_arr = [];
 
-        if(({}).toString.call(param.data) === '[object Object]'){
-            forEachIn(param.data, function(key, value) {
+        if (({}).toString.call(param.data) === '[object Object]') {
+            forEachIn(param.data, function (key, value) {
                 key_arr.push(key + '=' + String(value));
             });
 
@@ -129,24 +134,24 @@ define('ajax', [], function(require, exports) {
     };
 
     // 缓存方法
-    var cache = (function() {
+    var cache = (function () {
         var ls = localCache,
             cache_name = '__ajax_cache__',
             cacheData = [];
 
-        try{
+        try {
             cacheData = JSON.parse(ls.getItem(cache_name));
-        } catch(e) {
+        } catch (e) {
             cacheData = [];
         }
 
-        if(({}).toString.call(cacheData) !== '[object Array]') {
+        if (({}).toString.call(cacheData) !== '[object Array]') {
             cacheData = [];
         }
 
-        var getData = function(id) {
-            for(var i = 0, len = cacheData.length; i < len; i++){
-                if(cacheData[i].id == id && cacheData[i].value){
+        var getData = function (id) {
+            for (var i = 0, len = cacheData.length; i < len; i++) {
+                if (cacheData[i].id == id && cacheData[i].value) {
                     return cacheData[i];
                 }
             }
@@ -155,37 +160,38 @@ define('ajax', [], function(require, exports) {
         return {
 
             // 根据ajax参数返回缓存值
-            get_cache: function(id) {
+            get_cache: function (id) {
                 var data = getData(id);
                 return data ? data.value : '';
             },
 
             // 设置缓存值
-            set_cache: function(id, value) {
-                var data = getData(id), isModify = true;
+            set_cache: function (id, value) {
+                var data = getData(id),
+                    isModify = true;
 
 
-                if(!data){
+                if (!data) {
                     data = {
                         id: id
                     };
                     cacheData.push(data);
                 }
 
-                if(ls.is_support_ls){
-                    try{
+                if (ls.is_support_ls) {
+                    try {
 
                         var newValue = JSON.stringify(value);
                         // 判断数据是否变更
                         isModify = !(newValue === data.value);
 
                         // 如果返回的结果跟缓存不一致则替换旧缓存
-                        if(isModify){
+                        if (isModify) {
                             data.value = newValue;
                             ls.setItem(cache_name, JSON.stringify(cacheData));
                         }
 
-                    } catch(e) {
+                    } catch (e) {
                         console.error(e);
                     }
                 }
@@ -200,24 +206,24 @@ define('ajax', [], function(require, exports) {
      * @param {options} param
      * @description XMLHttpRequest
      */
-    var ajax = function(param) {
+    var ajax = function (param) {
 
         // 是否开启调试模式
         var isDebug = Config.debug && debugInterface && param.url.indexOf(debugInterface) > -1;
 
         var xhr = new XMLHttpRequest(),
             postData,
-            timeoutTimer,  // 请求超时计时器
-            cacheId,       // 缓存id
-            noSupportType = false;      // 是否支持 responseType
+            timeoutTimer, // 请求超时计时器
+            cacheId, // 缓存id
+            noSupportType = false; // 是否支持 responseType
 
-        xhr.onreadystatechange = function() {
-            if(xhr.readyState === 4){
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
 
                 xhr.onreadystatechange = null;
                 timeoutTimer && clearTimeout(timeoutTimer);
 
-                if((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
                     var data, isModify = true;
 
                     try {
@@ -226,21 +232,21 @@ define('ajax', [], function(require, exports) {
                         data = '';
                     }
 
-                    if(isDebug){
+                    if (isDebug) {
                         printLog('ajax response: \n', JSON.stringify(data, '', '    '));
                     }
 
-                    if(noSupportType){
+                    if (noSupportType) {
                         data = getDataByType(data, param.dataType);
                     }
 
                     // 如果使用缓存则保存到缓存中
-                    if(({}).toString.call(param.cache) === "[object Function]") {
+                    if (({}).toString.call(param.cache) === "[object Function]") {
                         isModify = cache.set_cache(cacheId, data);
                     }
 
                     // 如果缓存数据有变化则调用  success 方法
-                    if(isModify){
+                    if (isModify) {
                         param.success(data);
                     }
 
@@ -250,11 +256,11 @@ define('ajax', [], function(require, exports) {
             }
         };
 
-        if(({}).toString.call(param.data) === '[object FormData]') {
+        if (({}).toString.call(param.data) === '[object FormData]') {
             // 如果使用FormData提交数据
             param.type = 'POST';
             postData = param.data;
-        } else if(String(param.type).toLowerCase() === 'post'){
+        } else if (String(param.type).toLowerCase() === 'post') {
             // 如果请求方式为 POST
             param.type = 'POST';
             postData = getQueryStr(param.data);
@@ -265,10 +271,10 @@ define('ajax', [], function(require, exports) {
             postData = null;
         }
 
-        if(param.dataType){
+        if (param.dataType) {
             try {
                 xhr.responseType = param.dataType;
-                if(!xhr.responseType || xhr.responseType != param.dataType){
+                if (!xhr.responseType || xhr.responseType != param.dataType) {
                     noSupportType = true;
                 }
             } catch (e) {
@@ -280,23 +286,23 @@ define('ajax', [], function(require, exports) {
 
         // 请求超时
         param.timeout = Number(param.timeout) || 0;
-        if(param.timeout && param.timeout > 0){
+        if (param.timeout && param.timeout > 0) {
             try {
                 xhr.timeout = param.timeout;
             } catch (e) {
-                setTimeout(function() {
+                setTimeout(function () {
                     xhr.abort();
                 }, param.timeout);
             }
         }
 
         // 页面刷新时则停止请求
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener('beforeunload', function () {
             xhr.onreadystatechange = null;
             xhr.abort();
         });
 
-        forEachIn(param.header, function(name, value) {
+        forEachIn(param.header, function (name, value) {
             xhr.setRequestHeader(name, value);
         });
         param.beforeSend(xhr);
@@ -304,20 +310,20 @@ define('ajax', [], function(require, exports) {
         xhr.send(postData);
 
         // 如果有缓存则使用缓存
-        if(({}).toString.call(param.cache) === "[object Function]") {
+        if (({}).toString.call(param.cache) === "[object Function]") {
             // 缓存id
             cacheId = getCacheKey(param);
 
             var cacheData = getDataByType(cache.get_cache(cacheId), param.dataType);
 
-            if(cacheData){
-                setTimeout(function() {
+            if (cacheData) {
+                setTimeout(function () {
                     param.cache(cacheData);
                 }, 0);
             }
         }
 
-        if(isDebug){
+        if (isDebug) {
             printLog('ajax param: \n', param.data);
         }
 
@@ -328,7 +334,7 @@ define('ajax', [], function(require, exports) {
      * @param {options} param
      * @description jsonp
      */
-    var jsonp = function(param) {
+    var jsonp = function (param) {
         var callback = param.jsonp || 'json_callback_' + Date.now(),
             script = document.createElement("script"),
             head = document.head || document.querySelector('head') || document.documentElement;
@@ -337,7 +343,7 @@ define('ajax', [], function(require, exports) {
         data['_'] = 'jsonp_' + Date.now();
         data['callback'] = callback;
 
-        window[callback] = function(data) {
+        window[callback] = function (data) {
             window[callback] = null;
             param.success(data);
         };
@@ -347,14 +353,14 @@ define('ajax', [], function(require, exports) {
 
         script.src = getQueryUrl(param.url, data);
 
-        script.onload = script.onreadystatechange = function( _, isAbort ) {
+        script.onload = script.onreadystatechange = function (_, isAbort) {
 
-            if ( isAbort || !script.readyState || /loaded|complete/.test( script.readyState ) ) {
+            if (isAbort || !script.readyState || /loaded|complete/.test(script.readyState)) {
 
                 script.onload = script.onreadystatechange = null;
 
-                if ( script.parentNode ) {
-                    script.parentNode.removeChild( script );
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
                 }
 
                 script = null;
@@ -373,20 +379,20 @@ define('ajax', [], function(require, exports) {
      * @description Ajax 请求设置
      */
     var options = {
-        type: 'GET',               // 请求类型
-        url: '',                   // 请求url
-        async: true,               // 默认异步请求
-        timeout: null,             // 请求超时
-        data: {},                  // 请求参数
-        header: {                  // 默认头信息
+        type: 'GET', // 请求类型
+        url: '', // 请求url
+        async: true, // 默认异步请求
+        timeout: null, // 请求超时
+        data: {}, // 请求参数
+        header: { // 默认头信息
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        dataType: '',              // 获取的数据类型
-        jsonp: '',                 // jsonp
-        cache: null,               // 使用缓存时回调
-        beforeSend: function() {}, // 请求发送前回调
-        success: function() {},    // 成功回调
-        error: function() {}       // 失败回调
+        dataType: '', // 获取的数据类型
+        jsonp: '', // jsonp
+        cache: null, // 使用缓存时回调
+        beforeSend: function () {}, // 请求发送前回调
+        success: function () {}, // 成功回调
+        error: function () {} // 失败回调
     };
 
     /**
@@ -400,13 +406,13 @@ define('ajax', [], function(require, exports) {
      * @param {Function} error
      * @description Ajax 请求
      */
-    return function(option) {
-        forEachIn(options, function(key, value) {
-            if(!option[key]){
+    return function (option) {
+        forEachIn(options, function (key, value) {
+            if (!option[key]) {
                 option[key] = value;
             }
         });
-        if(option.dataType === 'jsonp'){
+        if (option.dataType === 'jsonp') {
             return jsonp(option);
         } else {
             return ajax(option);
