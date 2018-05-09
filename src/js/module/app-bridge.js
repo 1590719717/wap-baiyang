@@ -3,7 +3,6 @@
  * @date 2016/11/25 025
  * @description 百洋APP开放接口
  */
-
 define('app-bridge', [], function (require, exports) {
     var platform = Config.platform;
 
