@@ -2,7 +2,7 @@
  * @Author: lixiaoxiao@huobi.com 
  * @Date: 2018-05-09 17:06:26 
  * @Last Modified by: lixiaoxiao@huobi.com
- * @Last Modified time: 2018-05-09 17:45:02
+ * @Last Modified time: 2018-05-09 17:49:03
  */
 
 define('app-bridge', [], function (require, exports) {
